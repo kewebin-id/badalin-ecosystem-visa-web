@@ -9,7 +9,7 @@ const withNextIntl = require('next-intl/plugin')('./src/i18n/request.ts');
 
 module.exports = withNextIntl(
   withPWA({
-    pageExtensions: ['ts', 'tsx'],
+    pageExtensions: ['ts', 'tsx', 'js', 'jsx'],
     generateEtags: false,
     poweredByHeader: false,
     reactStrictMode: true,
