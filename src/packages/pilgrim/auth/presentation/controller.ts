@@ -48,8 +48,7 @@ export const useAuthController = () => {
       }
 
       toast.success(authResult.message);
-      router.push(ROUTES.PILGRIM.DASHBOARD);
-      router.refresh();
+      window.location.assign(ROUTES.PILGRIM.DASHBOARD);
       return res;
     },
   });

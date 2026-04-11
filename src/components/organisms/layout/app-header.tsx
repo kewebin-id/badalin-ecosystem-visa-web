@@ -88,10 +88,8 @@ export const AppHeader = ({ className, onMenuClick }: AppHeaderProps) => {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className={cn('hidden sm:block', isMobile && 'hidden')}>
-            <LocaleSwitcher />
-          </div>
+        <div className="flex items-center gap-1 sm:gap-2">
+          <LocaleSwitcher />
 
           <div className="h-8 w-px bg-gray-100 mx-1 hidden sm:block" />
 

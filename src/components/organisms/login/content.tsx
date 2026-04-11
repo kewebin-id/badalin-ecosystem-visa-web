@@ -96,7 +96,6 @@ export const LoginContent: FC<{ providerSlug?: string }> = () => {
       }
     } catch (error) {
       Logger.error(error, { location: 'LoginContent.onSubmit' });
-    } finally {
       setIsLoading(false);
     }
   };
