@@ -1,0 +1,105 @@
+@reference "../tailwind.css";
+
+.topbar {
+  @apply sticky top-0 z-30 flex py-2 items-center justify-between border-b border-gray-200 bg-white px-6 backdrop-blur-xl;
+}
+
+.titleSection {
+  @apply flex flex-col;
+}
+
+.title {
+  @apply text-lg font-bold text-dark-darker;
+}
+
+.subtitle {
+  @apply text-xs text-muted-foreground;
+}
+
+.rightSection {
+  @apply flex items-center gap-3;
+}
+
+.searchContainer {
+  @apply relative hidden md:block;
+}
+
+.searchIcon {
+  @apply absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground;
+}
+
+.searchInput {
+  @apply w-64 bg-muted/50 pl-9 focus:bg-primary;
+}
+
+.themeButton {
+  @apply text-muted-foreground hover:text-dark-darker rounded-lg;
+}
+
+.themeIcon {
+  @apply h-5 w-5;
+}
+
+.notificationButton {
+  @apply relative text-muted-foreground hover:text-dark-darker rounded-lg;
+}
+
+.notificationIcon {
+  @apply h-5 w-5;
+}
+
+.notificationBadge {
+  @apply absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground text-[10px] font-bold text-dark-darker;
+}
+
+.userMenuButton {
+  @apply gap-2 pl-2 pr-3;
+}
+
+.userAvatar {
+  @apply h-8 w-8;
+}
+
+.userAvatarFallback {
+  @apply bg-primary-lighter text-white text-sm font-semibold;
+}
+
+.userInfo {
+  @apply hidden flex-col items-start md:flex;
+}
+
+.userName {
+  @apply text-xs font-medium text-dark-darker;
+}
+
+.userRole {
+  @apply text-[8px] text-gray-400;
+}
+
+.chevronIcon {
+  @apply h-4 w-4 text-muted-foreground;
+}
+
+.dropdownContent {
+  @apply w-56 bg-white border-gray-200;
+}
+
+.dropdownLabel {
+  @apply flex flex-col space-y-1;
+}
+
+.dropdownUserName {
+  @apply text-sm font-medium;
+}
+
+.dropdownUserEmail {
+  @apply text-xs text-muted-foreground;
+}
+
+.dropdownMenuItem {
+  @apply mr-2 h-4 w-4;
+}
+
+.dropdownLogout {
+  @apply text-primary focus:text-primary;
+}

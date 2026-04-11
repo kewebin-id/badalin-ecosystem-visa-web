@@ -1,0 +1,13 @@
+@reference "../tailwind.css";
+
+.product-card {
+  @apply rounded-lg h-fit;
+}
+
+.product-image {
+  @apply rounded-t-lg w-full h-[167px] max-h-[195px] object-cover;
+}
+
+.product-name {
+  @apply text-md line-clamp-2;
+}

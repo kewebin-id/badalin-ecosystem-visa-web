@@ -1,0 +1,17 @@
+@reference "../tailwind.css";
+
+.splash-screen {
+  @apply flex flex-col items-center justify-center h-screen w-screen bg-white relative;
+}
+
+.splash-screen-logo {
+  @apply size-[300px];
+  background: url('../../../../public/og-image.webp');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.splash-screen-copyright {
+  @apply text-dark-darker text-sm absolute bottom-8 left-1/2 -translate-x-1/2 text-center w-full;
+}

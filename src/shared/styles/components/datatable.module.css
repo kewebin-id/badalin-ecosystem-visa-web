@@ -1,0 +1,61 @@
+@reference "../tailwind.css";
+
+.container {
+  @apply space-y-4;
+}
+
+.searchContainer {
+  @apply relative max-w-sm;
+}
+
+.searchIcon {
+  @apply absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground;
+}
+
+.tableWrapper {
+  @apply rounded-xl border border-gray-200 bg-white;
+}
+
+.headerRow {
+  @apply hover:bg-transparent;
+}
+
+.tableHead {
+  @apply bg-primary-lighter/30 font-semibold text-dark-darker first:rounded-tl-xl last:rounded-tr-xl;
+}
+
+.tableRow {
+  @apply hover:bg-muted/50;
+}
+
+.emptyCell {
+  @apply h-48;
+}
+
+.emptyText {
+  @apply text-center text-muted-foreground;
+}
+
+.pagination {
+  @apply flex items-center justify-between md:flex-row flex-col gap-2;
+}
+
+.paginationLeft {
+  @apply flex items-center gap-2;
+}
+
+.paginationLabel {
+  @apply text-sm text-muted-foreground text-nowrap;
+}
+
+.paginationRight {
+  @apply flex items-center md:flex-row flex-col gap-2;
+}
+
+.paginationPageInfo {
+  @apply text-sm text-muted-foreground;
+}
+
+.paginationButtons {
+  @apply flex items-center gap-1;
+}

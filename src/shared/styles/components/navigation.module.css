@@ -1,0 +1,19 @@
+@reference "../tailwind.css";
+
+.top-navigation {
+  @apply bg-white px-4 h-14 flex justify-between items-center fixed z-10 top-0 left-1/2 -translate-x-1/2 w-full max-w-[480px];
+  box-shadow: 0px 1px 12px 0px rgba(76, 60, 60, 0.25);
+}
+
+.title-left,
+.title-center {
+  @apply text-lg font-bold text-black;
+}
+
+.title-center {
+  @apply absolute text-center truncate text-nowrap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 line-clamp-1 max-w-[75%];
+}
+
+.bottom-navigation {
+  @apply fixed bottom-0 w-full left-1/2 -translate-x-1/2 bg-white px-4 py-2 max-w-[480px];
+}

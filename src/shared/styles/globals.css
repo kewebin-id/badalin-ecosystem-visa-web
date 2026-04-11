@@ -1,0 +1,88 @@
+@import './tailwind.css';
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist);
+  --font-mono: var(--font-geist-mono);
+
+  --spacing-sidebar: 16rem;
+  --spacing-sidebar-icon: 3rem;
+}
+
+@layer base {
+  :root {
+    --sidebar-width: 16rem;
+    --sidebar-width-icon: 3rem;
+    --sidebar-width-mobile: 18rem;
+  }
+}
+
+html,
+body {
+  @apply text-foreground bg-white;
+  font-family: var(--font-geist), sans-serif;
+}
+
+::-webkit-scrollbar {
+  display: none;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+button {
+  @apply cursor-pointer;
+}
+
+a {
+  @apply cursor-pointer transition-all duration-200;
+}
+
+.ol-zoom.ol-unselectable.ol-control {
+  top: unset !important;
+  left: unset !important;
+  right: unset !important;
+
+  bottom: 8rem !important; /* Jarak dari bawah */
+  right: 1rem !important; /* Jarak dari kiri */
+
+  border-radius: 0.5rem;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.ol-zoom button {
+  background-color: #ffffff;
+  color: #4f46e5;
+  transition: background-color 0.2s;
+}
+.ol-zoom button:hover {
+  background-color: #f3f4f6;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Hide browser default time picker icon */
+input[type='time']::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+input[type='time']::-webkit-inner-spin-button,
+input[type='time']::-webkit-outer-spin-button {
+  display: none;
+  -webkit-appearance: none;
+}
+
+input[type='time']::-moz-calendar-picker-indicator {
+  display: none;
+}

@@ -1,0 +1,23 @@
+@reference "../tailwind.css";
+
+.menu {
+  @apply text-md font-medium tracking-wide;
+}
+
+.trigger {
+  @apply flex justify-between cursor-pointer items-center;
+}
+
+.menu-content {
+  @apply w-56 bg-white border-none;
+  box-shadow: 0px 0px 4px 0px rgba(87, 87, 87, 0.24);
+}
+
+.sub-menu-content {
+  @apply bg-white border-none;
+  box-shadow: 0px 0px 4px 0px rgba(87, 87, 87, 0.24);
+}
+
+.item {
+  @apply cursor-pointer hover:bg-gray-100 transition-colors duration-200;
+}

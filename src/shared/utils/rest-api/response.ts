@@ -1,0 +1,118 @@
+import { validationMessage } from '@/shared/constants';
+import { HttpStatusCode } from 'axios';
+import { NextResponse } from 'next/server';
+import { ResponseREST } from './types';
+
+type ResponsePayload<T extends Partial<object> | undefined | void> = ResponseREST<T> &
+  Record<string, unknown>;
+
+export const response = {
+  [HttpStatusCode.Ok]: <T extends Partial<object> | undefined | void>(
+    payload: ResponsePayload<T>,
+  ) => {
+    const { code, message, data, ...rest } = payload;
+    return NextResponse.json({
+      code: code || HttpStatusCode.Ok,
+      message: message || 'Success!',
+      data,
+      ...rest,
+    });
+  },
+  [HttpStatusCode.Created]: <T extends Partial<object> | undefined | void>(
+    payload: ResponsePayload<T>,
+  ) => {
+    const { code, message, data, ...rest } = payload;
+    return NextResponse.json({
+      code: code || HttpStatusCode.Created,
+      message: message || 'Successfully created!',
+      data,
+      ...rest,
+    });
+  },
+  [207]: <T extends Partial<object> | undefined | void>({ code, message, data }: ResponseREST<T>) => {
+    return NextResponse.json(
+      {
+        code: code || 207,
+        message: message || 'Partial success',
+        data,
+      },
+      { status: 207 },
+    );
+  },
+  [HttpStatusCode.BadRequest]: <T extends Partial<object> | undefined | void>({
+    code,
+    message,
+    data,
+  }: ResponseREST<T>) => {
+    return NextResponse.json({
+      code: code || HttpStatusCode.BadRequest,
+      message: message || 'Invalid!',
+      data,
+    });
+  },
+  [HttpStatusCode.Unauthorized]: <T extends Partial<object> | undefined | void>({
+    code,
+    message,
+    data,
+  }: ResponseREST<T>) => {
+    return NextResponse.json({
+      code: code || HttpStatusCode.Unauthorized,
+      message: message || 'Unauthorized!',
+      data,
+    });
+  },
+  [HttpStatusCode.Forbidden]: <T extends Partial<object> | undefined | void>({
+    code,
+    message,
+    data,
+  }: ResponseREST<T>) => {
+    return NextResponse.json({
+      code: code || HttpStatusCode.Forbidden,
+      message: message || 'Failed!',
+      data,
+    });
+  },
+  [HttpStatusCode.NotFound]: <T extends Partial<object> | undefined | void>({
+    code,
+    message,
+    data,
+  }: ResponseREST<T>) => {
+    return NextResponse.json({
+      code: code || HttpStatusCode.NotFound,
+      message: message || 'Not found!',
+      data,
+    });
+  },
+  [HttpStatusCode.InternalServerError]: <T extends Partial<object> | undefined | void>(
+    payload?: ResponseREST<T>,
+  ) => {
+    return NextResponse.json({
+      code: HttpStatusCode.InternalServerError,
+      message: payload?.message || validationMessage()[500],
+    });
+  },
+  handler: <T extends Partial<object> | undefined | void>(payload: ResponseREST<T>) => {
+    const code = payload.code || HttpStatusCode.Ok;
+
+    switch (code) {
+      case HttpStatusCode.Ok:
+        return response[HttpStatusCode.Ok](payload);
+      case HttpStatusCode.Created:
+        return response[HttpStatusCode.Created](payload);
+      case 207:
+        return response[207](payload);
+      case HttpStatusCode.BadRequest:
+        return response[HttpStatusCode.BadRequest](payload);
+      case HttpStatusCode.Unauthorized:
+        return response[HttpStatusCode.Unauthorized](payload);
+      case HttpStatusCode.Forbidden:
+        return response[HttpStatusCode.Forbidden](payload);
+      case HttpStatusCode.NotFound:
+        return response[HttpStatusCode.NotFound](payload);
+      case HttpStatusCode.InternalServerError:
+        return response[HttpStatusCode.InternalServerError](payload);
+      default:
+        return response[HttpStatusCode.BadRequest](payload);
+    }
+  },
+};

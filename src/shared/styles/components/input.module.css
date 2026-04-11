@@ -1,0 +1,170 @@
+@reference "../tailwind.css";
+
+.form-label {
+  @apply text-[14px] text-black;
+}
+
+.sm {
+  @apply !text-sm !h-[36px] !font-medium !tracking-normal;
+}
+
+.md {
+  @apply !py-2 !pr-3 !pl-3 !h-[42px] !text-md !tracking-075;
+}
+
+.lg {
+  @apply !text-lg !p-4 !h-[55px] !tracking-075;
+}
+
+.xl {
+  @apply !text-xl !p-6 !h-[70px] !tracking-075;
+}
+
+.form-input {
+  @apply !bg-white text-black focus:border-primary-default border-gray-300 focus:ring-2 focus:ring-primary-200;
+}
+
+.form-input,
+.form-input-error,
+.form-input-with-icon-right,
+.form-input-with-icon-left,
+.form-input-with-icon-right-error,
+.form-input-with-icon-left-error {
+  @apply z-0 flex w-full rounded-lg border-1 outline-none transition duration-200 ease-in-out;
+}
+
+.form-input-error,
+.form-input-with-icon-right-error,
+.form-input-with-icon-left-error {
+  @apply !border-danger-500 focus:!ring-2 focus:!ring-danger-200;
+}
+
+.form-input-with-icon-left,
+.form-input-with-icon-left-error {
+  padding-left: 3.5rem !important; /* 56px - pl-14 */
+}
+
+.form-input-with-icon-right,
+.form-input-with-icon-right-error {
+  @apply pr-11;
+}
+
+.form-input-right-icon {
+  @apply absolute right-0 top-0 flex h-12 w-14 items-center justify-center;
+}
+
+.form-input-left-icon {
+  @apply absolute left-0 top-0 flex h-12 w-14 items-center justify-center;
+}
+
+.form-input-message {
+  @apply my-1 flex justify-start gap-1 pl-4 text-[14px] text-danger-500;
+}
+
+.form-label-inside {
+  @apply text-lg font-normal absolute tracking-[0.4px] translate-y-[-50%];
+  pointer-events: none;
+  left: 16px;
+  top: 50%;
+  transition: 0.2s ease all;
+}
+
+.form-input-inside:focus {
+  @apply pt-6; /* Default padding for focus */
+  transition: 0.2s ease all;
+}
+
+/* Size-specific padding for floating labels */
+.sm.form-input-inside-active,
+.sm.form-input-inside:focus {
+  @apply !pt-[0.875rem] !pb-[0.5rem];
+}
+
+.md.form-input-inside-active,
+.md.form-input-inside:focus {
+  @apply !pt-[1rem] !pb-[0.625rem];
+}
+
+.lg.form-input-inside-active,
+.lg.form-input-inside:focus {
+  @apply !pt-[2rem] !pb-[1rem];
+}
+
+.xl.form-input-inside-active,
+.xl.form-input-inside:focus {
+  @apply !pt-[1.875rem] !pb-[1.25rem];
+}
+
+/* Base shrunken label style (active or focused) */
+.form-label-inside-active,
+.form-input-inside:focus ~ [class*='form-label-inside'] {
+  @apply absolute translate-y-0 text-[10px] tracking-[0.4px] font-normal left-4;
+  pointer-events: none;
+  transition: 0.2s ease all;
+}
+
+.form-input-inside-active {
+  transition: 0.2s ease all;
+}
+
+/* Size-specific label positioning for floating labels */
+.sm:focus ~ .form-label-inside,
+.sm.input-focused ~ .form-label-inside,
+.sm ~ .form-label-inside-active {
+  @apply !top-[4px] !text-[9px];
+}
+
+.md:focus ~ .form-label-inside,
+.md.input-focused ~ .form-label-inside,
+.md ~ .form-label-inside-active {
+  @apply !top-[5px];
+}
+
+.lg:focus ~ .form-label-inside,
+.lg.input-focused ~ .form-label-inside,
+.lg ~ .form-label-inside-active {
+  @apply !top-[7px];
+}
+
+.xl:focus ~ .form-label-inside,
+.xl.input-focused ~ .form-label-inside,
+.xl ~ .form-label-inside-active {
+  @apply !top-[11px] !text-[12px];
+}
+
+.form-area-label-inside {
+  @apply text-lg font-normal absolute tracking-[0.4px] left-4 top-4;
+  transition: 0.2s ease all;
+}
+
+.form-area-label-inside-active {
+  @apply absolute text-[10px] font-normal left-4 top-2 w-full;
+  transition: 0.2s ease all;
+}
+
+.form-area-input-inside {
+  @apply border-gray-300;
+}
+
+.form-area-input-inside-error {
+  @apply border-danger-500;
+}
+
+.form-area-input-inside:focus {
+  @apply pt-6 border-primary-default;
+  transition: 0.2s ease all;
+}
+
+.form-area-input-inside-active {
+  @apply pt-6 text-[10px] border-gray-300;
+  transition: 0.2s ease all;
+}
+
+.form-area-input-inside-active:focus {
+  @apply border-primary-default;
+}
+
+.form-select-label-inside-focused {
+  @apply text-xs font-normal absolute tracking-[0.4px] left-4 top-4;
+  transition: 0.2s ease all;
+}

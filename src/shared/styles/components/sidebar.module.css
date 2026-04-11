@@ -1,0 +1,100 @@
+@reference "../tailwind.css";
+
+.sidebar {
+  @apply fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-gray-200 bg-white transition-all duration-300;
+}
+
+.sidebar.collapsed {
+  @apply w-[72px];
+}
+
+.sidebar.expanded {
+  @apply w-64;
+}
+
+.header {
+  @apply flex py-2 items-center justify-between px-4;
+}
+
+.logoContainer {
+  @apply flex items-center gap-2;
+}
+
+.logoIcon {
+  @apply flex size-12 items-center justify-center rounded-r-lg bg-[url('/og-image.webp')] bg-cover bg-center bg-no-repeat;
+}
+
+.logoText {
+  @apply flex flex-col gap-0;
+}
+
+.logoTitle {
+  @apply text-lg font-bold text-primary-default;
+}
+
+.logoSubtitle {
+  @apply text-[10px] text-gray-default/80;
+}
+
+.logoCarIcon {
+  @apply h-5 w-5 text-primary-default;
+}
+
+.navigation {
+  @apply flex-1 overflow-y-auto;
+}
+
+.navContainer {
+  @apply flex flex-col gap-1 py-2 px-3;
+}
+
+.navSection {
+  @apply mb-4;
+}
+
+.navSectionAdmin {
+  @apply border-t border-gray-200 pt-4;
+}
+
+.navSectionTitle {
+  @apply mb-2 block px-3 text-[10px] font-semibold uppercase tracking-wider text-dark-darker/50;
+}
+
+.navItem {
+  @apply flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200;
+  @apply hover:bg-gray-lighter/50;
+  @apply text-dark-darker/80;
+  @apply pointer-events-auto;
+}
+
+.navItem.active {
+  @apply bg-secondary-lighter/20 text-secondary font-medium;
+}
+
+.navItemIcon {
+  @apply h-5 w-5 shrink-0;
+}
+
+.navItemIcon.active {
+  @apply text-secondary;
+}
+
+.navItemText {
+  @apply flex-1;
+}
+
+.navItemBadge {
+  @apply flex h-5 min-w-5 items-center justify-center rounded-full bg-danger-default text-[10px] font-bold text-white!;
+}
+
+.toggleContainer {
+  @apply border-t border-gray-200 p-3;
+}
+
+.toggleButton {
+  @apply w-full text-white/60 hover:bg-primary/65 hover:text-white;
+}
+
+.toggleIcon {
+  @apply h-4 w-4;
+}

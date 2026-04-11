@@ -1,0 +1,229 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@theme {
+  --color-primary-50: #fff7ed;
+  --color-primary-100: #feedd6;
+  --color-primary-200: #fcd7ac;
+  --color-primary-300: #fabb77;
+  --color-primary-400: #f79340;
+  --color-primary-500: #f57d28;
+  --color-primary-600: #e55a11;
+  --color-primary-700: #be4410;
+  --color-primary-800: #973615;
+  --color-primary-900: #7a2f14;
+  --color-primary-950: #421508;
+  --color-primary-lighter: var(--color-primary-100);
+  --color-primary-default: var(--color-primary-500);
+
+  --color-secondary-50: #f3f8f8;
+  --color-secondary-100: #e0eded;
+  --color-secondary-200: #c5dcdc;
+  --color-secondary-300: #9cc3c4;
+  --color-secondary-400: #6da1a3;
+  --color-secondary-500: #518689;
+  --color-secondary-600: #466f74;
+  --color-secondary-700: #3c5a5e;
+  --color-secondary-800: #384f52;
+  --color-secondary-900: #324347;
+  --color-secondary-950: #1e2b2e;
+  --color-secondary-lighter: var(--color-secondary-200);
+  --color-secondary-default: var(--color-secondary-700);
+  --color-secondary-darker: var(--color-secondary-900);
+
+  --color-danger-50: #fef2f2;
+  --color-danger-100: #fee2e2;
+  --color-danger-200: #fecaca;
+  --color-danger-300: #fca5a5;
+  --color-danger-400: #f87171;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+  --color-danger-700: #b91c1c;
+  --color-danger-800: #991b1b;
+  --color-danger-900: #7f1d1d;
+  --color-danger-950: #450a0a;
+  --color-danger-lighter: var(--color-danger-100);
+  --color-danger-default: var(--color-danger-500);
+  --color-danger-darker: var(--color-danger-900);
+
+  --color-success-50: #ecfdf8;
+  --color-success-100: #d1faed;
+  --color-success-200: #a7f3db;
+  --color-success-300: #6ee7c1;
+  --color-success-400: #34d3a2;
+  --color-success-500: #10b985;
+  --color-success-600: #059669;
+  --color-success-700: #047854;
+  --color-success-800: #065f43;
+  --color-success-900: #064e38;
+  --color-success-950: #022c1f;
+  --color-success-lighter: var(--color-success-100);
+  --color-success-default: var(--color-success-600);
+  --color-success-darker: var(--color-success-900);
+
+  --color-dark-50: #f8fafc;
+  --color-dark-100: #f1f5f9;
+  --color-dark-200: #e2e8f0;
+  --color-dark-300: #cbd5e1;
+  --color-dark-400: #94a3b8;
+  --color-dark-500: #64748b;
+  --color-dark-600: #475569;
+  --color-dark-700: #334155;
+  --color-dark-800: #1e293b;
+  --color-dark-900: #0f172a;
+  --color-dark-950: #020617;
+  --color-dark-default: #1e293b;
+  --color-dark-lighter: #64748b;
+  --color-dark-darker: #0f172a;
+
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-gray-lighter: #e5e7eb;
+  --color-gray-default: #6b7280;
+  --color-gray-darker: #1f2937;
+
+  --color-info-50: #f0f9ff;
+  --color-info-100: #e0f2fe;
+  --color-info-200: #bae6fd;
+  --color-info-300: #7dd3fc;
+  --color-info-400: #38bdf8;
+  --color-info-500: #0ea5e9;
+  --color-info-600: #0284c7;
+  --color-info-700: #0369a1;
+  --color-info-default: #0ea5e9;
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-gradient-primary: hsl(var(--gradient-primary));
+  --color-gradient-earth: hsl(var(--gradient-earth));
+  --color-gradient-hero: hsl(var(--gradient-hero));
+
+  --color-primary: var(--color-primary-500);
+  --color-primary-foreground: hsl(0, 0%, 100%);
+
+  --color-secondary: var(--color-secondary-700);
+  --color-secondary-foreground: hsl(0, 0%, 100%);
+
+  --color-danger: var(--color-danger-500);
+  --color-danger-foreground: hsl(0, 0%, 100%);
+
+  --color-success: var(--color-success-600);
+  --color-success-foreground: hsl(0, 0%, 100%);
+
+  --font-geist: 'Geist', sans-serif;
+
+  --font-geist-regular: var(--font-geist);
+  --font-geist-italic: var(--font-geist);
+  --font-geist-light: var(--font-geist);
+  --font-geist-medium: var(--font-geist);
+  --font-geist-semibold: var(--font-geist);
+  --font-geist-bold: var(--font-geist);
+  --font-geist-extrabold: var(--font-geist);
+  --font-geist-black: var(--font-geist);
+
+  --text-md: 16px;
+
+  --tracking-075: 0.75px;
+
+  --tw-bg-opacity: 1;
+
+  --color-accent: 174 72% 40%;
+  --color-accent-foreground: 210 40% 98%;
+
+  /* Background */
+  --background: 220 20% 97%;
+  --foreground: 222 47% 11%;
+
+  /* Card */
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+
+  /* Popover */
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+
+  /* Secondary - Slate */
+  --secondary: 215 25% 93%;
+  --secondary-foreground: 222 47% 20%;
+
+  /* Muted */
+  --muted: 220 15% 95%;
+  --muted-foreground: 220 10% 45%;
+
+  /* Destructive */
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 210 40% 98%;
+
+  /* Success */
+  --success: 142 72% 40%;
+  --success-foreground: 210 40% 98%;
+
+  /* Info */
+  --info: 199 89% 48%;
+  --info-foreground: 210 40% 98%;
+
+  /* Border & Input */
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 174 72% 40%;
+
+  --radius: 0.75rem;
+
+  /* Sidebar */
+  --sidebar-background: 222 47% 14%;
+  --sidebar-foreground: 210 40% 96%;
+  --sidebar-primary: 174 72% 45%;
+  --sidebar-primary-foreground: 210 40% 98%;
+  --sidebar-accent: 222 47% 20%;
+  --sidebar-accent-foreground: 210 40% 96%;
+  --sidebar-border: 222 47% 22%;
+  --sidebar-ring: 174 72% 45%;
+
+  /* Custom gradients */
+  --gradient-primary: linear-gradient(135deg, hsl(222, 47%, 20%) 0%, hsl(222, 47%, 30%) 100%);
+  --gradient-accent: linear-gradient(135deg, hsl(174, 72%, 40%) 0%, hsl(174, 72%, 50%) 100%);
+  --gradient-card: linear-gradient(135deg, hsl(0, 0%, 100%) 0%, hsl(220, 20%, 98%) 100%);
+  --gradient-glass: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-glow: 0 0 20px hsl(174, 72%, 40%, 0.3);
+}
+
+@layer components {
+  .icon {
+    @apply cursor-pointer hover:scale-125 transition-all duration-300 ease-in-out;
+  }
+
+  .padding-layout {
+    @apply lg:px-[10%] px-[4.1%];
+  }
+
+  .box-shadow {
+    box-shadow: 0px 0px 4px 0.5px rgba(0, 0, 0, 0.25);
+  }
+
+  .bg-shadow {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1) 100%);
+  }
+
+  .xy-center {
+    @apply flex items-center justify-center;
+  }
+}
