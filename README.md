@@ -1,199 +1,115 @@
-# Car Ordering System Web
+# Badalin Ecosystem - Visa Web
 
-A web-based vehicle ordering management system built with Next.js 15, TypeScript, and Tailwind CSS.
+A robust, premium web application for managing pilgrim visa applications, built with **Next.js 15**, **TypeScript**, and **Tailwind CSS**. This platform provides a seamless experience for pilgrims to manage their family members, upload documents with OCR support, and process visa applications through an interactive multi-stage wizard.
 
-## 🚀 Features
+## ✨ Features
 
-- **Vehicle Management**: Complete vehicle CRUD operations (license plate, brand, model, capacity, etc.)
-- **Admin Dashboard**: Admin interface for managing vehicles and orders
-- **Responsive Design**: Optimal display across various screen sizes
-- **Authentication**: Authentication system using NextAuth.js
-- **Data Table**: Interactive data tables with sorting, filtering, and pagination
-- **Form Validation**: Robust form validation
-- **API Integration**: Backend API integration
+- **Pilgrim Management**: Complete management of family members/pilgrims with validation for required documents (Passport, KTP, Selfie).
+- **Smart OCR Integration**: Automated data extraction from Passports and KTPs to speed up the registration process.
+- **Visa Application Wizard**: A logical, multi-stage flow for submitting visa applications:
+  - **Stage 1**: Pilgrim Selection
+  - **Stage 2**: Logistics (Flights & Hotels)
+  - **Stage 3**: Transportation & Rawdah Schedule
+  - **Stage 4**: Summary & Submission
+- **Real-time Dashboard**: Overview of transaction history, status tracking (Submitted, Processing, Issued, Expired), and personalized greetings.
+- **Internationalization (i18n)**: Full support for **Indonesian (ID)** and **English (EN)** locales using `next-intl`.
+- **Responsive & Premium UI**: Fluid layouts, glassmorphism effects, and smooth animations powered by Framer Motion.
+- **Secure Authentication**: Protected routes and session management for pilgrim accounts.
 
 ## 🛠️ Tech Stack
 
 - **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS 4
-- **UI Components**: Radix UI
+- **Styling**: Tailwind CSS & Lucide Icons
 - **State Management**: TanStack Query (React Query)
-- **Form Handling**: React Hook Form
-- **Authentication**: NextAuth.js
-- **HTTP Client**: Axios
-- **Icons**: Lucide React
-- **Date Handling**: Moment.js
+- **Form Handling**: React Hook Form with Zod Validation
+- **Localization**: next-intl
+- **Animations**: Framer Motion
+- **UI Components**: Shadcn UI inspired custom components (Atoms, Molecules, Organisms)
 
 ## 📁 Project Structure
 
 ```
 src/
-├── app/                    # Next.js App Router
-│   ├── admin/             # Admin pages
-│   │   └── vehicles/      # Vehicle management
-│   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Homepage
-├── components/            # React components
-│   ├── atoms/            # Basic components (Button, Input, etc.)
-│   ├── molecules/        # Combined components
-│   ├── organisms/        # Complex components
-│   └── templates/        # Layout templates
-├── packages/             # Business logic & API
-│   ├── booking/         # Booking module
-│   ├── driver/          # Driver module
-│   ├── trip/            # Trip module
-│   └── vehicle/         # Vehicle module
-└── shared/              # Utilities & constants
-    ├── constants/       # Application constants
-    ├── context/         # React Context
-    ├── hooks/           # Custom hooks
-    ├── providers/       # Providers
-    ├── styles/          # Global styles
-    └── utils/           # Helper functions
+├── app/                    # Next.js App Router (Locales, Auth, Dashboard)
+├── components/            # Atomic Design Pattern
+│   ├── atoms/            # Basic UI components (Button, Input, Skeleton)
+│   ├── molecules/        # Combined atoms (DatePicker, Modal, HeaderPage)
+│   ├── organisms/        # Domain-specific complex components (Wizard, Card, List)
+│   └── templates/        # Page layouts (AppLayout)
+├── packages/             # Domain Logic & Repository Pattern
+│   ├── pilgrim/          # Pilgrim-specific logic
+│   │   ├── management/   # Family member management
+│   │   ├── transaction/  # Visa application & history
+│   │   └── dashboard/    # Dashboard statistics & data
+├── shared/              # Shared utilities, hooks, and constants
+│   ├── constants/       # ROUTES, API Enums
+│   ├── hooks/           # useAuth, useMobile, etc.
+│   └── utils/           # formatters, validators, rest-api client
+└── messages/             # i18n JSON translation files (en.json, id.json)
 ```
 
 ## 🚦 Getting Started
 
 ### Prerequisites
 
-- Node.js 20.x or higher
-- npm, yarn, pnpm, or bun
+- **Node.js**: 20.x or higher
+- **Package Manager**: npm, yarn, pnpm, or bun
 
 ### Installation
 
-1. Clone repository:
+1.  **Clone the repository**:
+    ```bash
+    git checkout <repository-url>
+    cd badalin-visa-web
+    ```
 
-```bash
-git clone <repository-url>
-cd car-ordering-system-web
-```
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
 
-2. Install dependencies:
+3.  **Setup environment variables**:
+    ```bash
+    cp .env.example .env
+    ```
+    Adjust the `.env` configuration:
+    ```env
+    PORT=4011
+    NODE_ENV=development
+    BASE_URL=http://localhost:4011
+    BASE_API_URL=http://localhost:3002
+    NEXTAUTH_URL=http://localhost:4011
+    NEXTAUTH_SECRET=your-secret-key
+    ```
 
-```bash
-npm install
-# or
-yarn install
-# or
-pnpm install
-```
-
-3. Setup environment variables:
-
-```bash
-cp .env.example .env
-```
-
-Edit the `.env` file and adjust according to your configuration:
-
-```env
-PORT=4009
-NODE_ENV=development
-BASE_URL=http://localhost:4009
-BASE_API_URL=http://localhost:3002
-NEXTAUTH_URL=http://localhost:4009
-NEXTAUTH_SECRET=your-secret-key
-```
-
-4. Run development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
-
-5. Open browser and access [http://localhost:4009](http://localhost:4009)
+4.  **Run development server**:
+    ```bash
+    npm run dev
+    ```
+    Access the app at [http://localhost:4011](http://localhost:4011)
 
 ## 📜 Available Scripts
 
-- `npm run dev` - Run development server on port 4009
-- `npm run build` - Build application for production
-- `npm start` - Run production server
-- `npm run lint` - Run ESLint
-- `npm run format` - Format code with Prettier
-- `npm run validate` - Code validation (prettier + lint + type check)
-- `npm run check:types` - Type checking with TypeScript
+- `npm run dev`: Starts development server on port 4011
+- `npm run build`: Generates production build
+- `npm run start`: Starts production server
+- `npm run lint`: Performs ESLint check
+- `npm run format`: Formats code using Prettier
+- `npm run validate`: Full check (Prettier + Lint + Type Check)
 
-## 🎨 Component Architecture
+## 🌍 Localization
 
-This project uses Atomic Design Pattern:
+Current support:
+- 🇮🇩 **Indonesian** (Default)
+- 🇺🇸 **English**
 
-- **Atoms**: Basic UI components (Button, Input, Select, etc.)
-- **Molecules**: Combination of atoms (InputText, InputSelect, etc.)
-- **Organisms**: Complex components (VehicleForm, DataTable, etc.)
-- **Templates**: Page layout and structure
-
-## 🔐 Authentication
-
-The application uses NextAuth.js for authentication with support for:
-
-- Google OAuth
-- Session management
-- Protected routes
-
-## 🌐 API Integration
-
-API endpoints are configured through the `BASE_API_URL` environment variable. API client structure is available in the `src/packages/` folder.
-
-## 📱 Responsive Design
-
-Fully responsive application with breakpoints:
-
-- Mobile: < 640px
-- Tablet: 640px - 1024px
-- Desktop: > 1024px
-
-## 🧪 Code Quality
-
-- **ESLint**: Linting with Next.js configuration
-- **Prettier**: Code formatting
-- **TypeScript**: Type safety
-- **Husky**: Pre-commit hooks (optional)
-
-## 📦 Build & Deployment
-
-### Build for Production
-
-```bash
-npm run build
-```
-
-### Run Production Build
-
-```bash
-npm start
-```
-
-### Deployment
-
-The application can be deployed to:
-
-- Vercel (recommended for Next.js)
-- AWS
-- Google Cloud Platform
-- Heroku
-- Docker
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Create a Pull Request
+Translations are managed in `messages/{locale}.json`. Simply add new keys to both files to support new localized strings.
 
 ## 📄 License
 
-Private - All rights reserved
+Private - Badalin Ecosystem All Rights Reserved
 
 ## 👥 Team
 
-Developed by Car Ordering System Team
-
-## 📞 Support
-
-For questions or support, please contact the development team.
+Developed by **Badalin Ecosystem Development Team**
