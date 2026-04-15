@@ -56,6 +56,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProviderLoginPage({ params }: { params: { slug: string } }) {
+export default async function ProviderLoginPage({ params }: { params: Promise<{ slug: string }> }) {
+  await params; // Ensure params are resolved though not directly used here
   return <ProviderLoginView />;
 }
