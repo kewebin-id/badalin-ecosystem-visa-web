@@ -37,6 +37,19 @@ export const endpoints = {
     },
     upload: `${PrefixEndpoint.V1}/upload`,
   },
+  provider: {
+    auth: {
+      verifyToken: '/api/v1/p/auth/verify-token',
+      register: '/api/v1/p/auth/register',
+      login: '/api/v1/p/auth/login',
+      forgotPassword: '/api/v1/p/auth/forgot-password',
+      resetPassword: '/api/v1/p/auth/reset-password',
+    },
+    agency: {
+      base: '/api/v1/p/agency',
+      checkSlug: '/api/v1/p/agency/check-slug',
+    },
+  },
   nextApi: {
     auth: {
       checkUser: '/api/auth/check-user',
@@ -45,6 +58,19 @@ export const endpoints = {
       socialAuth: '/api/auth/social-auth',
       forgotPassword: '/api/auth/forgot-password',
       resetPassword: '/api/auth/reset-password',
+    },
+    provider: {
+      auth: {
+        verifyToken: '/api/provider/auth/verify-token',
+        register: '/api/provider/auth/register',
+        login: '/api/provider/auth/login',
+        forgotPassword: '/api/provider/auth/forgot-password',
+        resetPassword: '/api/provider/auth/reset-password',
+      },
+      agency: {
+        base: '/api/provider/agency',
+        checkSlug: '/api/provider/agency/check-slug',
+      },
     },
     visa: {
       dashboard: {

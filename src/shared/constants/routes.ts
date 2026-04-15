@@ -17,8 +17,14 @@ export const ROUTES = {
     },
   },
   PROVIDER: {
-    DASHBOARD: '/provider/dashboard',
-    SUBMISSIONS: '/provider/submissions',
+    DASHBOARD: (slug: string = 'p') => `/${slug}/dashboard`,
+    SUBMISSIONS: (slug: string = 'p') => `/${slug}/submissions`,
+    AUTH: {
+      LOGIN: (slug: string = 'p') => `/${slug}/auth/login`,
+      FORGOT_PASSWORD: (slug: string = 'p') => `/${slug}/auth/forgot_password`,
+      RESET_PASSWORD: (slug: string = 'p') => `/${slug}/auth/reset_password`,
+      SETUP: (slug: string = 'p') => `/${slug}/auth/setup`,
+    },
   },
   ADMIN: {
     CONSOLE: '/console',
