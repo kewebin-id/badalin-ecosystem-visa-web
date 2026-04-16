@@ -153,6 +153,7 @@ export const LoginContent: FC<{ providerSlug?: string }> = () => {
 
           <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
             <InputText
+              useLabelInside
               label={t('identifier')}
               name="identifier"
               type="text"
@@ -161,10 +162,12 @@ export const LoginContent: FC<{ providerSlug?: string }> = () => {
               className="rounded-xl border-gray-200 focus:ring-primary-500 bg-white"
               disabled={step !== 'input' || isLoading}
               errorMessage={errors.identifier?.message}
+              helperText={t('identifierPlaceholder')}
             />
 
             {step === 'register' && (
               <InputText
+                useLabelInside
                 label={t('name')}
                 name="name"
                 type="text"
@@ -180,6 +183,7 @@ export const LoginContent: FC<{ providerSlug?: string }> = () => {
             {(step === 'login' || step === 'register') && (
               <>
                 <InputText
+                  useLabelInside
                   label={t('password')}
                   name="password"
                   type={showPassword ? 'text' : 'password'}
@@ -212,6 +216,7 @@ export const LoginContent: FC<{ providerSlug?: string }> = () => {
 
                 {step === 'register' && (
                   <InputText
+                    useLabelInside
                     label={tr('confirmPassword') || 'Confirm Password'}
                     name="confirmPassword"
                     type={showConfirmPassword ? 'text' : 'password'}

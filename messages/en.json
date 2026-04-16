@@ -2,7 +2,7 @@
   "Login": {
     "title": "Sign in to your account",
     "identifier": "Email or WhatsApp Number",
-    "identifierPlaceholder": "email@example.com or 08123456789",
+    "identifierPlaceholder": "Example: email@example.com or 08123456789",
     "name": "Full Name",
     "namePlaceholder": "Full name",
     "nameHelper": "*As per Passport",

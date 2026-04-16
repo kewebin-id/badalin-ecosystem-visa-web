@@ -11,6 +11,7 @@ import * as z from 'zod';
 import {
   ICreateMemberRequest,
   IFamilyMember,
+  INusukCompatibility,
   IPaginationParams,
   IUpdateMemberRequest,
   TRelation,
@@ -116,7 +117,11 @@ export const useManagementController = () => {
 
   const useProcessOcr = (
     onOcrSuccess: (
-      data: Partial<IFamilyMember> & { confidence: number; publicUrl?: string },
+      data: Partial<IFamilyMember> & {
+        confidence: number;
+        publicUrl?: string;
+        nusuk_compatibility?: INusukCompatibility;
+      },
     ) => void,
   ) =>
     useMutation({

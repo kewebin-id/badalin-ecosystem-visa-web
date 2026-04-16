@@ -10,8 +10,10 @@ import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
-import { RELATIONS, TRelation } from '../../domain/member';
+import { RELATIONS, TRelation, INusukCompatibility } from '../../domain/member';
 import { TManagementForm, useManagementController, useManagementForm } from '../controller';
+import { cn } from '@/shared/utils/merge-class';
+import { NusukIndicator } from '../components/nusuk-indicator';
 
 const FormSkeleton = () => (
   <div className="mx-auto space-y-8 pb-20 animate-in fade-in duration-500">
@@ -63,7 +65,15 @@ export const MemberFormView = () => {
     setValue,
     reset,
     formState: { errors, isValid },
+    watch,
   } = form;
+
+  const [nusukCompatibility, setNusukCompatibility] = useState<{
+    passport?: INusukCompatibility;
+    ktp?: INusukCompatibility;
+  }>({});
+  
+  const [isWarningConfirmed, setIsWarningConfirmed] = useState<boolean>(false);
 
   useEffect(() => {
     if (initialData) {
@@ -143,6 +153,14 @@ export const MemberFormView = () => {
       }
     }
 
+    if (data.nusuk_compatibility) {
+      setNusukCompatibility(prev => ({
+        ...prev,
+        [ocrMutation.variables?.type === 'passport' ? 'passport' : 'ktp']: data.nusuk_compatibility
+      }));
+      setIsWarningConfirmed(false);
+    }
+
     const newAutoDetected = { ...isAutoDetected };
     fields.forEach((f) => (newAutoDetected[f] = true));
     setIsAutoDetected(newAutoDetected);
@@ -175,6 +193,7 @@ export const MemberFormView = () => {
       createMutation.mutate(payload);
     }
   };
+
 
   const selfieValue = useMemo<UploadFile[]>(
     () => (selfiePreview ? [{ name: 'selfie.jpg', base64: selfiePreview }] : []),
@@ -252,44 +271,68 @@ export const MemberFormView = () => {
               {t('documentSection')}
             </h3>
             <div className="grid md:grid-cols-2 gap-6">
-              <InputFile
-                allowedTypes={['.png', '.jpeg', '.jpg', '.webp']}
-                label={t('passportPhoto')}
-                maxFiles={1}
-                isDragDrop
-                value={passportValue}
-                onChange={(files, rawFiles) => {
-                  const file = files[0];
-                  const rawFile = rawFiles?.[0];
-                  setPassportPreview(file?.base64);
-                  setValue('passportUrl', file?.base64);
-                  if (rawFile) {
-                    ocrMutation.mutate({ file: rawFile, type: 'passport' });
-                  }
-                }}
-                disabled={ocrMutation.isPending && ocrMutation.variables?.type === 'passport'}
-                isReadingOcr={ocrMutation.isPending && ocrMutation.variables?.type === 'passport'}
-                isTouched={true}
-              />
-              <InputFile
-                label={t('ktpPhoto')}
-                maxFiles={1}
-                allowedTypes={['.png', '.jpeg', '.jpg', '.webp']}
-                isDragDrop
-                value={ktpValue}
-                onChange={(files, rawFiles) => {
-                  const file = files[0];
-                  const rawFile = rawFiles?.[0];
-                  setKtpPreview(file?.base64);
-                  setValue('ktpUrl', file?.base64);
-                  if (rawFile) {
-                    ocrMutation.mutate({ file: rawFile, type: 'ktp' });
-                  }
-                }}
-                disabled={ocrMutation.isPending && ocrMutation.variables?.type === 'ktp'}
-                isReadingOcr={ocrMutation.isPending && ocrMutation.variables?.type === 'ktp'}
-                isTouched={true}
-              />
+              <div className="flex flex-col gap-2">
+                <InputFile
+                  allowedTypes={['.png', '.jpeg', '.jpg', '.webp']}
+                  label={t('passportPhoto')}
+                  maxFiles={1}
+                  isDragDrop
+                  value={passportValue}
+                  onChange={(files, rawFiles) => {
+                    const file = files[0];
+                    const rawFile = rawFiles?.[0];
+                    setPassportPreview(file?.base64);
+                    setValue('passportUrl', file?.base64);
+                    if (rawFile) {
+                      ocrMutation.mutate({ file: rawFile, type: 'passport' });
+                    }
+                  }}
+                  disabled={ocrMutation.isPending && ocrMutation.variables?.type === 'passport'}
+                  isReadingOcr={ocrMutation.isPending && ocrMutation.variables?.type === 'passport'}
+                  isTouched={true}
+                />
+                <NusukIndicator 
+                  compatibility={nusukCompatibility.passport} 
+                  isWarningConfirmed={isWarningConfirmed}
+                  onWarningConfirm={setIsWarningConfirmed}
+                  onRetake={() => {
+                    setPassportPreview(undefined);
+                    setValue('passportUrl', '');
+                    setNusukCompatibility(prev => ({ ...prev, passport: undefined }));
+                  }}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <InputFile
+                  label={t('ktpPhoto')}
+                  maxFiles={1}
+                  allowedTypes={['.png', '.jpeg', '.jpg', '.webp']}
+                  isDragDrop
+                  value={ktpValue}
+                  onChange={(files, rawFiles) => {
+                    const file = files[0];
+                    const rawFile = rawFiles?.[0];
+                    setKtpPreview(file?.base64);
+                    setValue('ktpUrl', file?.base64);
+                    if (rawFile) {
+                      ocrMutation.mutate({ file: rawFile, type: 'ktp' });
+                    }
+                  }}
+                  disabled={ocrMutation.isPending && ocrMutation.variables?.type === 'ktp'}
+                  isReadingOcr={ocrMutation.isPending && ocrMutation.variables?.type === 'ktp'}
+                  isTouched={true}
+                />
+                <NusukIndicator 
+                  compatibility={nusukCompatibility.ktp} 
+                  isWarningConfirmed={isWarningConfirmed}
+                  onWarningConfirm={setIsWarningConfirmed}
+                  onRetake={() => {
+                    setKtpPreview(undefined);
+                    setValue('ktpUrl', '');
+                    setNusukCompatibility(prev => ({ ...prev, ktp: undefined }));
+                  }}
+                />
+              </div>
             </div>
           </section>
 
@@ -424,7 +467,13 @@ export const MemberFormView = () => {
             </Button>
             <Button
               type="submit"
-              disabled={!isValid}
+              disabled={
+                !isValid || 
+                (nusukCompatibility.passport?.status === 'REJECTED') || 
+                (nusukCompatibility.ktp?.status === 'REJECTED') ||
+                (nusukCompatibility.passport?.status === 'WARNING' && !isWarningConfirmed) ||
+                (nusukCompatibility.ktp?.status === 'WARNING' && !isWarningConfirmed)
+              }
               isSubmitting={createMutation.isPending || updateMutation.isPending}
             >
               {id ? t('saveChanges') : t('addMember')}

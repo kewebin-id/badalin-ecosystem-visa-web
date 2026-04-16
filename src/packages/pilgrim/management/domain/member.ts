@@ -1,12 +1,6 @@
 export type FamilyMemberStatus = 'Lengkap' | 'Belum Lengkap' | 'Non-Aktif';
 
-export type TRelation =
-  | 'SELF'
-  | 'SPOUSE'
-  | 'FATHER'
-  | 'MOTHER'
-  | 'CHILD'
-  | 'SIBLING';
+export type TRelation = 'SELF' | 'SPOUSE' | 'FATHER' | 'MOTHER' | 'CHILD' | 'SIBLING';
 
 export interface IFamilyMember {
   id: string;
@@ -52,12 +46,20 @@ export interface IUpdateMemberRequest extends Partial<ICreateMemberRequest> {
   id: string;
 }
 
+export interface INusukCompatibility {
+  score: number;
+  status: 'SAFE' | 'WARNING' | 'REJECTED';
+  glare_detected: boolean;
+  message: string;
+}
+
 export interface IOCRPasportData {
   fullName: string;
   passportNumber: string;
   birthDate: string;
   passportExpiry: string;
   confidence: number;
+  nusuk_compatibility?: INusukCompatibility;
 }
 
 export interface IOCRIDCardData {
@@ -66,6 +68,7 @@ export interface IOCRIDCardData {
   gender: string;
   maritalStatus: string;
   confidence: number;
+  nusuk_compatibility?: INusukCompatibility;
 }
 
 export interface IUploadResponse {
@@ -113,7 +116,7 @@ export interface IApiCreateMemberRequest {
   fullName: string;
   passportNumber: string;
   passportExpiry: string;
-  dob: string;
+  birthDate: string;
   nik: string;
   gender: 'Male' | 'Female';
   maritalStatus: string;
@@ -129,7 +132,7 @@ export interface IApiUpdateMemberRequest {
   fullName?: string;
   passportNumber?: string;
   passportExpiry?: string;
-  dob?: string;
+  birthDate?: string;
   nik?: string;
   gender?: 'Male' | 'Female';
   maritalStatus?: string;
@@ -139,13 +142,6 @@ export interface IApiUpdateMemberRequest {
   passportUrl?: string;
 }
 
-export const RELATIONS: TRelation[] = [
-  'SELF',
-  'SPOUSE',
-  'FATHER',
-  'MOTHER',
-  'CHILD',
-  'SIBLING',
-];
+export const RELATIONS: TRelation[] = ['SELF', 'SPOUSE', 'FATHER', 'MOTHER', 'CHILD', 'SIBLING'];
 
 export const MARITAL_STATUSES = ['Belum Menikah', 'Menikah', 'Cerai Hidup', 'Cerai Mati'];

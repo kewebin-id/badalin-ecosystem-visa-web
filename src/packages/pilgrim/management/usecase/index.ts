@@ -244,11 +244,15 @@ export class ManagementUseCase implements IManagementUseCase {
         fullName: d.fullName,
         passportNumber: d.passportNumber,
         passportExpiry: d.passportExpiry,
-        dob: d.dob,
+        birthDate: d.dob,
         nik: d.nik,
         gender: d.gender,
-        maritalStatus: d.maritalStatus ? MARITAL_STATUS_MAP[d.maritalStatus] || d.maritalStatus : undefined,
-        relation: d.relation ? REVERSE_RELATION_MAP[d.relation as TRelation] || d.relation : undefined,
+        maritalStatus: d.maritalStatus
+          ? MARITAL_STATUS_MAP[d.maritalStatus] || d.maritalStatus
+          : undefined,
+        relation: d.relation
+          ? REVERSE_RELATION_MAP[d.relation as TRelation] || d.relation
+          : undefined,
         photoUrl: d.selfieUrl,
         ktpUrl: d.ktpUrl,
         passportUrl: d.passportUrl,
@@ -259,7 +263,7 @@ export class ManagementUseCase implements IManagementUseCase {
         fullName: d.fullName,
         passportNumber: d.passportNumber,
         passportExpiry: d.passportExpiry,
-        dob: d.dob,
+        birthDate: d.dob,
         nik: d.nik,
         gender: d.gender,
         maritalStatus: MARITAL_STATUS_MAP[d.maritalStatus] || d.maritalStatus,

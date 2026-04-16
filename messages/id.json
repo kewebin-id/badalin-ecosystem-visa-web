@@ -2,7 +2,7 @@
   "Login": {
     "title": "Masuk ke Akun Anda",
     "identifier": "Email atau Nomor WhatsApp",
-    "identifierPlaceholder": "email@contoh.com atau 08123456789",
+    "identifierPlaceholder": "Contoh: email@contoh.com atau 08123456789",
     "name": "Nama Lengkap",
     "namePlaceholder": "Nama lengkap",
     "nameHelper": "*Sesuai Paspor",

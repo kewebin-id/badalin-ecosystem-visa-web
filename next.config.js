@@ -20,6 +20,11 @@ module.exports = withNextIntl(
           hostname: 'ipdbnagmooxlihfeoima.supabase.co',
           pathname: '/**',
         },
+        {
+          protocol: 'https',
+          hostname: 'mkznrlyszlhmxglvdxcu.supabase.co',
+          pathname: '/**',
+        },
       ],
       unoptimized: false,
     },
