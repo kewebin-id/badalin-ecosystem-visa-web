@@ -261,7 +261,7 @@ const InputTextRoot = ({
           {confidence !== undefined && (
             <div className="flex items-center gap-1 text-[10px] font-medium text-success-600">
               <Check className="size-3" />
-              {confidence}% confidence
+              {confidence?.toFixed(2)}% confidence
             </div>
           )}
         </div>

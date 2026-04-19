@@ -3,6 +3,7 @@
 import { Button } from '@/components/atoms';
 import { Skeleton } from '@/components/atoms/skeleton';
 import { DatePicker, HeaderPageContent } from '@/components/molecules';
+import { DialogDrawer } from '@/components/molecules/dialog-drawer';
 import { InputFile, UploadFile } from '@/components/molecules/input/file';
 import { InputSelect } from '@/components/molecules/input/select';
 import { InputText } from '@/components/molecules/input/text';
@@ -10,10 +11,9 @@ import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
-import { RELATIONS, TRelation, INusukCompatibility } from '../../domain/member';
+import { INusukCompatibility, RELATIONS, TRelation } from '../../domain/member';
+import { DocumentUploadField } from '../components/document-upload-field';
 import { TManagementForm, useManagementController, useManagementForm } from '../controller';
-import { cn } from '@/shared/utils/merge-class';
-import { NusukIndicator } from '../components/nusuk-indicator';
 
 const FormSkeleton = () => (
   <div className="mx-auto space-y-8 pb-20 animate-in fade-in duration-500">
@@ -72,8 +72,9 @@ export const MemberFormView = () => {
     passport?: INusukCompatibility;
     ktp?: INusukCompatibility;
   }>({});
-  
+
   const [isWarningConfirmed, setIsWarningConfirmed] = useState<boolean>(false);
+  const [rejectedDialogMessage, setRejectedDialogMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (initialData) {
@@ -154,11 +155,15 @@ export const MemberFormView = () => {
     }
 
     if (data.nusuk_compatibility) {
-      setNusukCompatibility(prev => ({
+      setNusukCompatibility((prev) => ({
         ...prev,
-        [ocrMutation.variables?.type === 'passport' ? 'passport' : 'ktp']: data.nusuk_compatibility
+        [ocrMutation.variables?.type === 'passport' ? 'passport' : 'ktp']: data.nusuk_compatibility,
       }));
       setIsWarningConfirmed(false);
+
+      if (data.nusuk_compatibility.status === 'REJECTED') {
+        setRejectedDialogMessage(data.nusuk_compatibility.message);
+      }
     }
 
     const newAutoDetected = { ...isAutoDetected };
@@ -194,7 +199,6 @@ export const MemberFormView = () => {
     }
   };
 
-
   const selfieValue = useMemo<UploadFile[]>(
     () => (selfiePreview ? [{ name: 'selfie.jpg', base64: selfiePreview }] : []),
     [selfiePreview],
@@ -219,20 +223,20 @@ export const MemberFormView = () => {
   const relationOptions = useMemo(
     () =>
       RELATIONS.map((r) => ({
-        label: r.charAt(0) + r.slice(1).toLowerCase().replace('_', ' '),
+        label: t(`relations.${r}`),
         value: r,
       })),
-    [],
+    [t],
   );
 
   const maritalStatusOptions = useMemo(
     () => [
-      { label: 'Belum Menikah', value: 'Belum Menikah' },
-      { label: 'Menikah', value: 'Menikah' },
-      { label: 'Cerai Hidup', value: 'Cerai Hidup' },
-      { label: 'Cerai Mati', value: 'Cerai Mati' },
+      { label: t('maritalStatuses.Single'), value: 'Single' },
+      { label: t('maritalStatuses.Married'), value: 'Married' },
+      { label: t('maritalStatuses.Divorced'), value: 'Divorced' },
+      { label: t('maritalStatuses.Widowed'), value: 'Widowed' },
     ],
-    [],
+    [t],
   );
 
   if (id && isLoadingDetail) {
@@ -246,6 +250,25 @@ export const MemberFormView = () => {
         subtitle={t('formSubtitle')}
         onBack={() => router.back()}
       />
+
+      <DialogDrawer
+        open={!!rejectedDialogMessage}
+        setOpen={(open) => !open && setRejectedDialogMessage(null)}
+        title={t('nusuk.validationFailed')}
+        description={rejectedDialogMessage || ''}
+        onSubmit={() => setRejectedDialogMessage(null)}
+        submitButton={t('nusuk.iUnderstand')}
+      >
+        <div className="text-sm text-gray-700">
+          {t('nusuk.validationDesc')}
+          <ul className="list-disc ml-5 mt-2 space-y-1">
+            <li>{t('nusuk.validationList1')}</li>
+            <li>{t('nusuk.validationList2')}</li>
+            <li>{t('nusuk.validationList3')}</li>
+            <li>{t('nusuk.validationList4')}</li>
+          </ul>
+        </div>
+      </DialogDrawer>
 
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
@@ -271,68 +294,54 @@ export const MemberFormView = () => {
               {t('documentSection')}
             </h3>
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="flex flex-col gap-2">
-                <InputFile
-                  allowedTypes={['.png', '.jpeg', '.jpg', '.webp']}
-                  label={t('passportPhoto')}
-                  maxFiles={1}
-                  isDragDrop
-                  value={passportValue}
-                  onChange={(files, rawFiles) => {
-                    const file = files[0];
-                    const rawFile = rawFiles?.[0];
-                    setPassportPreview(file?.base64);
-                    setValue('passportUrl', file?.base64);
-                    if (rawFile) {
-                      ocrMutation.mutate({ file: rawFile, type: 'passport' });
-                    }
-                  }}
-                  disabled={ocrMutation.isPending && ocrMutation.variables?.type === 'passport'}
-                  isReadingOcr={ocrMutation.isPending && ocrMutation.variables?.type === 'passport'}
-                  isTouched={true}
-                />
-                <NusukIndicator 
-                  compatibility={nusukCompatibility.passport} 
-                  isWarningConfirmed={isWarningConfirmed}
-                  onWarningConfirm={setIsWarningConfirmed}
-                  onRetake={() => {
-                    setPassportPreview(undefined);
-                    setValue('passportUrl', '');
-                    setNusukCompatibility(prev => ({ ...prev, passport: undefined }));
-                  }}
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <InputFile
-                  label={t('ktpPhoto')}
-                  maxFiles={1}
-                  allowedTypes={['.png', '.jpeg', '.jpg', '.webp']}
-                  isDragDrop
-                  value={ktpValue}
-                  onChange={(files, rawFiles) => {
-                    const file = files[0];
-                    const rawFile = rawFiles?.[0];
-                    setKtpPreview(file?.base64);
-                    setValue('ktpUrl', file?.base64);
-                    if (rawFile) {
-                      ocrMutation.mutate({ file: rawFile, type: 'ktp' });
-                    }
-                  }}
-                  disabled={ocrMutation.isPending && ocrMutation.variables?.type === 'ktp'}
-                  isReadingOcr={ocrMutation.isPending && ocrMutation.variables?.type === 'ktp'}
-                  isTouched={true}
-                />
-                <NusukIndicator 
-                  compatibility={nusukCompatibility.ktp} 
-                  isWarningConfirmed={isWarningConfirmed}
-                  onWarningConfirm={setIsWarningConfirmed}
-                  onRetake={() => {
-                    setKtpPreview(undefined);
-                    setValue('ktpUrl', '');
-                    setNusukCompatibility(prev => ({ ...prev, ktp: undefined }));
-                  }}
-                />
-              </div>
+              <DocumentUploadField
+                label={t('passportPhoto')}
+                type="passport"
+                value={passportPreview}
+                onChange={(files, rawFiles) => {
+                  const file = files[0];
+                  const rawFile = rawFiles?.[0];
+                  setPassportPreview(file?.base64);
+                  setValue('passportUrl', file?.base64);
+                  if (rawFile) {
+                    ocrMutation.mutate({ file: rawFile, type: 'passport' });
+                  }
+                }}
+                onRetake={() => {
+                  setPassportPreview(undefined);
+                  setValue('passportUrl', '');
+                  setNusukCompatibility((prev) => ({ ...prev, passport: undefined }));
+                }}
+                compatibility={nusukCompatibility.passport}
+                isReadingOcr={ocrMutation.isPending && ocrMutation.variables?.type === 'passport'}
+                isWarningConfirmed={isWarningConfirmed}
+                onWarningConfirm={setIsWarningConfirmed}
+                disabled={ocrMutation.isPending && ocrMutation.variables?.type === 'passport'}
+              />
+              <DocumentUploadField
+                label={t('ktpPhoto')}
+                type="ktp"
+                value={ktpPreview}
+                onChange={(files, rawFiles) => {
+                  const file = files[0];
+                  const rawFile = rawFiles?.[0];
+                  setKtpPreview(file?.base64);
+                  setValue('ktpUrl', file?.base64);
+                  if (rawFile) {
+                    ocrMutation.mutate({ file: rawFile, type: 'ktp' });
+                  }
+                }}
+                onRetake={() => {
+                  setKtpPreview(undefined);
+                  setValue('ktpUrl', '');
+                  setNusukCompatibility((prev) => ({ ...prev, ktp: undefined }));
+                }}
+                compatibility={nusukCompatibility.ktp}
+                isReadingOcr={ocrMutation.isPending && ocrMutation.variables?.type === 'ktp'}
+                isWarningConfirmed={isWarningConfirmed}
+                onWarningConfirm={setIsWarningConfirmed}
+                disabled={ocrMutation.isPending && ocrMutation.variables?.type === 'ktp'}
+              />
             </div>
           </section>
 
@@ -468,9 +477,9 @@ export const MemberFormView = () => {
             <Button
               type="submit"
               disabled={
-                !isValid || 
-                (nusukCompatibility.passport?.status === 'REJECTED') || 
-                (nusukCompatibility.ktp?.status === 'REJECTED') ||
+                !isValid ||
+                nusukCompatibility.passport?.status === 'REJECTED' ||
+                nusukCompatibility.ktp?.status === 'REJECTED' ||
                 (nusukCompatibility.passport?.status === 'WARNING' && !isWarningConfirmed) ||
                 (nusukCompatibility.ktp?.status === 'WARNING' && !isWarningConfirmed)
               }

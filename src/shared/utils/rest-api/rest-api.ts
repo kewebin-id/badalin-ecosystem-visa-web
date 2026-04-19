@@ -17,9 +17,9 @@ http.interceptors.response.use(
   (error) => {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status;
-      const data = error.response?.data as ResponseREST<any>;
+      const data = error.response?.data;
 
-      if (status === 401 || data?.code === 401 || data?.code === '401') {
+      if (status === HttpStatusCode.Unauthorized || data?.code === HttpStatusCode.Unauthorized) {
         if (typeof window !== 'undefined') {
           signOut({ callbackUrl: '/', redirect: true });
         }
@@ -37,7 +37,7 @@ export class RestAPI implements RequestAPI {
 
   constructor(httpInstance?: AxiosInstance, token?: string, userId?: string) {
     this.http = httpInstance ?? this.httpDefault;
-    
+
     if (token) {
       this.http.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
@@ -51,10 +51,8 @@ export class RestAPI implements RequestAPI {
 
     const isServer = typeof window === 'undefined';
     const serverBaseURL = process.env.NEXTAUTH_URL || process.env.BASE_URL || '';
-    
-    return isNextApi 
-      ? (isServer ? serverBaseURL : '') 
-      : (process.env.BASE_API_URL || '');
+
+    return isNextApi ? (isServer ? serverBaseURL : '') : process.env.BASE_API_URL || '';
   }
 
   async get<T extends Partial<object> | undefined | void>({
@@ -79,6 +77,15 @@ export class RestAPI implements RequestAPI {
         baseURL: this.getBaseURL(isNextApi, config),
       });
 
+      if (
+        res.data?.code === HttpStatusCode.Unauthorized ||
+        res.status === HttpStatusCode.Unauthorized
+      ) {
+        if (typeof window !== 'undefined') {
+          signOut({ callbackUrl: '/', redirect: true });
+        }
+      }
+
       return res.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -86,10 +93,18 @@ export class RestAPI implements RequestAPI {
         if (error?.code === 'ECONNABORTED') {
           return { code: 408, message: validationMessage()[408]() };
         }
-        return { 
-          code: errData?.code || error.response?.status || 500, 
+        if (
+          errData?.code === HttpStatusCode.Unauthorized ||
+          error.response?.status === HttpStatusCode.Unauthorized
+        ) {
+          if (typeof window !== 'undefined') {
+            signOut({ callbackUrl: '/', redirect: true });
+          }
+        }
+        return {
+          code: errData?.code || error.response?.status || 500,
           message: errData?.message || error.message || validationMessage()[500](),
-          data: errData?.data
+          data: errData?.data,
         };
       }
       return { code: 500, message: validationMessage()[500]() };
@@ -129,6 +144,13 @@ export class RestAPI implements RequestAPI {
 
         if (res.status === HttpStatusCode.Ok || res.status === HttpStatusCode.Created) {
           return res.data;
+        } else if (
+          res.data?.code === HttpStatusCode.Unauthorized ||
+          res.status === HttpStatusCode.Unauthorized
+        ) {
+          if (typeof window !== 'undefined') {
+            signOut({ callbackUrl: '/', redirect: true });
+          }
         }
 
         return { ...res.data, code: res.status || 500 };
@@ -140,6 +162,14 @@ export class RestAPI implements RequestAPI {
           }
           if (error?.code === 'ECONNRESET' || error?.code === 'ETIMEDOUT' || !error.response) {
             if (attempt < maxRetries - 1) continue;
+          }
+          if (
+            errData?.code === HttpStatusCode.Unauthorized ||
+            error.response?.status === HttpStatusCode.Unauthorized
+          ) {
+            if (typeof window !== 'undefined') {
+              signOut({ callbackUrl: '/', redirect: true });
+            }
           }
           return {
             code: errData?.code || error.response?.status || 500,
@@ -180,6 +210,10 @@ export class RestAPI implements RequestAPI {
 
       if (res.status !== HttpStatusCode.Ok) {
         return { ...res.data, code: res.status || 500 };
+      } else if (res.data?.code === HttpStatusCode.Unauthorized) {
+        if (typeof window !== 'undefined') {
+          signOut({ callbackUrl: '/', redirect: true });
+        }
       }
 
       return res.data;
@@ -189,10 +223,18 @@ export class RestAPI implements RequestAPI {
         if (error?.code === 'ECONNABORTED') {
           return { code: 408, message: validationMessage()[408]() };
         }
-        return { 
-          code: errData?.code || error.response?.status || 500, 
+        if (
+          errData?.code === HttpStatusCode.Unauthorized ||
+          error.response?.status === HttpStatusCode.Unauthorized
+        ) {
+          if (typeof window !== 'undefined') {
+            signOut({ callbackUrl: '/', redirect: true });
+          }
+        }
+        return {
+          code: errData?.code || error.response?.status || 500,
           message: errData?.message || error.message || validationMessage()[500](),
-          data: errData?.data
+          data: errData?.data,
         };
       }
       return { code: 500, message: validationMessage()[500]() };
@@ -232,6 +274,10 @@ export class RestAPI implements RequestAPI {
 
         if (res.status !== HttpStatusCode.Ok) {
           return { ...res.data, code: res.status || 500 };
+        } else if (res.data?.code === HttpStatusCode.Unauthorized) {
+          if (typeof window !== 'undefined') {
+            signOut({ callbackUrl: '/', redirect: true });
+          }
         }
 
         return res.data;
@@ -244,10 +290,18 @@ export class RestAPI implements RequestAPI {
           if (error?.code === 'ECONNRESET' || error?.code === 'ETIMEDOUT' || !error.response) {
             if (attempt < maxRetries - 1) continue;
           }
-          return { 
-            code: errData?.code || error.response?.status || 500, 
+          if (
+            errData?.code === HttpStatusCode.Unauthorized ||
+            error.response?.status === HttpStatusCode.Unauthorized
+          ) {
+            if (typeof window !== 'undefined') {
+              signOut({ callbackUrl: '/', redirect: true });
+            }
+          }
+          return {
+            code: errData?.code || error.response?.status || 500,
             message: errData?.message || error.message || validationMessage()[500](),
-            data: errData?.data
+            data: errData?.data,
           };
         }
         if (attempt < maxRetries - 1) continue;
@@ -284,6 +338,10 @@ export class RestAPI implements RequestAPI {
 
       if (res.status !== HttpStatusCode.Ok) {
         return { ...res.data, code: res.status || 500 };
+      } else if (res?.data?.code === HttpStatusCode.Unauthorized) {
+        if (typeof window !== 'undefined') {
+          signOut({ callbackUrl: '/', redirect: true });
+        }
       }
 
       return res.data;
@@ -293,10 +351,18 @@ export class RestAPI implements RequestAPI {
         if (error?.code === 'ECONNABORTED') {
           return { code: 408, message: validationMessage()[408]() };
         }
-        return { 
-          code: errData?.code || error.response?.status || 500, 
+        if (
+          errData?.code === HttpStatusCode.Unauthorized ||
+          error.response?.status === HttpStatusCode.Unauthorized
+        ) {
+          if (typeof window !== 'undefined') {
+            signOut({ callbackUrl: '/', redirect: true });
+          }
+        }
+        return {
+          code: errData?.code || error.response?.status || 500,
           message: errData?.message || error.message || validationMessage()[500](),
-          data: errData?.data
+          data: errData?.data,
         };
       }
       return { code: 500, message: validationMessage()[500]() };

@@ -7,8 +7,8 @@ import { ImageCompProps } from './image';
 
 const defaultImage = '/assets/images/placeholder.webp';
 
-const shimmer = (w: number, h: number) => `
-<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+const shimmer = (w: number, h: number) =>
+  `<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
     <linearGradient id="g">
       <stop stop-color="#f0f0f0" offset="20%" />
@@ -60,15 +60,19 @@ export const Image: FC<ImageCompProps & ImageProps> = ({
     }
   };
 
+  const currentSrc = image || (!errClassName ? skeleton : defaultImage);
+  const isUnoptimized = typeof currentSrc === 'string' && currentSrc.startsWith('data:');
+
   return (
     <NextImage
       {...props}
-      src={image || (!errClassName ? skeleton : defaultImage)}
+      src={currentSrc}
       blurDataURL={skeleton}
       placeholder={placeholder}
       alt={alt}
-      height={height}
-      width={width}
+      height={props.fill ? undefined : height}
+      width={props.fill ? undefined : width}
+      unoptimized={props.unoptimized || isUnoptimized}
       className={classNames([className, onClick && 'cursor-pointer', errClassName])}
       onClick={onClick}
       onError={handleError}

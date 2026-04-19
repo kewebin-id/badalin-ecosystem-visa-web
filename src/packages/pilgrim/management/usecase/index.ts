@@ -42,9 +42,13 @@ const REVERSE_RELATION_MAP: Record<TRelation, string> = {
 
 const MARITAL_STATUS_MAP: Record<string, string> = {
   'Belum Menikah': 'Single',
+  Single: 'Single',
   Menikah: 'Married',
+  Married: 'Married',
   'Cerai Hidup': 'Divorced',
+  Divorced: 'Divorced',
   'Cerai Mati': 'Widowed',
+  Widowed: 'Widowed',
 };
 
 const REVERSE_MARITAL_STATUS_MAP: Record<string, string> = {

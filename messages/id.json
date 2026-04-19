@@ -196,7 +196,41 @@
     },
     "makkah": "Makkah",
     "madinah": "Madinah",
-    "transport": "Transportasi"
+    "transport": "Transportasi",
+    "nusuk": {
+      "guideTitle": "Panduan Foto Paspor",
+      "guideDesc": "Untuk memastikan pengajuan visa Anda diproses dengan sukses, harap ikuti panduan berikut untuk foto paspor Anda.",
+      "tipsTitle": "Tips Foto Kualitas Tinggi:",
+      "tips": {
+        "noBlur": "Pastikan gambar tidak blur (fokus jelas).",
+        "noGlare": "Hindari pantulan atau bias cahaya pada dokumen.",
+        "noWatermark": "Pastikan tidak ada watermark atau pantulan flash.",
+        "goodLighting": "Ambil foto di lingkungan dengan pencahayaan yang cukup."
+      },
+      "exampleTitle": "Contoh Paspor yang Benar:",
+      "statusSafe": "Pasti Lolos Nusuk! Lanjutkan.",
+      "statusWarning": "Peringatan",
+      "statusRejected": "Dokumen Ditolak (Nusuk)",
+      "rejectedDesc": "Sistem mendeteksi bahwa kualitas foto dokumen kurang optimal. Dokumen ini pasti akan tertolak oleh sistem Nusuk.",
+      "dialogTitle": "Dokumen Ditolak (Nusuk)",
+      "dialogSubmit": "Ambil Ulang Foto",
+      "readTips": "Baca Tips & Foto Ulang",
+      "preview": "Preview",
+      "change": "Ganti",
+      "clickToUpload": "Klik untuk Unggah {label}",
+      "uploadTitle": "Unggah {label}",
+      "documentConditions": "Ketentuan Dokumen",
+      "viewExample": "Lihat Contoh Dokumen",
+      "selectOrDrag": "Pilih atau Tarik File",
+      "done": "Selesai",
+      "validationFailed": "Validasi Dokumen Gagal",
+      "validationDesc": "Foto yang Anda unggah tidak memenuhi standar (blur, pantulan cahaya, data tidak lengkap atau kadaluarsa). Sistem akan menolak dokumen ini. Mohon pastikan foto dokumen Anda:",
+      "validationList1": "Seluruh teks dan nomor terbaca sangat jelas",
+      "validationList2": "Tidak ada pantulan cahaya (flash) yang menutupi teks",
+      "validationList3": "Tidak buram atau bebas kemiringan parah",
+      "validationList4": "Masa berlaku harus masih aktif",
+      "iUnderstand": "Saya Mengerti"
+    }
   },
   "VisaTransaction": {
     "title": "Transaksi & Pengajuan",

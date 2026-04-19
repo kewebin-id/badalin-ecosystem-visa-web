@@ -186,7 +186,41 @@
       "passportInvalid": "Passport number is invalid (min 5 characters)"
     },
     "makkah": "Makkah",
-    "madinah": "Madinah"
+    "madinah": "Madinah",
+    "nusuk": {
+      "guideTitle": "Passport Photo Guide",
+      "guideDesc": "To ensure your visa application is processed successfully, please follow these guidelines for your passport photo.",
+      "tipsTitle": "High-Quality Scan Tips:",
+      "tips": {
+        "noBlur": "Ensure the image is not blurry (clear focus).",
+        "noGlare": "Avoid light reflections or glare on the document.",
+        "noWatermark": "Make sure there are no watermarks or flash reflections.",
+        "goodLighting": "Take the photo in a well-lit environment."
+      },
+      "exampleTitle": "Correct Passport Example:",
+      "statusSafe": "Safe for Nusuk! Proceed.",
+      "statusWarning": "Warning",
+      "statusRejected": "Document Rejected (Nusuk)",
+      "rejectedDesc": "The system detected that the document photo quality is suboptimal. This document will definitely be rejected by the Nusuk system.",
+      "dialogTitle": "Document Rejected (Nusuk)",
+      "dialogSubmit": "Retake Photo",
+      "readTips": "Read Tips & Retake",
+      "preview": "Preview",
+      "change": "Change",
+      "clickToUpload": "Click to Upload {label}",
+      "uploadTitle": "Upload {label}",
+      "documentConditions": "Document Requirements",
+      "viewExample": "See Example Document",
+      "selectOrDrag": "Select or Drag File",
+      "done": "Done",
+      "validationFailed": "Document Validation Failed",
+      "validationDesc": "The photo you uploaded does not meet the standards (blurry, light reflection, incomplete data, or expired). The system will reject this document. Please ensure your document photo:",
+      "validationList1": "All text and numbers are perfectly readable",
+      "validationList2": "There is no light reflection (flash) covering the text",
+      "validationList3": "Not blurry or free from severe distortion",
+      "validationList4": "The validity period is still active",
+      "iUnderstand": "I Understand"
+    }
   },
   "VisaTransaction": {
     "title": "Transactions & Applications",
