@@ -1,42 +1,38 @@
+import { ROUTES } from '@/shared/constants';
 import { RestAPI } from '@/shared/utils/rest-api';
 import { useMutation } from '@tanstack/react-query';
-import { toast } from 'sonner';
 import { signIn } from 'next-auth/react';
-import { useParams, useRouter } from 'next/navigation';
-import { ROUTES, validationMessage } from '@/shared/constants';
-import { AuthRepository } from '../repository';
-import { AuthUseCase } from '../usecase';
+import { useParams } from 'next/navigation';
+import { toast } from 'sonner';
 import {
+  IForgotPasswordRequest,
   ILoginRequest,
   IRegisterProviderRequest,
-  IForgotPasswordRequest,
   IResetPasswordRequest,
   IVerifyTokenRequest,
 } from '../domain/request';
+import { AuthRepository } from '../repository';
+import { AuthUseCase } from '../usecase';
 
 export const useProviderAuthController = () => {
   const restApi = new RestAPI();
   const repository = new AuthRepository(restApi);
   const usecase = new AuthUseCase(repository);
-  
-  const router = useRouter();
+
   const params = useParams();
   const slug = (params?.slug as string) || 'p';
 
   const loginMutation = useMutation({
     mutationFn: async (payload: ILoginRequest) => {
-      // 1. Call logic from UseCase to get professional error/success messages
-      const authResult = await usecase.login(payload);
-      
-      if (authResult.error) {
-        toast.error(authResult.message);
-        throw new Error(authResult.message);
-      }
+      const { encryptClient } = await import('@/shared/utils/crypto-client');
+      const encryptedPayload = {
+        identifier: await encryptClient(payload.identifier),
+        password: await encryptClient(payload.password),
+      };
 
-      // 2. Establish NextAuth session
       const res = await signIn('credentials', {
-        identifier: payload.identifier,
-        password: payload.password,
+        identifier: encryptedPayload.identifier,
+        password: encryptedPayload.password,
         redirect: false,
       });
 
@@ -45,13 +41,9 @@ export const useProviderAuthController = () => {
         throw new Error(res.error);
       }
 
-      toast.success(authResult.message);
-      
-      // 3. Redirect to dashboard
-      // Use window.location.assign for a clean reload/redirect with fresh session
+      toast.success('Login successful');
       window.location.assign(ROUTES.PROVIDER.DASHBOARD(slug));
-      
-      return authResult.data;
+      return res;
     },
   });
 
@@ -119,6 +111,17 @@ export const useProviderAuthController = () => {
     forgotPasswordMutation,
     resetPasswordMutation,
     checkSlugMutation,
+    updateAgencyMutation: useMutation({
+      mutationFn: async (payload: { slug: string; name?: string }) => {
+        const result = await usecase.updateAgency(payload);
+        if (result.error) {
+          toast.error(result.message);
+          throw result.error;
+        }
+        toast.success(result.message);
+        return result.data;
+      },
+    }),
     slug,
   };
 };

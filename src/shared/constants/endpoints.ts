@@ -27,12 +27,10 @@ export const endpoints = {
       base: `${PrefixEndpoint.VISA}/pilgrims`,
       detail: (id: string) => `${PrefixEndpoint.VISA}/pilgrims/${id}`,
     },
-    transactions: {
+    submissions: {
       base: `${PrefixEndpoint.VISA}/submissions`,
       detail: (id: string) => `${PrefixEndpoint.VISA}/submissions/${id}`,
       paymentProof: (id: string) => `${PrefixEndpoint.VISA}/submissions/${id}/upload-proof`,
-    },
-    submissions: {
       preview: `${PrefixEndpoint.VISA}/submissions/preview`,
     },
     upload: `${PrefixEndpoint.V1}/upload`,
@@ -80,12 +78,10 @@ export const endpoints = {
         base: '/api/visa/pilgrims',
         detail: (id: string) => `/api/visa/pilgrims/${id}`,
       },
-      transactions: {
-        base: '/api/visa/transactions',
-        detail: (id: string) => `/api/visa/transactions/${id}`,
-        paymentProof: (id: string) => `/api/visa/transactions/${id}/payment-proof`,
-      },
       submissions: {
+        base: '/api/visa/submissions',
+        detail: (id: string) => `/api/visa/submissions/${id}`,
+        paymentProof: (id: string) => `/api/visa/submissions/${id}/payment-proof`,
         preview: '/api/visa/submissions/preview',
       },
       upload: '/api/visa/upload',

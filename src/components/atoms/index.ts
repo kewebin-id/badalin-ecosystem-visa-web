@@ -1,3 +1,4 @@
+export * from './alert';
 export * from './avatar';
 export * from './badge';
 export * from './button';
@@ -12,6 +13,7 @@ export * from './drawer';
 export * from './end-message';
 export * from './has-role';
 export * from './image';
+export * from './label';
 export * from './not-found';
 export * from './radio-group';
 export * from './scroll-area';

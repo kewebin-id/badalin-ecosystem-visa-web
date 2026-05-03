@@ -2,6 +2,7 @@ export interface IAgency {
   name: string;
   slug: string;
   isActive: boolean;
+  isSlugSetup: boolean;
 }
 
 export interface IUser {

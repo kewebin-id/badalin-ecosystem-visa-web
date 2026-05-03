@@ -1,10 +1,9 @@
 'use client';
 
-import { Button, Card, Checkbox } from '@/components/atoms';
+import { Button, Card, Checkbox, Image } from '@/components/atoms';
 import { InputText } from '@/components/molecules';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Building2, Eye, EyeOff, ShieldCheck } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -55,10 +54,11 @@ export const ProviderLoginView: FC = () => {
           <div className="flex flex-col items-center mb-8">
             <div className="relative w-32 h-16 mb-4">
               <Image
+                width={128}
+                height={64}
                 src="/assets/images/logo-transparent.webp"
                 alt="Badalin"
-                fill
-                className="object-contain"
+                className="object-contain rounded-lg"
                 priority
               />
             </div>
@@ -82,7 +82,7 @@ export const ProviderLoginView: FC = () => {
           </div>
 
           <FormProvider {...form}>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
               <InputText
                 useLabelInside
                 label="Email Agensi"
@@ -116,7 +116,7 @@ export const ProviderLoginView: FC = () => {
                 />
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between py-2">
                 <div className="flex items-center space-x-2">
                   <Controller
                     name="remember"

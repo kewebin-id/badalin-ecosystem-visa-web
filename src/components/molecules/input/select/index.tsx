@@ -134,14 +134,13 @@ const InputSelectBase: FC<InputSelectBaseProps> = ({
             className={cn(
               styles[size],
               className,
-              disabled
-                ? 'cursor-not-allowed! bg-gray-100! border-gray-200!'
-                : 'bg-white! text-black focus:border-primary-default border-gray-300',
-              useLabelInside && styles[`form-input-inside${currentValue ? '-active' : ''}`],
+              'bg-white! text-black',
               effectiveError && effectiveIsTouched
                 ? styles['form-input-error']
                 : styles['form-input'],
+              useLabelInside && styles[`form-input-inside${currentValue ? '-active' : ''}`],
               opened && styles['input-focused'],
+              disabled && 'cursor-not-allowed! border-[#DFE1E6]! bg-[#EFF1F4]!',
               'pr-10 text-left',
             )}
           >
@@ -193,7 +192,7 @@ const InputSelectBase: FC<InputSelectBaseProps> = ({
           {confidence !== undefined && (
             <div className="flex items-center gap-1 text-[10px] font-medium text-success-600">
               <Check className="size-3" />
-              {confidence}% confidence
+              {confidence?.toFixed(2)}% confidence
             </div>
           )}
         </div>

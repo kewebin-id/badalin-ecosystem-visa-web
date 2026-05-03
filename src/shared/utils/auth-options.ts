@@ -25,9 +25,11 @@ export const authOptions: NextAuthOptions = {
           const authRepository = new AuthRepository(dataStoreApi);
           const authUseCase = new AuthUseCase(authRepository);
 
+          const { decrypt } = await import('./crypto');
+
           const payload: ILoginRequest = {
-            identifier: credentials?.identifier || '',
-            password: credentials?.password || '',
+            identifier: decrypt<string>(credentials?.identifier || '') || credentials?.identifier || '',
+            password: decrypt<string>(credentials?.password || '') || credentials?.password || '',
           };
 
           const response = await authUseCase.login(payload);

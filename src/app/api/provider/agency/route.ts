@@ -7,35 +7,33 @@ import { NextRequest } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-export const POST = async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
-  let id = '';
+export const PATCH = async (req: NextRequest) => {
   try {
-    const p = await params;
-    id = p.id;
     const session = await getAuthTokenFromRequest(req);
-    const agencySlug = req.cookies.get('agency_slug')?.value || session?.user?.agency?.slug;
     const apiKey = process.env.API_KEY;
-    const formData = await req.formData();
+    const body = await req.json();
 
     if (!session?.token) return response[401]({ message: 'Unauthorized' });
     if (!apiKey) return response[500]({ message: 'Internal server error' });
 
     const restApi = new RestAPI(undefined, session.token as string);
-    const res = await restApi.post({
-      endpoint: endpoints.visa.transactions.paymentProof(id),
-      body: formData,
+    const res = await restApi.patch({
+      endpoint: endpoints.provider.agency.base,
+      body,
       config: {
         headers: {
           'x-api-key': apiKey,
-          Cookie: `agency_slug=${agencySlug}`,
-          'Content-Type': 'multipart/form-data',
         },
       },
     });
 
+    Logger.info(`PATCH ${endpoints.provider.agency.base} - Response: ${JSON.stringify(res)}`, {
+      location: 'api/provider/agency/route.ts - PATCH',
+    });
+
     return response.handler(res);
   } catch (error: unknown) {
-    Logger.error(error, { location: `api/visa/transactions/${id}/payment-proof/route.ts - POST` });
+    Logger.error(error, { location: 'api/provider/agency/route.ts - PATCH' });
     return response[500]({ message: 'Internal server error' });
   }
 };

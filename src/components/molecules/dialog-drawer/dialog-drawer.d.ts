@@ -18,4 +18,5 @@ export interface DialogDrawerProps {
   onSubmit?: () => void;
   onCancel?: (flag?: boolean) => void;
   className?: string;
+  showCloseButton?: boolean;
 }

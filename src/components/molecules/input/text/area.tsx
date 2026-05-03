@@ -3,7 +3,7 @@
 import styles from '@/shared/styles/components/input.module.css';
 import { cn } from '@/shared/utils';
 import { AlertTriangle } from 'lucide-react';
-import Image from 'next/image';
+import { Image } from '@/components/atoms';
 import { ChangeEvent, useState } from 'react';
 import { InputTextareaProps } from '../input';
 
@@ -34,6 +34,7 @@ export const InputTextarea = ({
 }: InputTextareaProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const [inputState, setInputState] = useState<string>();
+  const id = `textarea-${name || Math.random().toString(36).substr(2, 9)}`;
 
   const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const tempValue = e.target.value;
@@ -55,11 +56,13 @@ export const InputTextarea = ({
       <span className="relative block">
         {label && useLabelInside && (
           <label
+            htmlFor={id}
             className={cn(
               styles[`form-area-label-inside${isFocused || inputState || value ? '-active' : ''}`],
               isFocused || value || inputState
-                ? 'text-gray-500 bg-white w-[91%]!'
+                ? 'text-gray-500 w-[91%]!'
                 : 'text-gray-400',
+              'cursor-text'
             )}
           >
             <span>{label}</span>
@@ -70,6 +73,7 @@ export const InputTextarea = ({
         )}
         {register && name ? (
           <textarea
+            id={id}
             {...register(name, {
               onChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
                 setInputState(e.target.value);
@@ -93,13 +97,13 @@ export const InputTextarea = ({
             placeholder={useLabelInside ? '' : placeholder}
             disabled={disabled}
             className={cn(
-              'bg-white! text-black min-h-20 h-full top-2!',
+              'bg-white! text-black min-h-20 h-full w-full',
               styles[size],
               className,
               disabled && 'cursor-not-allowed bg-gray-100! border-gray-200!',
               useLabelInside &&
                 styles[
-                  `form-area-input-inside${errorMessage ? 'error' : inputState ? '-active' : ''}`
+                  `form-area-input-inside${errorMessage ? 'error' : inputState || value ? '-active' : ''}`
                 ],
               errorMessage
                 ? styles[
@@ -111,6 +115,7 @@ export const InputTextarea = ({
           />
         ) : (
           <textarea
+            id={id}
             onBlur={() => {
               setIsFocused(false);
               if (onBlur) onBlur();
@@ -130,11 +135,14 @@ export const InputTextarea = ({
             placeholder={useLabelInside ? '' : placeholder}
             disabled={disabled}
             className={cn(
-              'bg-white! text-black min-h-20 h-full',
+              'bg-white! text-black min-h-20 h-full w-full',
               styles[size],
               className,
               disabled && 'cursor-not-allowed bg-gray-100! border-gray-200!',
-              useLabelInside && styles[`form-input-inside${value ? '-active' : ''}`],
+              useLabelInside &&
+                styles[
+                  `form-area-input-inside${errorMessage ? 'error' : value ? '-active' : ''}`
+                ],
               errorMessage ? styles['form-input-error'] : styles['form-input'],
               icon &&
                 iconPosition &&

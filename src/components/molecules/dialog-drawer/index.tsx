@@ -40,6 +40,7 @@ export const DialogDrawer: FC<DialogDrawerProps> = ({
   submitButtonClassName,
   submitting,
   className,
+  showCloseButton = true,
 }) => {
   const { isDesktop } = useScreenSize();
 
@@ -50,21 +51,29 @@ export const DialogDrawer: FC<DialogDrawerProps> = ({
           <DialogHeader className="mb-0! pb-0!">
             <div
               className={cn(
-                (title || description) && 'shadow',
-                title && !description && 'items-center',
-                'p-4 flex justify-between w-full',
+                (title || description) && 'shadow-xs border-b border-gray-100',
+                'p-5 flex items-start justify-between w-full',
               )}
             >
-              <div className="flex flex-col">
-                <DialogTitle className={cn(titleClassName)}>{title}</DialogTitle>
+              <div className={cn("flex flex-col flex-1", showCloseButton && "pr-4")}>
+                <DialogTitle className={cn("text-xl font-bold text-gray-900", titleClassName)}>{title}</DialogTitle>
                 {description && (
-                  <DialogDescription className={cn(descriptionClassName)}>
+                  <DialogDescription className={cn("text-sm text-gray-500 mt-1 leading-relaxed", descriptionClassName)}>
                     {description}
                   </DialogDescription>
                 )}
                 {!title && !description && <div className="h-1" />}
               </div>
-              <X onClick={() => setOpen(false)} className="text-muted-foreground cursor-pointer" />
+              {showCloseButton && (
+                <div 
+                  onClick={() => setOpen(false)}
+                  className="p-1 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer group"
+                >
+                  <X
+                    className="size-5 text-gray-400 group-hover:text-gray-600 transition-colors"
+                  />
+                </div>
+              )}
             </div>
           </DialogHeader>
           <ScrollArea className="max-h-[calc(100vh-200px)] overflow-y-auto w-full px-0! m-0!">

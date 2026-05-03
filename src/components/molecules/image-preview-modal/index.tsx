@@ -1,9 +1,7 @@
 'use client';
 
-import { Button } from '@/components/atoms';
-import { cn } from '@/shared/utils';
+import { Button, Image } from '@/components/atoms';
 import { Minimize2, X, ZoomIn, ZoomOut } from 'lucide-react';
-import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
 export interface ImagePreviewModalProps {

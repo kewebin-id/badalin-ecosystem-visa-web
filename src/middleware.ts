@@ -17,6 +17,17 @@ export default withAuth(
     const slug = segments[0];
     const isAuthPage = pathname.includes('/auth/');
 
+    // 1. Root Path Redirect (Authenticated)
+    if (token && pathname === '/') {
+      if (role === 'PROVIDER') {
+        const userSlug = (token?.user as any)?.agency?.slug || 'p';
+        return NextResponse.redirect(new URL(ROUTES.PROVIDER.DASHBOARD(userSlug), req.url));
+      }
+      if (role === 'SUPERADMIN') {
+        return NextResponse.redirect(new URL(ROUTES.ADMIN.CONSOLE, req.url));
+      }
+    }
+
     // 2. Proteksi Provider (Unauthenticated)
     const isProviderProtectedArea =
       segments.length >= 2 &&

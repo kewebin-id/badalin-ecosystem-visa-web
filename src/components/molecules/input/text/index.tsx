@@ -3,7 +3,7 @@
 import styles from '@/shared/styles/components/input.module.css';
 import { cn, formatRupiah, unformatRupiah } from '@/shared/utils';
 import { AlertTriangle, Check, Sparkles } from 'lucide-react';
-import Image from 'next/image';
+import { Image } from '@/components/atoms';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { InputTextProps } from '../input';

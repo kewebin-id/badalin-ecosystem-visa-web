@@ -3,18 +3,26 @@ import { endpoints } from '@/shared/constants/endpoints';
 import Logger from '@/shared/utils/logger';
 import { RestAPI } from '@/shared/utils/rest-api';
 import { response } from '@/shared/utils/rest-api/response';
+import { decrypt } from '@/shared/utils/crypto';
 import { NextRequest } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
 export const POST = async (req: NextRequest) => {
   try {
-    const body = await req.json();
+    const rawBody = await req.json();
     const apiKey = process.env.API_KEY;
 
     if (!apiKey) {
       throw new Error('API_KEY not configured');
     }
+
+    // Decrypt credentials if they are encrypted
+    const body = {
+      ...rawBody,
+      identifier: decrypt<string>(rawBody.identifier) || rawBody.identifier,
+      password: decrypt<string>(rawBody.password) || rawBody.password,
+    };
 
     const restApi = new RestAPI();
     const res = await restApi.post<ILoginResponse>({

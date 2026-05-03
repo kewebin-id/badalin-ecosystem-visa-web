@@ -324,12 +324,6 @@
       "domesticTransport": "Transportasi Domestik",
       "uploadedDocuments": "Dokumen yang Diunggah",
       "vehicles": "Kendaraan",
-      "formIssues": "Kendala Formulir",
-      "systemBusinessRules": "Aturan Sistem & Bisnis",
-      "validationRequiredBanner": "Validasi Diperlukan",
-      "validationRequiredDesc": "Formulir Anda memiliki kesalahan atau informasi wajib yang belum lengkap di beberapa langkah.",
-      "stepInstructions": "Silakan periksa kembali setiap langkah untuk memastikan semua kolom wajib (ditandai dengan *) telah diisi dengan benar.",
-      "attentionWarnings": "Perhatian",
       "roomTypeOptions": {
         "DBL": "Double (DBL)",
         "TRPL": "Triple (TRPL)",
@@ -344,7 +338,13 @@
         "OTHER": "Lainnya"
       },
       "submitting": "Mohon tunggu, sedang mengirimkan data...",
-      "processingDataAndImages": "Mohon tunggu, sedang memproses data dan dokumen..."
+      "processingDataAndImages": "Mohon tunggu, sedang memproses data dan dokumen...",
+      "validationRequiredBanner": "Informasi Wajib Belum Lengkap",
+      "validationRequiredDesc": "Beberapa kolom masih kosong atau tidak valid. Silakan periksa kolom yang ditandai di bawah ini.",
+      "formIssues": "Kendala Formulir",
+      "systemBusinessRules": "Aturan Bisnis Sistem",
+      "attentionWarnings": "Perhatian & Peringatan",
+      "stepInstructions": "Pastikan semua data sesuai dengan paspor dan dokumen perjalanan resmi Anda untuk menghindari penolakan."
     },
     "validateAndPreview": "Validasi & Preview Pengajuan",
     "validationErrorTitle": "Kesalahan Validasi Formulir",
@@ -425,5 +425,145 @@
     "back": "Kembali",
     "next": "Lanjut Tahap Berikutnya",
     "process": "Proses Sekarang"
+  },
+  "ProviderDashboard": {
+    "title": "Dashboard Provider",
+    "subtitle": "Ringkasan operasional agensi Anda",
+    "totalSubmissions": "Total Pengajuan",
+    "pendingPayments": "Menunggu Pembayaran",
+    "documentsInReview": "Dokumen Dalam Tinjauan",
+    "issuedVisas": "Visa Diterbitkan",
+    "monthlyTrends": "Tren Visa Bulanan",
+    "recentActivity": "Aktivitas Terbaru",
+    "noActivity": "Belum ada aktivitas",
+    "badges": {
+      "payment": "Pembayaran",
+      "visa": "Visa",
+      "manifest": "Manifest"
+    }
+  },
+  "ProviderSubmissions": {
+    "title": "Submissions Monitoring",
+    "subtitle": "Kelola antrian pembayaran dan review dokumen jamaah",
+    "cardTitle": "Daftar Pengajuan ({count})",
+    "cardSubtitle": "Tinjau bukti pembayaran dan verifikasi data manifest jamaah",
+    "table": {
+      "id": "Submission ID",
+      "leader": "Leader",
+      "members": "Members",
+      "payment": "Payment",
+      "review": "Review",
+      "action": "Aksi"
+    },
+    "status": {
+      "pending": "Pending",
+      "checking": "Checking",
+      "completed": "Completed",
+      "verified": "Verified",
+      "rejected": "Rejected"
+    },
+    "manifest": {
+      "title": "Logistik & Manifest",
+      "subtitle": "{id} · {leader} · {count} Jamaah",
+      "downloadVisa": "Download Visa",
+      "downloadVisaLocked": "Download Visa (Locked)",
+      "downloadVisaHint": "Download dokumen visa",
+      "paymentLockedHint": "Pembayaran belum Completed",
+      "zeroGapSync": "Zero Gap Sync — Periksa Jadwal",
+      "flight": {
+        "title": "Penerbangan",
+        "subtitle": "Informasi maskapai, nomor penerbangan, dan jadwal tiba/pulang",
+        "flightNo": "Flight No",
+        "carrier": "Carrier",
+        "date": "Tanggal",
+        "eta": "ETA (Tiba)",
+        "etd": "ETD (Berangkat Pulang)"
+      },
+      "hotel": {
+        "title": "Akomodasi Hotel",
+        "subtitle": "Detail pemesanan hotel di Makkah atau Madinah",
+        "name": "Nama Hotel",
+        "resvNo": "No. Reservasi",
+        "city": "Kota",
+        "roomType": "Tipe Kamar",
+        "checkin": "Check-in",
+        "checkout": "Check-out"
+      },
+      "transport": {
+        "title": "Transportasi Darat",
+        "subtitle": "Pilihan tipe kendaraan untuk penjemputan dan lokal",
+        "vehicleType": "Tipe Kendaraan",
+        "smartTransport": "Smart Transport",
+        "smartTransportDesc": "Jumlah jamaah ≥ 6 orang. MPV/Mobil Kecil dinonaktifkan — gunakan Bus atau Mini Bus."
+      },
+      "save": "Simpan Manifest",
+      "saveSuccess": "Manifest disimpan",
+      "saveSuccessDesc": "Logistik untuk {id} berhasil diperbarui.",
+      "notFoundTitle": "Pengajuan Tidak Ditemukan",
+      "notFoundDesc": "Kami tidak dapat menemukan data pengajuan yang Anda cari. Data mungkin telah dihapus atau ID salah.",
+      "backToList": "Kembali ke Daftar"
+    },
+    "dialogs": {
+      "payment": {
+        "title": "Verifikasi Pembayaran — {id}",
+        "description": "Periksa bukti transfer sebelum menandai sebagai Completed.",
+        "markAsCompleted": "Mark as Completed",
+        "leader": "Leader",
+        "amount": "Jumlah",
+        "status": "Status",
+        "members": "Anggota",
+        "participantsCount": "{count} orang",
+        "proofAlt": "Bukti Transfer",
+        "noProof": "Tidak ada bukti transfer"
+      },
+      "review": {
+        "title": "Review Dokumen — {id}",
+        "description": "Verifikasi kelengkapan dokumen jamaah atau tolak dengan alasan.",
+        "rejectionReasonLabel": "Alasan Penolakan (opsional, wajib jika Reject)",
+        "rejectionReasonPlaceholder": "Contoh: Foto paspor buram, KTP tidak terbaca…",
+        "previousRejection": "Alasan penolakan sebelumnya",
+        "reject": "Reject",
+        "verify": "Verify",
+        "leader": "Leader",
+        "members": "Anggota",
+        "participantsCount": "{count} orang",
+        "reviewStatus": "Status Review",
+        "payment": "Pembayaran"
+      }
+    },
+    "toasts": {
+      "verified": "Dokumen Diverifikasi",
+      "verifiedDesc": "Submission {id} telah ditandai Verified.",
+      "rejected": "Dokumen Ditolak",
+      "rejectedDesc": "Submission {id} ditolak dengan alasan tercatat.",
+      "reasonRequired": "Alasan Diperlukan",
+      "reasonRequiredDesc": "Mohon isi alasan penolakan."
+    }
+  },
+  "ProviderSidebar": {
+    "dashboard": "Dashboard",
+    "submissions": "Submissions",
+    "paymentVerification": "Verifikasi Pembayaran",
+    "manifestData": "Data Manifest",
+    "settings": "Pengaturan"
+  },
+  "SetupSlug": {
+    "title": "Lengkapi Setup Agensi Anda",
+    "description": "Atur identitas unik dan link akses Anda untuk mulai menggunakan Badalin Visa.",
+    "mandatorySetup": "Setup Wajib",
+    "mandatorySetupDesc": "Amankan nama agensi dan domain kustom Anda.",
+    "agencyName": "Nama Agensi",
+    "agencyNamePlaceholder": "Masukkan nama agensi Anda",
+    "agencySlug": "Slug Agensi (URL)",
+    "agencySlugPlaceholder": "misal: agensi-saya-keren",
+    "slugTaken": "Slug ini sudah digunakan",
+    "checkingAvailability": "Memeriksa ketersediaan...",
+    "slugAvailable": "Slug tersedia!",
+    "agencyLink": "Link Agensi Anda",
+    "yourSlug": "slug-anda",
+    "finishSetup": "Konfirmasi & Selesaikan Setup",
+    "settingUp": "Sedang mengatur...",
+    "terms": "Dengan melanjutkan, Anda menyetujui ketentuan layanan dan panduan identitas kami.",
+    "success": "Setup agensi berhasil diselesaikan!"
   }
 }

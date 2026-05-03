@@ -214,11 +214,16 @@ export const TransactionFormView = () => {
             form.setError(mappedPath as any, { message: err.message });
           }
         });
+        const displayMessage =
+          res.message?.includes('Cannot POST') || res.message?.includes('404')
+            ? 'The submission preview service is currently unavailable. Please contact support.'
+            : res.message || 'Validation failed';
+
         setApiErrors(
           systemErrors.length > 0
             ? systemErrors
             : errors.length === 0
-              ? [res.message || 'Validation failed']
+              ? [displayMessage]
               : [],
         );
         setApiWarnings(res.data?.warnings || []);

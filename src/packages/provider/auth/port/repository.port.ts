@@ -20,4 +20,5 @@ export interface IAuthRepository {
   forgotPassword(data: IForgotPasswordRequest): Promise<ResponseREST<{ message: string }>>;
   resetPassword(data: IResetPasswordRequest): Promise<ResponseREST<{ message: string }>>;
   checkSlug(slug: string): Promise<ResponseREST<ICheckSlugResponse>>;
+  updateAgency(body: { slug: string; name?: string }): Promise<ResponseREST<any>>;
 }

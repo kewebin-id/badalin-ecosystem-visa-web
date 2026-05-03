@@ -1,0 +1,42 @@
+export interface ILeader {
+  id: string;
+  fullName: string;
+  phoneNumber: string;
+  email: string;
+}
+
+export interface IMember {
+  id: string;
+  fullName: string;
+  passportNumber: string;
+  nik: string;
+  relation: string;
+}
+
+export interface ISubmissionListItem {
+  id: string;
+  agencySlug: string;
+  paymentStatus: string;
+  verifyStatus: string;
+  totalAmount: number;
+  createdAt: string;
+  leader: ILeader;
+  members: IMember[];
+}
+
+export interface ISubmissionListResponse {
+  data: ISubmissionListItem[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+  };
+}
+
+export interface ISubmissionResponse extends ISubmissionListItem {}
+
+export interface IVerifyPaymentResponse {
+  id: string;
+  paymentStatus: 'COMPLETED';
+  verifyStatus: 'IN_REVIEW';
+}

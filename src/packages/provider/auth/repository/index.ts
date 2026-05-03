@@ -100,4 +100,17 @@ export class AuthRepository implements IAuthRepository {
       throw error;
     }
   };
+
+  updateAgency = async (body: { slug: string; name?: string }) => {
+    try {
+      return await this.restApi.patch<any>({
+        endpoint: endpoints.nextApi.provider.agency.base,
+        body,
+        isNextApi: true,
+      });
+    } catch (error) {
+      Logger.error(error, { location: 'ProviderAuthRepository.updateAgency' });
+      throw error;
+    }
+  };
 }

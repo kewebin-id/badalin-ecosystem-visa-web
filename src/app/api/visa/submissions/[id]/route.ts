@@ -21,7 +21,7 @@ export const GET = async (req: NextRequest, { params }: { params: Promise<{ id: 
 
     const restApi = new RestAPI(undefined, session.token as string);
     const res = await restApi.get({
-      endpoint: endpoints.visa.transactions.detail(id),
+      endpoint: endpoints.visa.submissions.detail(id),
       config: {
         headers: {
           'x-api-key': apiKey,
@@ -30,11 +30,11 @@ export const GET = async (req: NextRequest, { params }: { params: Promise<{ id: 
       },
     });
 
-    Logger.info(JSON.stringify(res), { location: `api/visa/transactions/${id}/route.ts - GET` });
+    Logger.info(JSON.stringify(res), { location: `api/visa/submissions/${id}/route.ts - GET` });
 
     return response.handler(res);
   } catch (error: unknown) {
-    Logger.error(error, { location: `api/visa/transactions/${id}/route.ts - GET` });
+    Logger.error(error, { location: `api/visa/submissions/${id}/route.ts - GET` });
     return response[500]({ message: 'Internal server error' });
   }
 };
@@ -52,7 +52,7 @@ export const PUT = async (req: NextRequest, { params }: { params: Promise<{ id: 
 
     const restApi = new RestAPI(undefined, session.token as string);
     const res = await restApi.put({
-      endpoint: endpoints.visa.transactions.detail(id),
+      endpoint: endpoints.visa.submissions.detail(id),
       body: { ...body, agencySlug },
       config: {
         headers: {
@@ -62,11 +62,11 @@ export const PUT = async (req: NextRequest, { params }: { params: Promise<{ id: 
       },
     });
 
-    Logger.info(JSON.stringify(res), { location: `api/visa/transactions/${id}/route.ts - PUT` });
+    Logger.info(JSON.stringify(res), { location: `api/visa/submissions/${id}/route.ts - PUT` });
 
     return response.handler(res);
   } catch (error: unknown) {
-    Logger.error(error, { location: `api/visa/transactions/${id}/route.ts - PUT` });
+    Logger.error(error, { location: `api/visa/submissions/${id}/route.ts - PUT` });
     return response[500]({ message: 'Internal server error' });
   }
 };

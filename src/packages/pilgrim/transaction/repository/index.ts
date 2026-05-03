@@ -23,7 +23,7 @@ export class TransactionRepository implements ITransactionRepository {
       items: IApiTransaction[];
       meta: { total: number; page: number; limit: number };
     }>({
-      endpoint: endpoints.nextApi.visa.transactions.base,
+      endpoint: endpoints.nextApi.visa.submissions.base,
       queryParam: params,
       isNextApi: true,
     });
@@ -31,14 +31,14 @@ export class TransactionRepository implements ITransactionRepository {
 
   async findById(id: string): Promise<ResponseREST<IApiTransaction>> {
     return this.api.get<IApiTransaction>({
-      endpoint: endpoints.nextApi.visa.transactions.detail(id),
+      endpoint: endpoints.nextApi.visa.submissions.detail(id),
       isNextApi: true,
     });
   }
 
   async create(data: ICreateTransactionRequest): Promise<ResponseREST<IApiTransaction>> {
     return this.api.post<IApiTransaction>({
-      endpoint: endpoints.nextApi.visa.transactions.base,
+      endpoint: endpoints.nextApi.visa.submissions.base,
       body: data,
       isNextApi: true,
     });
@@ -48,7 +48,7 @@ export class TransactionRepository implements ITransactionRepository {
     const formData = new FormData();
     formData.append('file', file);
     return this.api.post<IApiTransaction>({
-      endpoint: endpoints.nextApi.visa.transactions.paymentProof(id),
+      endpoint: endpoints.nextApi.visa.submissions.paymentProof(id),
       body: formData,
       isNextApi: true,
     });
@@ -59,7 +59,7 @@ export class TransactionRepository implements ITransactionRepository {
     data: ICreateTransactionRequest,
   ): Promise<ResponseREST<IApiTransaction>> {
     return this.api.put<IApiTransaction>({
-      endpoint: endpoints.nextApi.visa.transactions.detail(id),
+      endpoint: endpoints.nextApi.visa.submissions.detail(id),
       body: data,
       isNextApi: true,
     });

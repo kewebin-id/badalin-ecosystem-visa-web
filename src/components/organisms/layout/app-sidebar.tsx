@@ -18,9 +18,9 @@ import { ROUTES } from '@/shared/constants/routes';
 import { useAuth } from '@/shared/hooks';
 import { cn } from '@/shared/utils';
 import { AnimatePresence, motion } from 'framer-motion';
-import { LayoutDashboard, LogOut, PanelLeftClose, Plane, Users } from 'lucide-react';
+import { LayoutDashboard, LogOut, PanelLeftClose, Plane, Users, Inbox, CreditCard, FileText, Settings } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 
 export const AppSidebar = ({
   onMenuClose,
@@ -36,30 +36,63 @@ export const AppSidebar = ({
   const collapsed = state === 'collapsed';
   const pathname = usePathname();
   const { user, isLoadingAuth } = useAuth();
+  const params = useParams();
+  const slug = (params?.slug as string) || user?.agency?.slug || 'p';
 
   const isLoading = isLoadingAuth;
 
   const name = user?.fullName || '';
   const role = user?.role === 'PILGRIM' ? 'Jamaah Pilgrim' : user?.role || 'User';
 
-  const menuItems = [
-    {
-      title: 'Dashboard.title',
-      url: ROUTES.PILGRIM.DASHBOARD,
-      icon: LayoutDashboard,
-      exact: true,
-    },
-    {
-      title: 'Dashboard.familyGroup',
-      url: ROUTES.PILGRIM.FAMILY.INDEX,
-      icon: Users,
-    },
-    {
-      title: 'Dashboard.transactions',
-      url: ROUTES.PILGRIM.TRANSACTION.INDEX,
-      icon: Plane,
-    },
-  ];
+  const isProvider = user?.role === 'PROVIDER';
+
+  const menuItems = isProvider
+    ? [
+        {
+          title: 'ProviderSidebar.dashboard',
+          url: ROUTES.PROVIDER.DASHBOARD(slug),
+          icon: LayoutDashboard,
+          exact: true,
+        },
+        {
+          title: 'ProviderSidebar.submissions',
+          url: ROUTES.PROVIDER.SUBMISSIONS(slug),
+          icon: Inbox,
+        },
+        {
+          title: 'ProviderSidebar.paymentVerification',
+          url: ROUTES.PROVIDER.PAYMENT_VERIFICATION(slug),
+          icon: CreditCard,
+        },
+        {
+          title: 'ProviderSidebar.manifestData',
+          url: ROUTES.PROVIDER.MANIFEST(slug),
+          icon: FileText,
+        },
+        {
+          title: 'ProviderSidebar.settings',
+          url: ROUTES.PROVIDER.SETTINGS(slug),
+          icon: Settings,
+        },
+      ]
+    : [
+        {
+          title: 'Dashboard.title',
+          url: ROUTES.PILGRIM.DASHBOARD,
+          icon: LayoutDashboard,
+          exact: true,
+        },
+        {
+          title: 'Dashboard.familyGroup',
+          url: ROUTES.PILGRIM.FAMILY.INDEX,
+          icon: Users,
+        },
+        {
+          title: 'Dashboard.transactions',
+          url: ROUTES.PILGRIM.TRANSACTION.INDEX,
+          icon: Plane,
+        },
+      ];
 
   return (
     <Sidebar
@@ -169,7 +202,7 @@ export const AppSidebar = ({
                         href={item.url}
                         onClick={onMenuClose}
                         className={cn(
-                          'group flex items-center px-4 py-3 rounded-2xl transition-all duration-200 w-full relative overflow-hidden',
+                          'group flex items-center px-4 py-3 rounded-2xl transition-all duration-200 w-full relative overflow-hidden cursor-pointer',
                           isActive
                             ? 'bg-primary-default/10 text-primary-default shadow-sm'
                             : 'text-gray-500 hover:bg-gray-50 hover:text-foreground',
@@ -228,7 +261,7 @@ export const AppSidebar = ({
                 onMenuClose?.();
                 onLogoutClick?.();
               }}
-              className="group flex w-full items-center p-3 rounded-2xl text-gray-500 hover:text-red-500 hover:bg-red-50/50 transition-all duration-200"
+              className="group flex w-full items-center p-3 rounded-2xl text-gray-500 hover:text-red-500 hover:bg-red-50/50 transition-all duration-200 cursor-pointer"
             >
               <div className="p-2 rounded-xl group-hover:bg-red-50 transition-colors shrink-0">
                 <LogOut className="h-4 w-4" strokeWidth={1.5} />

@@ -28,17 +28,17 @@ export const useAuthController = () => {
 
   const loginMutation = useMutation({
     mutationFn: async (payload: ILoginRequest) => {
-      // Manual call to login API to get the dynamic success/error message
-      const authResult = await usecase.login(payload);
-      if (authResult.error) {
-        toast.error(authResult.message);
-        throw new Error(authResult.message);
-      }
+      // Encrypt credentials before sending to server
+      const { encryptClient } = await import('@/shared/utils/crypto-client');
+      const encryptedPayload = {
+        identifier: await encryptClient(payload.identifier),
+        password: await encryptClient(payload.password),
+      };
 
-      // Proceed with session establishment
+      // Proceed with session establishment directly
       const res = await signIn('credentials', {
-        identifier: payload.identifier,
-        password: payload.password,
+        identifier: encryptedPayload.identifier,
+        password: encryptedPayload.password,
         redirect: false,
       });
 
@@ -47,7 +47,7 @@ export const useAuthController = () => {
         throw new Error(res.error);
       }
 
-      toast.success(authResult.message);
+      toast.success('Login successful');
       window.location.assign(ROUTES.PILGRIM.DASHBOARD);
       return res;
     },

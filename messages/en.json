@@ -82,7 +82,8 @@
     "rowsPerPage": "Rows per page",
     "page": "Page {current} of {total}",
     "back": "Back",
-    "continue": "Continue"
+    "continue": "Continue",
+    "detail": "Detail"
   },
   "ForgotPassword": {
     "title": "Forgot Password?",
@@ -312,6 +313,7 @@
       "flightLogistics": "Flight Logistics",
       "hotelAccommodation": "Hotel Accommodation",
       "domesticTransport": "Domestic Transport",
+      "uploadedDocuments": "Uploaded Documents",
       "vehicles": "Vehicles",
       "roomTypeOptions": {
         "DBL": "Double (DBL)",
@@ -327,7 +329,13 @@
         "OTHER": "Other"
       },
       "submitting": "Please wait, sending data...",
-      "processingDataAndImages": "Please wait, processing data and images..."
+      "processingDataAndImages": "Please wait, processing data and images...",
+      "validationRequiredBanner": "Required Information Missing",
+      "validationRequiredDesc": "Some fields are still empty or invalid. Please check the marked fields below.",
+      "formIssues": "Form Issues",
+      "systemBusinessRules": "System Business Rules",
+      "attentionWarnings": "Attention & Warnings",
+      "stepInstructions": "Please ensure all data matches your passport and official travel documents to avoid rejection."
     },
     "validateAndPreview": "Validate & Preview Submission",
     "validationErrorTitle": "Form Validation Errors",
@@ -363,12 +371,14 @@
       "Submit": "Submit",
       "Process": "In Process",
       "Issued": "Issued",
-      "Expired": "Expired"
+      "Expired": "Expired",
+      "IN_REVIEW": "In Review"
     },
     "payment": {
       "Menunggu": "Waiting",
       "Checking": "Checking",
-      "Completed": "Completed"
+      "Completed": "Completed",
+      "PENDING": "Pending"
     },
     "notFoundTitle": "Transaction Not Found",
     "notFoundDescription": "Sorry, the transaction you are looking for is unavailable or might have been deleted.",
@@ -406,5 +416,145 @@
     "back": "Back",
     "next": "Next Stage",
     "process": "Process Now"
+  },
+  "ProviderDashboard": {
+    "title": "Provider Dashboard",
+    "subtitle": "Summary of your agency's operations",
+    "totalSubmissions": "Total Submissions",
+    "pendingPayments": "Pending Payments",
+    "documentsInReview": "Documents in Review",
+    "issuedVisas": "Issued Visas",
+    "monthlyTrends": "Monthly Visa Trends",
+    "recentActivity": "Recent Activity",
+    "noActivity": "No activity yet",
+    "badges": {
+      "payment": "Payment",
+      "visa": "Visa",
+      "manifest": "Manifest"
+    }
+  },
+  "ProviderSubmissions": {
+    "title": "Submissions Monitoring",
+    "subtitle": "Manage payment queues and pilgrim document reviews",
+    "cardTitle": "Submission List ({count})",
+    "cardSubtitle": "Review payment proof and verify pilgrim manifest data",
+    "table": {
+      "id": "Submission ID",
+      "leader": "Leader",
+      "members": "Members",
+      "payment": "Payment",
+      "review": "Review",
+      "action": "Action"
+    },
+    "status": {
+      "pending": "Pending",
+      "checking": "Checking",
+      "completed": "Completed",
+      "verified": "Verified",
+      "rejected": "Rejected"
+    },
+    "manifest": {
+      "title": "Logistics & Manifest",
+      "subtitle": "{id} · {leader} · {count} Pilgrims",
+      "downloadVisa": "Download Visa",
+      "downloadVisaLocked": "Download Visa (Locked)",
+      "downloadVisaHint": "Download visa document",
+      "paymentLockedHint": "Payment not yet completed",
+      "zeroGapSync": "Zero Gap Sync — Check Schedule",
+      "flight": {
+        "title": "Flight",
+        "subtitle": "Airline info, flight number, and arrival/return schedule",
+        "flightNo": "Flight No",
+        "carrier": "Carrier",
+        "date": "Date",
+        "eta": "ETA (Arrival)",
+        "etd": "ETD (Departure Return)"
+      },
+      "hotel": {
+        "title": "Hotel Accommodation",
+        "subtitle": "Hotel booking details in Makkah or Madinah",
+        "name": "Hotel Name",
+        "resvNo": "Reservation No",
+        "city": "City",
+        "roomType": "Room Type",
+        "checkin": "Check-in",
+        "checkout": "Check-out"
+      },
+      "transport": {
+        "title": "Ground Transport",
+        "subtitle": "Vehicle type options for pickup and local transport",
+        "vehicleType": "Vehicle Type",
+        "smartTransport": "Smart Transport",
+        "smartTransportDesc": "Pilgrim count ≥ 6. MPV/Small Car disabled — use Bus or Mini Bus."
+      },
+      "save": "Save Manifest",
+      "saveSuccess": "Manifest saved",
+      "saveSuccessDesc": "Logistics for {id} successfully updated.",
+      "notFoundTitle": "Submission Not Found",
+      "notFoundDesc": "We couldn't find the submission you're looking for. It might have been removed or the ID is incorrect.",
+      "backToList": "Back to Submissions"
+    },
+    "dialogs": {
+      "payment": {
+        "title": "Verify Payment — {id}",
+        "description": "Check transfer proof before marking as Completed.",
+        "markAsCompleted": "Mark as Completed",
+        "leader": "Leader",
+        "amount": "Amount",
+        "status": "Status",
+        "members": "Members",
+        "participantsCount": "{count} people",
+        "proofAlt": "Payment Proof",
+        "noProof": "No payment proof available"
+      },
+      "review": {
+        "title": "Review Document — {id}",
+        "description": "Verify pilgrim document completeness or reject with reason.",
+        "rejectionReasonLabel": "Rejection Reason (optional, required if Reject)",
+        "rejectionReasonPlaceholder": "Example: Blurry passport photo, unreadable KTP...",
+        "previousRejection": "Previous rejection reason",
+        "reject": "Reject",
+        "verify": "Verify",
+        "leader": "Leader",
+        "members": "Members",
+        "participantsCount": "{count} people",
+        "reviewStatus": "Review Status",
+        "payment": "Payment"
+      }
+    },
+    "toasts": {
+      "verified": "Document Verified",
+      "verifiedDesc": "Submission {id} has been verified.",
+      "rejected": "Document Rejected",
+      "rejectedDesc": "Submission {id} has been rejected with recorded reason.",
+      "reasonRequired": "Reason Required",
+      "reasonRequiredDesc": "Please provide a reason for rejection."
+    }
+  },
+  "ProviderSidebar": {
+    "dashboard": "Dashboard",
+    "submissions": "Submissions",
+    "paymentVerification": "Payment Verification",
+    "manifestData": "Manifest Data",
+    "settings": "Settings"
+  },
+  "SetupSlug": {
+    "title": "Complete Your Agency Setup",
+    "description": "Setup your unique identity and access link to start using Badalin Visa.",
+    "mandatorySetup": "Mandatory Setup",
+    "mandatorySetupDesc": "Secure your agency name and custom domain.",
+    "agencyName": "Agency Name",
+    "agencyNamePlaceholder": "Enter your agency name",
+    "agencySlug": "Agency Slug (URL)",
+    "agencySlugPlaceholder": "e.g. my-awesome-agency",
+    "slugTaken": "This slug is already taken",
+    "checkingAvailability": "Checking availability...",
+    "slugAvailable": "Slug is available!",
+    "agencyLink": "Your Agency Link",
+    "yourSlug": "your-slug",
+    "finishSetup": "Confirm & Finish Setup",
+    "settingUp": "Setting up...",
+    "terms": "By continuing, you agree to our terms of service and identity guidelines.",
+    "success": "Agency setup completed successfully!"
   }
 }

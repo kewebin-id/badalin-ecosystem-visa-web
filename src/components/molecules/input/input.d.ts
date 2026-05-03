@@ -64,6 +64,7 @@ export interface InputTextProps extends IInputTextType {
   isAutoDetected?: boolean;
   confidence?: number;
   isReadingOcr?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface InputTextareaProps extends InputTextProps, Partial<IInputTextType> {

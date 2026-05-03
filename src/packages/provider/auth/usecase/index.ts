@@ -118,4 +118,23 @@ export class AuthUseCase implements IAuthUsecase {
       };
     }
   };
+
+  updateAgency = async (data: { slug: string; name?: string }): Promise<IUsecaseResponse<any>> => {
+    try {
+      const result = await this.repository.updateAgency(data);
+      if (result?.data) {
+        return { data: result.data, message: result.message };
+      }
+      return {
+        error: new Error(result?.message || 'Failed to update agency'),
+        message: result?.message || 'Update failed',
+      };
+    } catch (err) {
+      Logger.error(err, { location: 'ProviderAuthUseCase.updateAgency' });
+      return {
+        error: new Error(err instanceof Error ? err.message : 'Internal server error'),
+        message: 'Failed to update agency',
+      };
+    }
+  };
 }

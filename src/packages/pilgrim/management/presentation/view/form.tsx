@@ -65,7 +65,6 @@ export const MemberFormView = () => {
     setValue,
     reset,
     formState: { errors, isValid },
-    watch,
   } = form;
 
   const [nusukCompatibility, setNusukCompatibility] = useState<{

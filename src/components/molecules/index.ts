@@ -15,4 +15,6 @@ export * from './input/text/area';
 export * from './loading-overlay';
 export * from './locale-switcher';
 export * from './maps';
+export * from './pagination';
 export * from './time-picker';
+export * from './badge/provider-status';

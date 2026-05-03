@@ -9,13 +9,18 @@ import { useState } from 'react';
 import { AppHeader } from '../../organisms/layout/app-header';
 import { AppSidebar } from '../../organisms/layout/app-sidebar';
 import { useAuth } from '@/shared/hooks';
+import { SetupSlugDialog } from '@/packages/provider/auth/presentation/view/setup-slug-dialog';
 
 export const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const t = useTranslations();
   const router = useRouter();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  const isProvider = user?.role === 'PROVIDER';
+  const isSlugSetup = user?.agency?.isSlugSetup;
+  const showSetupSlug = isProvider && !isSlugSetup;
 
   return (
     <SidebarProvider>
@@ -80,12 +85,13 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
           onSubmit={async () => {
             setIsLogoutModalOpen(false);
             await signOut();
-            router.push('/');
           }}
           disabledSubmitButton={false}
         >
           <p className="text-sm text-gray-500">{t('Common.logoutConfirmDesc')}</p>
         </DialogDrawer>
+        
+        <SetupSlugDialog open={!!showSetupSlug} />
       </div>
     </SidebarProvider>
   );

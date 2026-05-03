@@ -16,6 +16,10 @@ export const useAuth = () => {
   const user = session?.user as unknown as IUser & { token: string };
 
   const signOut = async () => {
+    const isProvider = user?.role === 'PROVIDER';
+    const slug = user?.agency?.slug || 'p';
+    const callbackUrl = isProvider ? `/${slug}/auth/login` : '/auth/login';
+
     // Cleanup OneSignal external user ID
     try {
       const { NotificationRepository } = await import('@/packages/notification/repository');
@@ -32,8 +36,8 @@ export const useAuth = () => {
     localStorage.removeItem('cos_saved_credentials');
 
     return nextAuthSignout({
-      redirect: false,
-      callbackUrl: window.location.href,
+      callbackUrl,
+      redirect: true,
     });
   };
 
@@ -43,6 +47,7 @@ export const useAuth = () => {
     signOut,
     session,
     user,
+    token: user?.token,
     update,
   };
 };

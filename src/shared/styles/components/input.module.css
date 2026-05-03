@@ -138,7 +138,7 @@
 }
 
 .form-area-label-inside-active {
-  @apply absolute text-[10px] font-normal left-4 top-2 w-full;
+  @apply absolute text-[10px] font-normal left-4 top-1 w-full;
   transition: 0.2s ease all;
 }
 
@@ -151,12 +151,12 @@
 }
 
 .form-area-input-inside:focus {
-  @apply pt-6 border-primary-default;
+  @apply pt-[1.625rem] border-primary-default;
   transition: 0.2s ease all;
 }
 
 .form-area-input-inside-active {
-  @apply pt-6 text-[10px] border-gray-300;
+  @apply pt-[1.625rem] border-gray-300;
   transition: 0.2s ease all;
 }
 
