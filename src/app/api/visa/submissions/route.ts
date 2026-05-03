@@ -66,6 +66,16 @@ export const POST = async (req: NextRequest) => {
       },
     });
 
+    if (res?.code !== 200 && res?.code !== 201) {
+      Logger.error(`POST ${endpoints.visa.submissions.base} failed: ${JSON.stringify(res)}`, {
+        location: 'api/visa/submissions/route.ts - POST',
+      });
+    } else {
+      Logger.info(`POST ${endpoints.visa.submissions.base} success: ${JSON.stringify(res)}`, {
+        location: 'api/visa/submissions/route.ts - POST',
+      });
+    }
+
     return response.handler(res);
   } catch (error: unknown) {
     Logger.error(error, { location: 'api/visa/submissions/route.ts - POST' });
