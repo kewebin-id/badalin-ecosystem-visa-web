@@ -66,7 +66,7 @@ export const AppSidebar = ({
         },
         {
           title: 'ProviderSidebar.manifestData',
-          url: ROUTES.PROVIDER.MANIFEST(slug),
+          url: ROUTES.PROVIDER.SUBMISSIONS(slug),
           icon: FileText,
         },
         {

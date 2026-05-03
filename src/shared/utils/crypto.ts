@@ -32,7 +32,7 @@ export const decrypt = <T extends object | string | undefined>(cipherText: strin
       decrypted += decipher.final('utf8');
       
       try {
-        return JSON.parse(decrypted);
+        return JSON.parse(decrypted) as T;
       } catch {
         return decrypted as unknown as T;
       }
@@ -46,7 +46,7 @@ export const decrypt = <T extends object | string | undefined>(cipherText: strin
       decrypted += decipher.final('utf8');
 
       try {
-        return typeof decrypted === 'string' ? decrypted : JSON.parse(decrypted);
+        return (typeof decrypted === 'string' ? decrypted : JSON.parse(decrypted)) as T;
       } catch {
         return decrypted as unknown as T;
       }
