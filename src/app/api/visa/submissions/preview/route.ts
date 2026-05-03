@@ -37,7 +37,7 @@ export const POST = async (req: NextRequest) => {
       Logger.error(`Preview visa submission failed: ${JSON.stringify(res)}`, {
         location: 'api/visa/submissions/preview/route.ts - POST',
       });
-      return response[400]({ message: res?.message || 'Internal server error' });
+      return response.handler(res);
     }
 
     Logger.info(`Preview visa submission success: ${JSON.stringify(res)}`, {
