@@ -24,14 +24,9 @@ export const GET = async (req: NextRequest) => {
     }
 
     const restApi = await createAuthenticatedApi(req);
-    const session = await getAuthTokenFromRequest(req);
-    const userSlug = session?.user?.agency?.slug || 'p';
-
-    // Replace generic 'p' with actual user slug to bypass reserved-word 403
-    const endpoint = endpoints.provider.agency.checkSlug.replace('/p/', `/${userSlug}/`);
 
     const res = await restApi.get<ICheckSlugResponse>({
-      endpoint,
+      endpoint: endpoints.provider.agency.checkSlug,
       queryParam: { slug },
       config: {
         headers: {
@@ -40,7 +35,7 @@ export const GET = async (req: NextRequest) => {
       },
     });
 
-    Logger.info(`GET ${endpoint} - Response: ${JSON.stringify(res)}`, {
+    Logger.info(`GET ${endpoints.provider.agency.checkSlug} - Response: ${JSON.stringify(res)}`, {
       location: 'api/provider/agency/check-slug/route.ts - GET',
     });
 

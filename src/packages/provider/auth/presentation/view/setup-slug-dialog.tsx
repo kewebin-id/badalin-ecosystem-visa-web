@@ -155,7 +155,7 @@ export const SetupSlugDialog = ({ open }: { open: boolean }) => {
                 {t('SetupSlug.agencyLink')}
               </p>
               <p className="truncate text-sm text-gray-700">
-                {process.env.APP_DOMAIN}/
+                {process.env.BASE_URL}/
                 <span className={cn('font-bold', slug ? 'text-primary-600' : 'text-gray-300')}>
                   {slug || t('SetupSlug.yourSlug')}
                 </span>
