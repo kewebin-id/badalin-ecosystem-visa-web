@@ -1,5 +1,5 @@
-import { IAuthUser, ILoginResponse, IUser } from '@/packages/pilgrim/auth/domain/response';
 import { ILoginRequest } from '@/packages/pilgrim/auth/domain/request';
+import { ILoginResponse, IUser } from '@/packages/pilgrim/auth/domain/response';
 import { AuthRepository } from '@/packages/pilgrim/auth/repository';
 import { AuthUseCase } from '@/packages/pilgrim/auth/usecase';
 import type { NextAuthOptions, User } from 'next-auth';
@@ -28,7 +28,8 @@ export const authOptions: NextAuthOptions = {
           const { decrypt } = await import('./crypto');
 
           const payload: ILoginRequest = {
-            identifier: decrypt<string>(credentials?.identifier || '') || credentials?.identifier || '',
+            identifier:
+              decrypt<string>(credentials?.identifier || '') || credentials?.identifier || '',
             password: decrypt<string>(credentials?.password || '') || credentials?.password || '',
           };
 
@@ -134,8 +135,7 @@ export const authOptions: NextAuthOptions = {
         sameSite: 'lax',
         path: '/',
         secure:
-          process.env.NODE_ENV === 'production' &&
-          !process.env.NEXTAUTH_URL?.includes('localhost'),
+          process.env.NODE_ENV === 'production' && !process.env.NEXTAUTH_URL?.includes('localhost'),
       },
     },
   },
