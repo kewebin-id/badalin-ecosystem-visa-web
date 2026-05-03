@@ -191,6 +191,10 @@ export const TransactionFormView = () => {
 
   const handleValidateSubmission = async () => {
     try {
+      setApiErrors([]);
+      setApiWarnings([]);
+      form.clearErrors();
+      
       const values = form.getValues() as TWizardForm;
       const res = await previewMutation.mutateAsync(values);
 
