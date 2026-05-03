@@ -1,3 +1,4 @@
+import { IPreviewResponse } from '@/packages/pilgrim/transaction/domain/transaction';
 import { endpoints } from '@/shared/constants/endpoints';
 import { getAuthTokenFromRequest } from '@/shared/hooks/use-auth-server';
 import Logger from '@/shared/utils/logger';
@@ -18,7 +19,7 @@ export const POST = async (req: NextRequest) => {
     if (!apiKey) return response[500]({ message: 'Internal server error' });
 
     const restApi = new RestAPI(undefined, session.token as string);
-    const res = await restApi.post({
+    const res = await restApi.post<IPreviewResponse>({
       endpoint: endpoints.visa.submissions.preview,
       body: { ...body, agencySlug },
       config: {
@@ -29,14 +30,17 @@ export const POST = async (req: NextRequest) => {
       },
     });
 
-    if (res?.code !== 200) {
+    const code = Number(res?.code);
+    const isSuccess = code >= 200 && code < 300;
+
+    if (!isSuccess && !res?.data?.isValid) {
       Logger.error(`Preview visa submission failed: ${JSON.stringify(res)}`, {
         location: 'api/visa/submissions/preview/route.ts - POST',
       });
       return response[400]({ message: res?.message || 'Internal server error' });
     }
 
-    Logger.info(`Preview visa submission response: ${JSON.stringify(res)}`, {
+    Logger.info(`Preview visa submission success: ${JSON.stringify(res)}`, {
       location: 'api/visa/submissions/preview/route.ts - POST',
     });
 
