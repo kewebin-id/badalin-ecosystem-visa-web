@@ -57,6 +57,7 @@ export interface ITransaction {
   rawdahMenTime?: string;
   rawdahWomenTime?: string;
   notes?: string;
+  resultSnapshot?: any;
 
   invoiceAmount: number;
   totalAmount?: number;

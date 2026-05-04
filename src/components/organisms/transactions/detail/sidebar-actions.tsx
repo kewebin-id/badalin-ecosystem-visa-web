@@ -63,17 +63,19 @@ export const DetailSidebarActions = ({
           </Button>
         ) : (
           <>
-            <Button
-              variant="primaryOutline"
-              className="w-full rounded-2xl border-primary-default/10 py-6"
-              onClick={onEdit}
-            >
-              <Pencil className="size-4 mr-2" /> {t('detail.editSubmission')}
-            </Button>
             {transaction.paymentStatus === 'PENDING' && (
-              <p className="text-[10px] text-center text-muted-foreground italic leading-relaxed px-2">
-                {t('detail.editHint')}
-              </p>
+              <>
+                <Button
+                  variant="primaryOutline"
+                  className="w-full rounded-2xl border-primary-default/10 py-6"
+                  onClick={onEdit}
+                >
+                  <Pencil className="size-4 mr-2" /> {t('detail.editSubmission')}
+                </Button>
+                <p className="text-[10px] text-center text-muted-foreground italic leading-relaxed px-2">
+                  {t('detail.editHint')}
+                </p>
+              </>
             )}
           </>
         )}
