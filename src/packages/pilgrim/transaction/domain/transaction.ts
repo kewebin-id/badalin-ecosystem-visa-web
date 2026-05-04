@@ -42,6 +42,20 @@ export interface ITransportation {
   imageUrls: string[];
 }
 
+export interface IPaymentProofSnapshot {
+  amount?: number;
+  date?: string;
+  fullName?: string;
+  recipientName?: string;
+  recipientAccount?: string;
+  bankName?: string;
+  transferStatus?: string;
+  notes?: string;
+  rawText?: string;
+  confidence?: number;
+  message?: string;
+}
+
 export interface ITransaction {
   id: string;
   route?: string;
@@ -57,7 +71,7 @@ export interface ITransaction {
   rawdahMenTime?: string;
   rawdahWomenTime?: string;
   notes?: string;
-  resultSnapshot?: any;
+  resultSnapshot?: IPaymentProofSnapshot;
 
   invoiceAmount: number;
   totalAmount?: number;
