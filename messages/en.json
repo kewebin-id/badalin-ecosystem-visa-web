@@ -367,7 +367,15 @@
       "uploadedDocuments": "Attached Documents",
       "noDocuments": "No documents uploaded yet",
       "pendingPayment": "Pending Payment",
-      "checkingPayment": "Checking Payment"
+      "checkingPayment": "Checking Payment",
+      "paymentProof": "Payment Proof",
+      "clickToPreview": "Click to Preview",
+      "transferTime": "Transfer Time",
+      "uploadTime": "Upload Time",
+      "detectedAmount": "Detected Amount",
+      "senderName": "Sender Name",
+      "checkStatus": "Check Status",
+      "systemVerification": "System Verification"
     },
     "status": {
       "Submit": "Submit",
@@ -377,10 +385,9 @@
       "IN_REVIEW": "In Review"
     },
     "payment": {
-      "Menunggu": "Waiting",
-      "Checking": "Checking",
-      "Completed": "Completed",
-      "PENDING": "Pending"
+      "PENDING": "Pending",
+      "CHECKING": "Checking",
+      "COMPLETED": "Completed"
     },
     "notFoundTitle": "Transaction Not Found",
     "notFoundDescription": "Sorry, the transaction you are looking for is unavailable or might have been deleted.",

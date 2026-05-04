@@ -376,7 +376,15 @@
       "uploadedDocuments": "Dokumen Terlampir",
       "noDocuments": "Belum ada dokumen yang diunggah",
       "pendingPayment": "Menunggu Pembayaran",
-      "checkingPayment": "Pengecekan Pembayaran"
+      "checkingPayment": "Pengecekan Pembayaran",
+      "paymentProof": "Bukti Transfer",
+      "clickToPreview": "Klik untuk Preview",
+      "transferTime": "Waktu Transfer",
+      "uploadTime": "Waktu Upload",
+      "detectedAmount": "Nominal Terdeteksi",
+      "senderName": "Nama Pengirim",
+      "checkStatus": "Status Pengecekan",
+      "systemVerification": "Verifikasi Sistem"
     },
     "status": {
       "Submit": "Submit",
@@ -386,10 +394,9 @@
       "IN_REVIEW": "Dalam Tinjauan"
     },
     "payment": {
-      "Menunggu": "Menunggu",
-      "Checking": "Pengecekan",
-      "Completed": "Selesai",
-      "PENDING": "Menunggu"
+      "PENDING": "Menunggu",
+      "CHECKING": "Pengecekan",
+      "COMPLETED": "Selesai"
     },
     "notFoundTitle": "Transaksi Tidak Ditemukan",
     "notFoundDescription": "Mohon maaf, data transaksi yang Anda cari tidak tersedia atau mungkin telah dihapus.",
