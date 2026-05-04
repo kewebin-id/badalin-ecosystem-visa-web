@@ -15,7 +15,7 @@ import { InputTextSearch } from '@/components/molecules/input/search';
 import { DataTable } from '@/components/templates/datatable';
 import { EmptyState } from '@/components/templates/empty-state';
 import { ROUTES } from '@/shared/constants/routes';
-import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
+import { UserAvatar } from '@/components/molecules/user-avatar';
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { Eye, MoreHorizontal, Pencil, Trash, User, UserPlus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -70,15 +70,13 @@ export const ManagementListView = () => {
         header: t('fullName'),
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
-            <Avatar className="size-8 rounded-full flex items-center justify-center">
-              <AvatarImage
-                src={row.original?.selfieUrl}
-                className="object-cover size-8 rounded-full"
-              />
-              <AvatarFallback className="bg-primary-default/5 text-primary-default text-xs font-black">
-                {row.original.fullName.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
+            <UserAvatar
+              name={row.original.fullName}
+              src={row.original?.selfieUrl}
+              seed={row.original.id}
+              className="size-8"
+              fallbackClassName="text-xs"
+            />
             <span className="font-medium">{row.original.fullName || '—'}</span>
           </div>
         ),

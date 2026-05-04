@@ -1,6 +1,7 @@
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/atoms/avatar';
+import { UserAvatar } from '@/components/molecules/user-avatar';
 import { Card } from '@/components/atoms/card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/atoms/sheet';
 import { InputFile } from '@/components/molecules/input/file';
@@ -63,12 +64,13 @@ export const DetailLogisticsTab = ({ transaction }: DetailLogisticsTabProps) => 
                 className="bg-white border border-gray-100 shadow-sm rounded-3xl p-5 flex items-center gap-4 hover:border-primary-default/20 transition-all hover:shadow-md group cursor-pointer active:scale-95"
               >
                 <div className="size-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-primary-default group-hover:text-white transition-all shadow-inner overflow-hidden border border-gray-100/50">
-                  <Avatar className="size-full rounded-none">
-                    <AvatarImage src={member.photoUrl} className="object-cover" />
-                    <AvatarFallback className="bg-transparent text-inherit font-black">
-                      {member.fullName.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
+                    <UserAvatar
+                      name={member.fullName}
+                      src={member.photoUrl}
+                      seed={member.id}
+                      className="size-full"
+                      fallbackClassName="text-sm rounded-none"
+                    />
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-black text-foreground truncate">{member.fullName}</p>
@@ -87,12 +89,13 @@ export const DetailLogisticsTab = ({ transaction }: DetailLogisticsTabProps) => 
                 <SheetTitle className="sr-only">Detail Jamaah</SheetTitle>
                 <div className="flex flex-col items-center text-center mt-4">
                   <div className="size-24 rounded-[2rem] border-4 border-white shadow-xl overflow-hidden bg-white mb-4">
-                    <Avatar className="size-full rounded-none">
-                      <AvatarImage src={selectedMember?.photoUrl} className="object-cover" />
-                      <AvatarFallback className="bg-primary-default/5 text-primary-default text-3xl font-black">
-                        {selectedMember?.fullName.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
+                    <UserAvatar
+                      name={selectedMember?.fullName || ''}
+                      src={selectedMember?.photoUrl}
+                      seed={selectedMember?.id}
+                      className="size-full"
+                      fallbackClassName="text-3xl rounded-none"
+                    />
                   </div>
                   <h3 className="text-xl font-black text-foreground">{selectedMember?.fullName}</h3>
                   <p className="text-xs font-bold text-primary-default uppercase tracking-widest mt-1">

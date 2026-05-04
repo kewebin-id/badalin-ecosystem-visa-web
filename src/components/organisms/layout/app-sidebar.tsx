@@ -2,6 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage, Button } from '@/components/atoms';
 import { Skeleton } from '@/components/atoms/skeleton';
+import { UserAvatar } from '@/components/molecules/user-avatar';
 import {
   Sidebar,
   SidebarContent,
@@ -143,28 +144,14 @@ export const AppSidebar = ({
             <div className="relative group">
               {isLoading ? (
                 <Skeleton variant="ellipse" className="h-11 w-11 rounded-2xl" />
-              ) : user?.photoUrl ? (
-                <Avatar className="size-11 rounded-none">
-                  <AvatarImage
-                    src={user.photoUrl}
-                    className="object-cover size-11 rounded-2xl shrink-0 border-2 border-gray-200 shadow-sm"
-                  />
-                  <AvatarFallback className="bg-transparent text-inherit font-black">
-                    {name && name !== '-'
-                      ? name
-                          .split(' ')
-                          .map((n: string) => n[0])
-                          .join('')
-                      : '?'}
-                  </AvatarFallback>
-                </Avatar>
-              ) : name && name !== '-' ? (
-                name
-                  .split(' ')
-                  .map((n: string) => n[0])
-                  .join('')
               ) : (
-                '?'
+                <UserAvatar
+                  name={name}
+                  src={user?.photoUrl || undefined}
+                  seed={user?.id}
+                  className="size-11"
+                  fallbackClassName="rounded-2xl"
+                />
               )}
               {!isLoading && (
                 <div className="absolute -bottom-1 -right-1 h-3.5 w-3.5 bg-green-500 border-2 border-white rounded-full" />

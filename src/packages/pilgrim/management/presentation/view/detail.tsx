@@ -2,6 +2,7 @@
 
 import { Image } from '@/components/atoms';
 import { StatusBadge } from '@/components/molecules/badge-status';
+import { UserAvatar } from '@/components/molecules/user-avatar';
 import { DialogDrawer } from '@/components/molecules/dialog-drawer';
 import { MemberDetailSkeleton } from '@/components/organisms/pilgrim-management/skeleton/detail.skeleton';
 import { Camera, CreditCard, Plane, User } from 'lucide-react';
@@ -70,24 +71,13 @@ export const MemberDetailView = ({ member, isLoading, isOpen, onClose }: MemberD
             <>
               <div className="flex flex-col items-center gap-4 py-4">
                 <div className="relative">
-                  {member.selfieUrl ? (
-                    <Image
-                      src={member.selfieUrl}
-                      alt={member.fullName}
-                      width={112}
-                      height={112}
-                      className="h-28 w-28 rounded-3xl object-cover border-4 border-white shadow-xl"
-                    />
-                  ) : (
-                    <div className="h-28 w-28 rounded-3xl bg-primary-default/10 border-4 border-white shadow-xl flex items-center justify-center">
-                      <span className="text-3xl font-bold text-primary-default">
-                        {member.fullName
-                          .split(' ')
-                          .map((n: string) => n[0])
-                          .join('')}
-                      </span>
-                    </div>
-                  )}
+                  <UserAvatar
+                    name={member.fullName}
+                    src={member.selfieUrl}
+                    seed={member.id}
+                    className="h-28 w-28 rounded-3xl border-4 border-white shadow-xl"
+                    fallbackClassName="text-3xl rounded-3xl"
+                  />
                   <div className="absolute -bottom-2 -right-2">
                     <StatusBadge
                       className="bg-white!"
