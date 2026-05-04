@@ -4,17 +4,11 @@ import { Button } from '@/components/atoms/button';
 import { Card } from '@/components/atoms/card';
 import { Skeleton } from '@/components/atoms/skeleton';
 import { StatusBadge } from '@/components/molecules/badge-status';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/molecules/dropdown-menu';
 import { DataTable } from '@/components/templates/datatable';
 import { ROUTES } from '@/shared/constants/routes';
 import { formatDate, thousandFormat } from '@/shared/utils';
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { Eye, MoreHorizontal, Pencil, Plane } from 'lucide-react';
+import { Pencil, Plane } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useCallback, useMemo } from 'react';
@@ -43,7 +37,6 @@ export const TransactionListView = ({
   pageCount,
   pagination,
   onPaginationChange,
-  search,
   onSearchChange,
 }: TransactionListViewProps) => {
   const t = useTranslations('VisaTransaction');
@@ -64,9 +57,7 @@ export const TransactionListView = ({
         accessorKey: 'route',
         header: t('form.tripRoute'),
         cell: ({ row }) => (
-          <span className="text-muted-foreground font-medium">
-            {row.original.route || 'Umrah'}
-          </span>
+          <span className="text-muted-foreground font-medium">{row.original.route || 'Umrah'}</span>
         ),
       },
       {
@@ -109,25 +100,19 @@ export const TransactionListView = ({
       {
         id: 'actions',
         cell: ({ row }) => (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="transparent" size="icon" className="h-8 w-8">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onViewDetail(row.original.id)}>
-                <Eye className="mr-2 h-4 w-4" />
-                {tCommon('detail')}
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href={`${ROUTES.PILGRIM.TRANSACTION.FORM}?id=${row.original.id}`}>
-                  <Pencil className="mr-2 h-4 w-4" />
-                  {tCommon('edit')}
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            variant="transparent"
+            size="icon"
+            className="h-8 w-8 text-gray-400 hover:text-primary-default"
+            asChild
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <Link href={`${ROUTES.PILGRIM.TRANSACTION.FORM}?id=${row.original.id}`}>
+              <Pencil className="h-4 w-4" />
+            </Link>
+          </Button>
         ),
       },
     ],
@@ -169,6 +154,7 @@ export const TransactionListView = ({
           table={table}
           columns={columns}
           loading={loading}
+          onRowClick={(row) => onViewDetail(row.id)}
           searchKey="id"
           searchPlaceholder={t('form.tripRoute')}
           onSearchChange={onSearchChange}

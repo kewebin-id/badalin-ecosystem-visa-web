@@ -12,6 +12,7 @@ import {
 import { InputTextSearch } from '@/components/molecules/input/search';
 import { InputSelect } from '@/components/molecules/input/select';
 import styles from '@/shared/styles/components/datatable.module.css';
+import { cn } from '@/shared/utils';
 import { flexRender } from '@tanstack/react-table';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
@@ -33,6 +34,7 @@ export const DataTable = <TData, TValue>({
   emptyTitle,
   emptyDescription,
   emptyAction,
+  onRowClick,
 }: DataTableProps<TData, TValue>) => {
   const t = useTranslations('Common');
 
@@ -124,7 +126,11 @@ export const DataTable = <TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                  className={styles.tableRow}
+                  className={cn(
+                    styles.tableRow,
+                    onRowClick && 'cursor-pointer hover:bg-gray-50/50 transition-colors',
+                  )}
+                  onClick={() => onRowClick?.(row.original)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

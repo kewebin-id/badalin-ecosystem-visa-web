@@ -13,4 +13,5 @@ export interface DataTableProps<TData, TValue> {
   emptyTitle?: string;
   emptyDescription?: string;
   emptyAction?: ReactNode;
+  onRowClick?: (data: TData) => void;
 }
