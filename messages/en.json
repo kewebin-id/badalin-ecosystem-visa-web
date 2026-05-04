@@ -374,6 +374,11 @@
       "uploadTime": "Upload Time",
       "detectedAmount": "Detected Amount",
       "senderName": "Sender Name",
+      "recipientName": "Recipient",
+      "recipientAccount": "Account No.",
+      "bankName": "Bank",
+      "transferStatusLabel": "Transfer Status",
+      "notes": "Notes / Remarks",
       "checkStatus": "Check Status",
       "systemVerification": "System Verification"
     },

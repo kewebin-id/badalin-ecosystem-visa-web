@@ -383,6 +383,11 @@
       "uploadTime": "Waktu Upload",
       "detectedAmount": "Nominal Terdeteksi",
       "senderName": "Nama Pengirim",
+      "recipientName": "Penerima",
+      "recipientAccount": "No. Rekening",
+      "bankName": "Bank",
+      "transferStatusLabel": "Status Transfer",
+      "notes": "Catatan / Berita",
       "checkStatus": "Status Pengecekan",
       "systemVerification": "Verifikasi Sistem"
     },
