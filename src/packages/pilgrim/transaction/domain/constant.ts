@@ -20,8 +20,8 @@ export const VEHICLE_TYPES = [
 
 export const PAYMENT_STEPS = [
   { key: 'PENDING', label: 'Submit', icon: FileSearch },
-  { key: 'Checking', label: 'Checking', icon: Clock },
-  { key: 'Completed', label: 'Completed', icon: CheckCircle2 },
+  { key: 'CHECKING', label: 'Checking', icon: Clock },
+  { key: 'COMPLETED', label: 'Completed', icon: CheckCircle2 },
 ] as const;
 
 export const TRANSACTION_STATUS_MAP: Record<string, string> = {

@@ -51,32 +51,34 @@ export const DetailPaymentTab = ({ transaction, onUpload, isUploading }: DetailP
         <CountdownTimer deadline={transaction.paymentDeadline} />
       )}
 
-      <div className="bg-primary-default/5 rounded-3xl p-6 space-y-2 border border-primary-default/10">
-        <p className="text-xs font-black text-primary-default uppercase tracking-widest">
-          {t('detail.transferTo')}
-        </p>
-        <div className="flex justify-between items-center">
-          <div>
-            <p className="text-sm font-bold text-foreground">
-              {transaction.agency?.bankName || 'Bank'} •{' '}
-              {transaction.agency?.bankAccountNumber || '-'}
-            </p>
-            <p className="text-xs font-medium text-muted-foreground">
-              a.n. {transaction.agency?.bankAccountName || '-'}
-            </p>
-          </div>
-          <div>
-            <Button
-              variant="transparent"
-              size="sm"
-              className="text-primary-default font-black h-8 hover:bg-white px-3 rounded-xl border border-primary-default/10 w-fit"
-              onClick={handleCopy}
-            >
-              {t('detail.copy')}
-            </Button>
+      {transaction.paymentStatus === 'PENDING' && (
+        <div className="bg-primary-default/5 rounded-3xl p-6 space-y-2 border border-primary-default/10">
+          <p className="text-xs font-black text-primary-default uppercase tracking-widest">
+            {t('detail.transferTo')}
+          </p>
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-sm font-bold text-foreground">
+                {transaction.agency?.bankName || 'Bank'} •{' '}
+                {transaction.agency?.bankAccountNumber || '-'}
+              </p>
+              <p className="text-xs font-medium text-muted-foreground">
+                a.n. {transaction.agency?.bankAccountName || '-'}
+              </p>
+            </div>
+            <div>
+              <Button
+                variant="transparent"
+                size="sm"
+                className="text-primary-default font-black h-8 hover:bg-white px-3 rounded-xl border border-primary-default/10 w-fit"
+                onClick={handleCopy}
+              >
+                {t('detail.copy')}
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {transaction.paymentStatus === 'PENDING' &&
         !transaction.paymentProofUrl &&
@@ -92,7 +94,7 @@ export const DetailPaymentTab = ({ transaction, onUpload, isUploading }: DetailP
           />
         )}
 
-      {transaction.paymentStatus === 'Checking' && (
+      {transaction.paymentStatus === 'CHECKING' && (
         <div className="bg-warning-500/5 rounded-3xl p-6 flex items-center gap-5 border border-warning-200">
           <div className="size-12 rounded-2xl bg-warning-500 flex items-center justify-center text-white shadow-lg shadow-warning-500/20 shrink-0">
             <ShieldCheck className="size-6" />
@@ -226,7 +228,7 @@ export const DetailPaymentTab = ({ transaction, onUpload, isUploading }: DetailP
                     <p className="text-[10px] font-bold text-muted-foreground">Status Pengecekan</p>
                     <Badge className={cn(
                       "text-[10px] font-black uppercase tracking-widest border-0",
-                      transaction.paymentStatus === 'Completed' ? "bg-primary-default text-white" : "bg-warning-500 text-white"
+                      transaction.paymentStatus === 'COMPLETED' ? "bg-primary-default text-white" : "bg-warning-500 text-white"
                     )}>
                       {transaction.paymentStatus}
                     </Badge>

@@ -1,5 +1,5 @@
 export type TTransactionStatus = 'Submit' | 'Process' | 'Issued' | 'Expired' | 'IN_REVIEW';
-export type TPaymentStatus = 'Menunggu' | 'Checking' | 'Completed' | 'PENDING';
+export type TPaymentStatus = 'PENDING' | 'CHECKING' | 'COMPLETED';
 
 export type TOcrType =
   | 'PASSPORT'

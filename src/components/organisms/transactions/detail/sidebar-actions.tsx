@@ -45,41 +45,43 @@ export const DetailSidebarActions = ({
         </div>
       </div>
 
-      <div className="pt-6 border-t border-gray-50 flex flex-col gap-4">
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-60">
-          {transaction.paymentStatus === 'Completed'
-            ? t('detail.downloadVisa')
-            : t('detail.actionTitle')}
-        </p>
+      {(transaction.paymentStatus === 'PENDING' || transaction.paymentStatus === 'COMPLETED') && (
+        <div className="pt-6 border-t border-gray-50 flex flex-col gap-4">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-60">
+            {transaction.paymentStatus === 'COMPLETED'
+              ? t('detail.downloadVisa')
+              : t('detail.actionTitle')}
+          </p>
 
-        {transaction.paymentStatus === 'Completed' ? (
-          <Button
-            className="w-full rounded-2xl shadow-lg shadow-primary-500/20 py-6"
-            size="lg"
-            onClick={onDownload}
-          >
-            <Download className="size-5 mr-3" />
-            {t('detail.downloadVisa')}
-          </Button>
-        ) : (
-          <>
-            {transaction.paymentStatus === 'PENDING' && (
-              <>
-                <Button
-                  variant="primaryOutline"
-                  className="w-full rounded-2xl border-primary-default/10 py-6"
-                  onClick={onEdit}
-                >
-                  <Pencil className="size-4 mr-2" /> {t('detail.editSubmission')}
-                </Button>
-                <p className="text-[10px] text-center text-muted-foreground italic leading-relaxed px-2">
-                  {t('detail.editHint')}
-                </p>
-              </>
-            )}
-          </>
-        )}
-      </div>
+          {transaction.paymentStatus === 'COMPLETED' ? (
+            <Button
+              className="w-full rounded-2xl shadow-lg shadow-primary-500/20 py-6"
+              size="lg"
+              onClick={onDownload}
+            >
+              <Download className="size-5 mr-3" />
+              {t('detail.downloadVisa')}
+            </Button>
+          ) : (
+            <>
+              {transaction.paymentStatus === 'PENDING' && (
+                <>
+                  <Button
+                    variant="primaryOutline"
+                    className="w-full rounded-2xl border-primary-default/10 py-6"
+                    onClick={onEdit}
+                  >
+                    <Pencil className="size-4 mr-2" /> {t('detail.editSubmission')}
+                  </Button>
+                  <p className="text-[10px] text-center text-muted-foreground italic leading-relaxed px-2">
+                    {t('detail.editHint')}
+                  </p>
+                </>
+              )}
+            </>
+          )}
+        </div>
+      )}
     </Card>
   );
 };
