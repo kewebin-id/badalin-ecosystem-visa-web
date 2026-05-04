@@ -16,25 +16,32 @@ export const POST = async (req: NextRequest, { params }: { params: Promise<{ id:
     const agencySlug = req.cookies.get('agency_slug')?.value || session?.user?.agency?.slug;
     const apiKey = process.env.API_KEY;
     const formData = await req.formData();
+    const file = formData.get('file') as File;
 
     if (!session?.token) return response[401]({ message: 'Unauthorized' });
     if (!apiKey) return response[500]({ message: 'Internal server error' });
+    if (!file) return response[400]({ message: 'No file uploaded' });
+
+    const arrayBuffer = await file.arrayBuffer();
+    const base64 = Buffer.from(arrayBuffer).toString('base64');
+    const base64WithPrefix = `data:${file.type};base64,${base64}`;
 
     const restApi = new RestAPI(undefined, session.token as string);
     const endpoint = endpoints.visa.submissions.paymentProof(id);
 
-    Logger.info(`POST ${endpoint} - Starting upload`, {
+    Logger.info(`POST ${endpoint} - Starting upload (base64)`, {
       location: `api/visa/submissions/${id}/payment-proof/route.ts - POST`,
     });
 
     const res = await restApi.post({
       endpoint,
-      body: formData,
+      body: {
+        file: base64WithPrefix,
+      },
       config: {
         headers: {
           'x-api-key': apiKey,
           Cookie: `agency_slug=${agencySlug}`,
-          'Content-Type': 'multipart/form-data',
         },
       },
     });
