@@ -7,7 +7,7 @@ export const getTransactionDisplayStatus = (transaction: ITransaction) => {
       labelKey: 'detail.pendingPayment',
     };
   }
-  if (transaction.paymentStatus === 'Checking') {
+  if (transaction.paymentStatus === 'CHECKING') {
     return {
       status: 'CHECKING_PAYMENT',
       labelKey: 'detail.checkingPayment',
