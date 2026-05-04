@@ -86,7 +86,7 @@ export interface ITransaction {
 }
 
 export interface IApiTransaction extends Omit<ITransaction, 'pilgrimIds'> {
-  members: { id: string; fullName: string; passportNumber: string; relation: string }[];
+  members: ITransaction['members'];
 }
 
 export interface ICreateTransactionRequest {
