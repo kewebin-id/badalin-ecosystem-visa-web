@@ -30,7 +30,7 @@ export const endpoints = {
     submissions: {
       base: `${PrefixEndpoint.VISA}/submissions`,
       detail: (id: string) => `${PrefixEndpoint.VISA}/submissions/${id}`,
-      paymentProof: (id: string) => `${PrefixEndpoint.VISA}/submissions/${id}/upload-proof`,
+      paymentProof: (id: string) => `${PrefixEndpoint.VISA}/submissions/${id}/payment-proof`,
       preview: `${PrefixEndpoint.VISA}/submissions/preview`,
     },
     upload: `${PrefixEndpoint.V1}/upload`,
