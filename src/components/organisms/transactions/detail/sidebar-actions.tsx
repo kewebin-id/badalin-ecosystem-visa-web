@@ -8,6 +8,8 @@ import { formatDate } from '@/shared/utils';
 import { Download, Pencil } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
+import { getTransactionDisplayStatus } from '@/packages/pilgrim/transaction/domain/utils';
+
 interface DetailSidebarActionsProps {
   transaction: ITransaction;
   onEdit: () => void;
@@ -21,6 +23,8 @@ export const DetailSidebarActions = ({
 }: DetailSidebarActionsProps) => {
   const t = useTranslations('VisaTransaction');
 
+  const displayStatus = getTransactionDisplayStatus(transaction);
+
   return (
     <Card className="p-6 rounded-[2rem] border border-gray-100 shadow-sm space-y-6 bg-white sticky top-24 overflow-hidden">
       <div className="space-y-4">
@@ -29,8 +33,8 @@ export const DetailSidebarActions = ({
         </p>
         <div className="bg-gray-50 rounded-2xl p-4 flex flex-col items-center text-center gap-3 border border-gray-100">
           <StatusBadge
-            status={transaction.status}
-            label={t(`status.${transaction.status}`)}
+            status={displayStatus.status}
+            label={t(displayStatus.labelKey as any)}
             className="text-xs font-black px-4 py-1.5 rounded-full"
           />
           {transaction.updatedAt && (

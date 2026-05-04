@@ -1,0 +1,20 @@
+import { ITransaction } from './transaction';
+
+export const getTransactionDisplayStatus = (transaction: ITransaction) => {
+  if (transaction.paymentStatus === 'PENDING') {
+    return {
+      status: 'PENDING_PAYMENT',
+      labelKey: 'detail.pendingPayment',
+    };
+  }
+  if (transaction.paymentStatus === 'Checking') {
+    return {
+      status: 'CHECKING_PAYMENT',
+      labelKey: 'detail.checkingPayment',
+    };
+  }
+  return {
+    status: transaction.status,
+    labelKey: `status.${transaction.status}`,
+  };
+};

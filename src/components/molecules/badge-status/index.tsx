@@ -38,6 +38,12 @@ const statusConfig: Record<string, { label: string; variant: BadgeVariant }> = {
   OnLeave: { label: 'On Leave', variant: 'warning' },
   Inactive: { label: 'Inactive', variant: 'dark' },
   'waiting-external-approve': { label: 'Cost Review', variant: 'warning' },
+  // Visa statuses
+  IN_REVIEW: { label: 'In Review', variant: 'info' },
+  VERIFIED: { label: 'Verified', variant: 'success' },
+  SUBMIT: { label: 'Submitted', variant: 'warning' },
+  PENDING_PAYMENT: { label: 'Pending Payment', variant: 'warning' },
+  CHECKING_PAYMENT: { label: 'Checking Payment', variant: 'secondary' },
 };
 
 interface StatusBadgeProps {

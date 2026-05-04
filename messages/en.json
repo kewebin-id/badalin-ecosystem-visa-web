@@ -365,7 +365,9 @@
       "copySuccess": "Account number copied successfully!",
       "pilgrimList": "Pilgrim List",
       "uploadedDocuments": "Attached Documents",
-      "noDocuments": "No documents uploaded yet"
+      "noDocuments": "No documents uploaded yet",
+      "pendingPayment": "Pending Payment",
+      "checkingPayment": "Checking Payment"
     },
     "status": {
       "Submit": "Submit",

@@ -374,7 +374,9 @@
       "copySuccess": "Nomor rekening berhasil disalin!",
       "pilgrimList": "Daftar Jamaah",
       "uploadedDocuments": "Dokumen Terlampir",
-      "noDocuments": "Belum ada dokumen yang diunggah"
+      "noDocuments": "Belum ada dokumen yang diunggah",
+      "pendingPayment": "Menunggu Pembayaran",
+      "checkingPayment": "Pengecekan Pembayaran"
     },
     "status": {
       "Submit": "Submit",

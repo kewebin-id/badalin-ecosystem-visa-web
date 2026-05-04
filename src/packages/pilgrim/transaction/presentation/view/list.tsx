@@ -20,6 +20,8 @@ import Link from 'next/link';
 import { useCallback, useMemo } from 'react';
 import { ITransaction } from '../../domain/transaction';
 
+import { getTransactionDisplayStatus } from '@/packages/pilgrim/transaction/domain/utils';
+
 interface TransactionListViewProps {
   transactions: ITransaction[];
   loading: boolean;
@@ -32,14 +34,6 @@ interface TransactionListViewProps {
   onSearchChange: (value?: string) => void;
   onRetry?: () => void;
 }
-
-const statusMap: Record<string, string> = {
-  Submit: 'submitted',
-  Process: 'pending',
-  Issued: 'approved',
-  Expired: 'cancelled',
-  IN_REVIEW: 'pending',
-};
 
 export const TransactionListView = ({
   transactions,
@@ -105,12 +99,12 @@ export const TransactionListView = ({
       {
         accessorKey: 'status',
         header: 'Status',
-        cell: ({ row }) => (
-          <StatusBadge
-            status={statusMap[row.original.status] || 'pending'}
-            label={t(`status.${row.original.status}`)}
-          />
-        ),
+        cell: ({ row }) => {
+          const displayStatus = getTransactionDisplayStatus(row.original);
+          return (
+            <StatusBadge status={displayStatus.status} label={t(displayStatus.labelKey as any)} />
+          );
+        },
       },
       {
         id: 'actions',
@@ -204,10 +198,15 @@ export const TransactionListView = ({
                 </p>
                 <p className="text-xs text-muted-foreground font-medium">{tx.route || 'Umrah'}</p>
               </div>
-              <StatusBadge
-                status={statusMap[tx.status] || 'pending'}
-                label={t(`status.${tx.status}`)}
-              />
+              {(() => {
+                const displayStatus = getTransactionDisplayStatus(tx);
+                return (
+                  <StatusBadge
+                    status={displayStatus.status}
+                    label={t(displayStatus.labelKey as any)}
+                  />
+                );
+              })()}
             </div>
             <div className="flex items-center justify-between pt-3 border-t border-gray-50 mt-3">
               <div className="flex flex-col">

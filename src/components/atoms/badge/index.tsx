@@ -26,6 +26,8 @@ const badgeVariants = cva(
         info: 'border-transparent bg-info-500 text-white [a&]:hover:bg-info-600',
         outlineInfo:
           'border border-info-500 text-info-500 [a&]:hover:bg-info-100 [a&]:hover:text-dark-950',
+        success:
+          'border-transparent bg-emerald-500 text-white [a&]:hover:bg-emerald-600 focus-visible:ring-emerald-200/20',
       },
     },
     defaultVariants: {
