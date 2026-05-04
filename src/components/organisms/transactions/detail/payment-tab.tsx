@@ -9,7 +9,17 @@ import { InputFile, UploadFile } from '@/components/molecules/input/file';
 import { PAYMENT_STEPS } from '@/packages/pilgrim/transaction/domain/constant';
 import { ITransaction } from '@/packages/pilgrim/transaction/domain/transaction';
 import { cn, currencyFormat } from '@/shared/utils';
-import { Calendar, Eye, ShieldCheck, User, Wallet, CreditCard, Landmark, FileText, CheckCircle2 } from 'lucide-react';
+import {
+  Calendar,
+  CheckCircle2,
+  CreditCard,
+  Eye,
+  FileText,
+  Landmark,
+  ShieldCheck,
+  User,
+  Wallet,
+} from 'lucide-react';
 import moment from 'moment';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -181,7 +191,7 @@ export const DetailPaymentTab = ({ transaction, onUpload, isUploading }: DetailP
                   alt={t('detail.paymentProof')}
                   width={400}
                   height={600}
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                  className="w-full h-[400px] object-cover transition-transform duration-1000 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-primary-default/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center backdrop-blur-[2px]">
                   <div className="bg-white p-4 rounded-full shadow-2xl scale-75 group-hover:scale-100 transition-transform duration-500">
@@ -209,7 +219,7 @@ export const DetailPaymentTab = ({ transaction, onUpload, isUploading }: DetailP
                         : '-'}
                     </p>
                   </div>
-                  
+
                   <div className="space-y-1.5">
                     <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.2em] flex items-center gap-2">
                       <Wallet className="size-3.5 text-primary-default/40" />
@@ -267,7 +277,10 @@ export const DetailPaymentTab = ({ transaction, onUpload, isUploading }: DetailP
                       <CheckCircle2 className="size-3.5 text-primary-default/40" />
                       {t('detail.transferStatusLabel')}
                     </p>
-                    <Badge variant="outline" className="text-[10px] font-black border-primary-default/20 text-primary-default bg-primary-default/5 px-2 py-0">
+                    <Badge
+                      variant="outline"
+                      className="text-[10px] font-black border-primary-default/20 text-primary-default bg-primary-default/5 px-2 py-0"
+                    >
                       {transaction.resultSnapshot?.transferStatus || '-'}
                     </Badge>
                   </div>
@@ -280,29 +293,6 @@ export const DetailPaymentTab = ({ transaction, onUpload, isUploading }: DetailP
                     <p className="text-sm font-bold text-foreground truncate max-w-[150px]">
                       {transaction.resultSnapshot?.notes || '-'}
                     </p>
-                  </div>
-                </div>
-
-                <div className="pt-6 border-t border-gray-100/50">
-                  <div className="bg-white rounded-2xl p-4 border border-gray-100 flex items-center justify-between shadow-sm">
-                    <div className="flex flex-col gap-0.5">
-                      <p className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.15em]">
-                        {t('detail.checkStatus')}
-                      </p>
-                      <p className="text-xs font-bold text-foreground/60">
-                        {t('detail.systemVerification')}
-                      </p>
-                    </div>
-                    <Badge
-                      className={cn(
-                        'text-[10px] font-black uppercase tracking-[0.2em] border-0 px-4 py-1.5 rounded-xl shadow-lg',
-                        transaction.paymentStatus === 'COMPLETED'
-                          ? 'bg-primary-default text-white shadow-primary-default/20'
-                          : 'bg-warning-500 text-white shadow-warning-500/20',
-                      )}
-                    >
-                      {t(`payment.${transaction.paymentStatus}`)}
-                    </Badge>
                   </div>
                 </div>
               </div>

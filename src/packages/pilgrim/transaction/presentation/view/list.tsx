@@ -100,19 +100,21 @@ export const TransactionListView = ({
       {
         id: 'actions',
         cell: ({ row }) => (
-          <Button
-            variant="transparent"
-            size="icon"
-            className="h-8 w-8 text-gray-400 hover:text-primary-default"
-            asChild
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <Link href={`${ROUTES.PILGRIM.TRANSACTION.FORM}?id=${row.original.id}`}>
-              <Pencil className="h-4 w-4" />
-            </Link>
-          </Button>
+          row.original.paymentStatus === 'PENDING' ? (
+            <Button
+              variant="transparent"
+              size="icon"
+              className="h-8 w-8 text-gray-400 hover:text-primary-default"
+              asChild
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <Link href={`${ROUTES.PILGRIM.TRANSACTION.FORM}?id=${row.original.id}`}>
+                <Pencil className="h-4 w-4" />
+              </Link>
+            </Button>
+          ) : null
         ),
       },
     ],
@@ -204,17 +206,19 @@ export const TransactionListView = ({
                 </span>
               </div>
               <div className="flex items-center gap-1">
-                <Button
-                  variant="transparent"
-                  size="icon"
-                  className="h-9 w-9 text-gray-400 hover:text-primary-default"
-                  asChild
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Link href={`${ROUTES.PILGRIM.TRANSACTION.FORM}?id=${tx.id}`}>
-                    <Pencil className="h-4 w-4" />
-                  </Link>
-                </Button>
+                {tx.paymentStatus === 'PENDING' && (
+                  <Button
+                    variant="transparent"
+                    size="icon"
+                    className="h-9 w-9 text-gray-400 hover:text-primary-default"
+                    asChild
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Link href={`${ROUTES.PILGRIM.TRANSACTION.FORM}?id=${tx.id}`}>
+                      <Pencil className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                )}
               </div>
             </div>
           </Card>

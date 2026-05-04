@@ -403,6 +403,17 @@
       "CHECKING": "Pengecekan",
       "COMPLETED": "Selesai"
     },
+    "dialog": {
+      "successTitle": "Upload Berhasil",
+      "successWithNoteTitle": "Upload Berhasil dengan Catatan",
+      "okButton": "Oke, Mengerti",
+      "checkingHeading": "Pembayaran Sedang Dicek",
+      "attentionHeading": "Mohon Perhatikan Catatan",
+      "successDesc": "Bukti transfer kamu sudah kami terima dan sedang dalam proses pengecekan oleh tim kami.",
+      "successWithNoteDesc": "Bukti transfer kamu berhasil diupload, namun ada beberapa hal yang perlu kamu perhatikan:",
+      "systemNote": "Catatan Sistem:",
+      "footer": "Status transaksi kamu akan diperbarui secara berkala."
+    },
     "notFoundTitle": "Transaksi Tidak Ditemukan",
     "notFoundDescription": "Mohon maaf, data transaksi yang Anda cari tidak tersedia atau mungkin telah dihapus.",
     "backToList": "Kembali ke Daftar Transaksi"

@@ -394,6 +394,17 @@
       "CHECKING": "Checking",
       "COMPLETED": "Completed"
     },
+    "dialog": {
+      "successTitle": "Upload Successful",
+      "successWithNoteTitle": "Upload Successful with Notes",
+      "okButton": "OK, I Understand",
+      "checkingHeading": "Payment is Being Checked",
+      "attentionHeading": "Please Note the Following",
+      "successDesc": "Your payment proof has been received and is currently being verified by our team.",
+      "successWithNoteDesc": "Your payment proof has been successfully uploaded, but there are a few things you need to note:",
+      "systemNote": "System Note:",
+      "footer": "Your transaction status will be updated periodically."
+    },
     "notFoundTitle": "Transaction Not Found",
     "notFoundDescription": "Sorry, the transaction you are looking for is unavailable or might have been deleted.",
     "backToList": "Back to Transaction List"

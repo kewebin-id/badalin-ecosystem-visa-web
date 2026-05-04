@@ -9,16 +9,15 @@ import {
   DetailLogisticsTab,
   DetailPaymentTab,
   DetailSidebarActions,
+  PaymentStatusDialog,
 } from '@/components/organisms/transactions/detail';
+import { ITransaction } from '@/packages/pilgrim/transaction/domain/transaction';
 import { ROUTES } from '@/shared/constants/routes';
-import { cn } from '@/shared/utils';
+import { CheckCircle2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useTransactionController } from '../controller';
-import { DialogDrawer } from '@/components/molecules/dialog-drawer';
-import { CheckCircle2, FileText } from 'lucide-react';
-import { ITransaction } from '@/packages/pilgrim/transaction/domain/transaction';
 
 export const TransactionDetailView = () => {
   const t = useTranslations('VisaTransaction');
@@ -132,44 +131,11 @@ export const TransactionDetailView = () => {
         </div>
       </div>
 
-      <DialogDrawer
+      <PaymentStatusDialog
         open={showSuccessDialog}
-        setOpen={setShowSuccessDialog}
-        title={lastUploadedData?.resultSnapshot?.message ? "Upload Berhasil dengan Catatan" : "Upload Berhasil"}
-        onSubmit={() => setShowSuccessDialog(false)}
-        submitButton="Oke, Mengerti"
-      >
-        <div className="flex flex-col items-center text-center p-4 space-y-4">
-          <div className={cn(
-            "size-20 rounded-full flex items-center justify-center shadow-lg",
-            lastUploadedData?.resultSnapshot?.message ? "bg-warning-500/10 text-warning-600" : "bg-primary-default/10 text-primary-default"
-          )}>
-            {lastUploadedData?.resultSnapshot?.message ? <FileText className="size-10" /> : <CheckCircle2 className="size-10" />}
-          </div>
-          
-          <div className="space-y-2">
-            <h3 className="text-lg font-bold text-foreground">
-              {lastUploadedData?.resultSnapshot?.message ? "Mohon Perhatikan Catatan" : "Pembayaran Sedang Dicek"}
-            </h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {lastUploadedData?.resultSnapshot?.message 
-                ? "Bukti transfer kamu berhasil diupload, namun ada beberapa hal yang perlu kamu perhatikan:"
-                : "Bukti transfer kamu sudah kami terima dan sedang dalam proses pengecekan oleh tim kami."}
-            </p>
-          </div>
-
-          {lastUploadedData?.resultSnapshot?.message && (
-            <div className="w-full bg-warning-500/5 border border-warning-200 rounded-2xl p-4 text-left">
-              <p className="text-xs font-black text-warning-700 uppercase tracking-widest mb-1">Catatan Sistem:</p>
-              <p className="text-sm font-medium text-warning-600 italic">"{lastUploadedData.resultSnapshot.message}"</p>
-            </div>
-          )}
-          
-          <p className="text-xs text-muted-foreground font-medium pt-2">
-            Status transaksi kamu akan diperbarui secara berkala.
-          </p>
-        </div>
-      </DialogDrawer>
+        onOpenChange={setShowSuccessDialog}
+        message={lastUploadedData?.resultSnapshot?.message}
+      />
     </div>
   );
 };
