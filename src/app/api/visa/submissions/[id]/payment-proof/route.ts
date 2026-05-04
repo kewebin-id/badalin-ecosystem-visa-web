@@ -21,8 +21,14 @@ export const POST = async (req: NextRequest, { params }: { params: Promise<{ id:
     if (!apiKey) return response[500]({ message: 'Internal server error' });
 
     const restApi = new RestAPI(undefined, session.token as string);
+    const endpoint = endpoints.visa.submissions.paymentProof(id);
+
+    Logger.info(`POST ${endpoint} - Starting upload`, {
+      location: `api/visa/submissions/${id}/payment-proof/route.ts - POST`,
+    });
+
     const res = await restApi.post({
-      endpoint: endpoints.visa.submissions.paymentProof(id),
+      endpoint,
       body: formData,
       config: {
         headers: {
@@ -31,6 +37,10 @@ export const POST = async (req: NextRequest, { params }: { params: Promise<{ id:
           'Content-Type': 'multipart/form-data',
         },
       },
+    });
+
+    Logger.info(`POST ${endpoint} - Response: ${JSON.stringify(res)}`, {
+      location: `api/visa/submissions/${id}/payment-proof/route.ts - POST`,
     });
 
     return response.handler(res);
