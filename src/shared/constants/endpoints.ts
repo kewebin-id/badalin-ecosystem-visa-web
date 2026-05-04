@@ -45,7 +45,7 @@ export const endpoints = {
     },
     agency: {
       base: '/api/v1/p/agency',
-      checkSlug: '/api/v1/visa/agency/check-slug',
+      checkSlug: '/api/v1/p/agency/check-slug',
     },
   },
   nextApi: {
