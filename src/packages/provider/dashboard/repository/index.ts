@@ -1,3 +1,4 @@
+import { endpoints } from '@/shared/constants/endpoints';
 import { RequestAPI, ResponseREST } from '@/shared/utils/rest-api/types';
 import { IDashboardSummary } from '../domain/response';
 
@@ -10,7 +11,8 @@ export class ProviderDashboardRepository implements IProviderDashboardRepository
 
   async getSummary(): Promise<ResponseREST<IDashboardSummary>> {
     return this.api.get<IDashboardSummary>({
-      endpoint: '/api/v1/p/dashboard/summary',
+      endpoint: endpoints.nextApi.provider.dashboard.summary,
+      isNextApi: true,
     });
   }
 }

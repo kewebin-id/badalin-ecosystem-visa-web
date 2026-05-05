@@ -14,6 +14,7 @@ export interface IUser {
   employeeId?: string;
   photoUrl: string | null;
   agency: IAgency | null;
+  agencySlug?: string;
 }
 
 export interface ILoginResponse {

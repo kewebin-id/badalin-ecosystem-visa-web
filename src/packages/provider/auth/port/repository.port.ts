@@ -21,4 +21,5 @@ export interface IAuthRepository {
   resetPassword(data: IResetPasswordRequest): Promise<ResponseREST<{ message: string }>>;
   checkSlug(slug: string): Promise<ResponseREST<ICheckSlugResponse>>;
   updateAgency(body: { slug: string; name?: string }): Promise<ResponseREST<any>>;
+  validateSession(): Promise<ResponseREST<{ valid: boolean }>>;
 }

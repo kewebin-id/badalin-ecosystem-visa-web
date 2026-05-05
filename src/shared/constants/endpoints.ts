@@ -48,6 +48,9 @@ export const endpoints = {
       checkSlug: '/api/v1/p/agency/check-slug',
       validateSession: '/api/v1/p/agency/validate',
     },
+    dashboard: {
+      summary: (slug: string = 'p') => `/api/v1/${slug}/dashboard/summary`,
+    },
   },
   nextApi: {
     auth: {
@@ -70,6 +73,9 @@ export const endpoints = {
         base: '/api/provider/agency',
         checkSlug: '/api/provider/agency/check-slug',
         validateSession: '/api/provider/agency/validate',
+      },
+      dashboard: {
+        summary: '/api/provider/dashboard/summary',
       },
     },
     visa: {

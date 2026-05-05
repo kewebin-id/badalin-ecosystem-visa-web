@@ -7,6 +7,7 @@ import { SetupSlugDialog } from '@/packages/provider/auth/presentation/view/setu
 import { useAuth } from '@/shared/hooks';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AppHeader } from '../../organisms/layout/app-header';
 import { AppSidebar } from '../../organisms/layout/app-sidebar';
@@ -14,13 +15,26 @@ import { AppSidebar } from '../../organisms/layout/app-sidebar';
 export const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const t = useTranslations();
   const { signOut, user } = useAuth();
+  const params = useParams();
   const { validateSessionMutation } = useProviderAuthController();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   useEffect(() => {
-    const checkSession = async () => {
+    const checkAndSyncSession = async () => {
       if (user?.role === 'PROVIDER') {
+        // 1. Check if slug matches user's agencySlug
+        const currentSlug = params?.slug as string;
+        const userSlug = user?.agencySlug || user?.agency?.slug;
+
+        if (currentSlug && userSlug && currentSlug !== userSlug) {
+          const currentPath = window.location.pathname;
+          const newPath = currentPath.replace(`/${currentSlug}`, `/${userSlug}`);
+          window.location.assign(newPath);
+          return;
+        }
+
+        // 2. Validate session with backend
         try {
           const res = await validateSessionMutation.mutateAsync();
           if (res && !res.valid) {
@@ -32,8 +46,8 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
       }
     };
 
-    checkSession();
-  }, []);
+    checkAndSyncSession();
+  }, [params?.slug, user?.agencySlug]);
 
   const isProvider = user?.role === 'PROVIDER';
   const isSlugSetup = user?.agency?.isSlugSetup;

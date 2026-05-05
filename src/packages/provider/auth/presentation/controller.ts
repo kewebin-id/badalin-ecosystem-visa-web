@@ -43,8 +43,12 @@ export const useProviderAuthController = () => {
         throw new Error(res.error);
       }
 
+      const { getSession } = await import('next-auth/react');
+      const session = await getSession();
+      const userSlug = (session?.user as any)?.agency?.slug || (session?.user as any)?.agencySlug || slug;
+
       toast.success('Login successful');
-      window.location.assign(ROUTES.PROVIDER.DASHBOARD(slug));
+      window.location.assign(ROUTES.PROVIDER.DASHBOARD(userSlug));
       return res;
     },
   });
