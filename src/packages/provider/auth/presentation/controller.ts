@@ -106,6 +106,16 @@ export const useProviderAuthController = () => {
     },
   });
 
+  const validateSessionMutation = useMutation({
+    mutationFn: async () => {
+      const result = await usecase.validateSession();
+      if (result.error) {
+        throw result.error;
+      }
+      return result.data;
+    },
+  });
+
   return {
     loginMutation,
     registerMutation,
@@ -113,6 +123,7 @@ export const useProviderAuthController = () => {
     forgotPasswordMutation,
     resetPasswordMutation,
     checkSlugMutation,
+    validateSessionMutation,
     updateAgencyMutation: useMutation({
       mutationFn: async (payload: { slug: string; name?: string }) => {
         const result = await usecase.updateAgency(payload);

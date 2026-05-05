@@ -46,6 +46,7 @@ export const endpoints = {
     agency: {
       base: '/api/v1/p/agency',
       checkSlug: '/api/v1/p/agency/check-slug',
+      validateSession: '/api/v1/p/agency/validate',
     },
   },
   nextApi: {
@@ -68,6 +69,7 @@ export const endpoints = {
       agency: {
         base: '/api/provider/agency',
         checkSlug: '/api/provider/agency/check-slug',
+        validateSession: '/api/provider/agency/validate',
       },
     },
     visa: {

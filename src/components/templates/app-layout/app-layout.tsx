@@ -1,22 +1,39 @@
 'use client';
 
-import { SidebarProvider } from '@/components/organisms';
 import { DialogDrawer } from '@/components/molecules';
+import { SidebarProvider } from '@/components/organisms';
+import { useProviderAuthController } from '@/packages/provider/auth/presentation/controller';
+import { SetupSlugDialog } from '@/packages/provider/auth/presentation/view/setup-slug-dialog';
+import { useAuth } from '@/shared/hooks';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AppHeader } from '../../organisms/layout/app-header';
 import { AppSidebar } from '../../organisms/layout/app-sidebar';
-import { useAuth } from '@/shared/hooks';
-import { SetupSlugDialog } from '@/packages/provider/auth/presentation/view/setup-slug-dialog';
 
 export const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const t = useTranslations();
-  const router = useRouter();
   const { signOut, user } = useAuth();
+  const { validateSessionMutation } = useProviderAuthController();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      if (user?.role === 'PROVIDER') {
+        try {
+          const res = await validateSessionMutation.mutateAsync();
+          if (res && !res.valid) {
+            await signOut();
+          }
+        } catch (error) {
+          await signOut();
+        }
+      }
+    };
+
+    checkSession();
+  }, []);
 
   const isProvider = user?.role === 'PROVIDER';
   const isSlugSetup = user?.agency?.isSlugSetup;
@@ -26,8 +43,8 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
     <SidebarProvider>
       <div className="flex h-screen w-full overflow-hidden bg-gray-200/50">
         {/* SIDEBAR: Fluid on Desktop, Sheet on Mobile */}
-        <AppSidebar 
-          onMenuClose={() => setIsSidebarOpen(false)} 
+        <AppSidebar
+          onMenuClose={() => setIsSidebarOpen(false)}
           onLogoutClick={() => setIsLogoutModalOpen(true)}
           className="hidden md:flex bg-white border-r border-gray-100"
         />
@@ -53,8 +70,8 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                 className="fixed inset-y-0 left-0 w-[280px] bg-white z-60 lg:hidden shadow-2xl"
               >
-                <AppSidebar 
-                  onMenuClose={() => setIsSidebarOpen(false)} 
+                <AppSidebar
+                  onMenuClose={() => setIsSidebarOpen(false)}
                   onLogoutClick={() => setIsLogoutModalOpen(true)}
                   className="flex w-full h-full"
                 />
@@ -90,7 +107,7 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
         >
           <p className="text-sm text-gray-500">{t('Common.logoutConfirmDesc')}</p>
         </DialogDrawer>
-        
+
         <SetupSlugDialog open={!!showSetupSlug} />
       </div>
     </SidebarProvider>

@@ -137,4 +137,17 @@ export class AuthUseCase implements IAuthUsecase {
       };
     }
   };
+
+  validateSession = async (): Promise<IUsecaseResponse<{ valid: boolean }>> => {
+    try {
+      const result = await this.repository.validateSession();
+      return { data: { valid: result.data?.valid ?? false }, message: result.message };
+    } catch (err) {
+      Logger.error(err, { location: 'ProviderAuthUseCase.validateSession' });
+      return {
+        error: new Error(err instanceof Error ? err.message : 'Internal server error'),
+        message: 'Failed to validate session',
+      };
+    }
+  };
 }
