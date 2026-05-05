@@ -8,6 +8,7 @@ export interface IDashboardStats {
 export interface IDashboardActivity {
   id: string;
   description: string;
+  status: string;
   timestamp: string;
   type: 'payment' | 'visa' | 'manifest';
 }

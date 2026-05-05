@@ -1,13 +1,13 @@
 'use client';
 
 import { Badge } from '@/components/atoms';
+import { HeaderPageContent } from '@/components/molecules';
 import { cn } from '@/shared/utils';
-import { useTranslations } from 'next-intl';
 import { BadgeCheck, BarChart3, Clock, CreditCard, FileSearch, FileText } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useProviderDashboardController } from '../controller';
 import { DashboardSkeleton } from './skeleton';
-import { HeaderPageContent } from '@/components/molecules';
 
 export const ProviderDashboardView = () => {
   const t = useTranslations('ProviderDashboard');
@@ -100,17 +100,41 @@ export const ProviderDashboardView = () => {
     </div>
   );
 
+  const formatStatus = (status: string) => {
+    switch (status) {
+      case 'IN_REVIEW':
+        return t('badges.inReview');
+      case 'VERIFIED':
+        return t('badges.verified');
+      case 'REJECTED':
+        return t('badges.rejected');
+      default:
+        return status;
+    }
+  };
+
+  const formatDate = (dateStr: string) => {
+    try {
+      const date = new Date(dateStr);
+      return new Intl.DateTimeFormat('id-ID', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }).format(date);
+    } catch (e) {
+      return dateStr;
+    }
+  };
+
   if (isPending) {
     return <DashboardSkeleton />;
   }
 
   return (
     <div className="space-y-8 w-full">
-      <HeaderPageContent
-        title={t('title')}
-        subtitle={t('subtitle')}
-        hideBack
-      />
+      <HeaderPageContent title={t('title')} subtitle={t('subtitle')} hideBack />
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -201,12 +225,17 @@ export const ProviderDashboardView = () => {
                 className="flex items-start justify-between p-5 rounded-2xl bg-gray-50/50 border border-transparent hover:border-gray-100 hover:bg-white transition-all duration-300"
               >
                 <div className="min-w-0 flex-1">
-                  <p className="text-[13px] font-medium text-gray-900 leading-relaxed line-clamp-2">
+                  <p className="text-[13px] font-bold text-gray-900 leading-relaxed truncate">
                     {a.description}
                   </p>
-                  <p className="text-[11px] text-gray-400 mt-2 font-medium flex items-center gap-1">
+                  <p className="text-[11px] text-gray-500 mt-1 font-medium flex items-center gap-2">
+                    <Badge className="bg-gray-100 text-gray-600 border-0 text-[9px] py-0 px-1.5 h-4">
+                      {formatStatus(a.status)}
+                    </Badge>
+                  </p>
+                  <p className="text-[10px] text-gray-400 mt-2 font-medium flex items-center gap-1">
                     <Clock className="size-3" />
-                    {a.timestamp}
+                    {formatDate(a.timestamp)}
                   </p>
                 </div>
                 <div className="ml-3 shrink-0">{typeBadge(a.type)}</div>
