@@ -464,7 +464,10 @@
     "badges": {
       "payment": "Pembayaran",
       "visa": "Visa",
-      "manifest": "Manifest"
+      "manifest": "Manifest",
+      "inReview": "Dalam Tinjauan",
+      "verified": "Terverifikasi",
+      "rejected": "Ditolak"
     }
   },
   "ProviderSubmissions": {
@@ -481,11 +484,12 @@
       "action": "Aksi"
     },
     "status": {
-      "pending": "Pending",
-      "checking": "Checking",
-      "completed": "Completed",
-      "verified": "Verified",
-      "rejected": "Rejected"
+      "pending": "Menunggu",
+      "checking": "Mengecek",
+      "completed": "Selesai",
+      "inReview": "Dalam Tinjauan",
+      "verified": "Terverifikasi",
+      "rejected": "Ditolak"
     },
     "manifest": {
       "title": "Logistik & Manifest",

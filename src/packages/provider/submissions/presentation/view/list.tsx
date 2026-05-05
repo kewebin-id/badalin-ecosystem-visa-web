@@ -27,57 +27,73 @@ import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
+import { useProviderSubmissionsController } from '../controller';
+import { SubmissionsSkeleton } from './skeleton'; // Assuming there is a skeleton
+
 export const SubmissionsMonitoring = () => {
   const t = useTranslations('ProviderSubmissions');
   const { isMobile } = useScreenSize();
-
   const router = useRouter();
   const params = useParams();
   const slug = (params?.slug as string) || 'p';
-  const [submissions, setSubmissions] = useState<ProviderSubmission[]>(PROVIDER_SUBMISSIONS);
-  const [paymentTarget, setPaymentTarget] = useState<ProviderSubmission | null>(null);
-  const [reviewTarget, setReviewTarget] = useState<ProviderSubmission | null>(null);
-  const [actionMenuTarget, setActionMenuTarget] = useState<ProviderSubmission | null>(null);
+
+  const { useSubmissions, useVerifyPayment, useReviewSubmission } = useProviderSubmissionsController();
+  const { data: res, isPending } = useSubmissions({ page: 1, limit: 50 });
+  const verifyPaymentMutation = useVerifyPayment();
+  const reviewMutation = useReviewSubmission();
+
+  const [paymentTarget, setPaymentTarget] = useState<any | null>(null);
+  const [reviewTarget, setReviewTarget] = useState<any | null>(null);
+  const [actionMenuTarget, setActionMenuTarget] = useState<any | null>(null);
   const [rejectReason, setRejectReason] = useState('');
 
-  const handleMarkCompleted = (id: string) => {
-    setSubmissions((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, paymentStatus: 'COMPLETED' } : s)),
-    );
-    setPaymentTarget(null);
-    toast(t('manifest.saveSuccess'), {
-      description: t('manifest.saveSuccessDesc', { id }),
-    });
+  const submissions = res?.data?.data || [];
+
+  const handleMarkCompleted = async (id: string) => {
+    try {
+      await verifyPaymentMutation.mutateAsync(id);
+      setPaymentTarget(null);
+      toast.success(t('toasts.success'), {
+        description: t('manifest.saveSuccessDesc', { id }),
+      });
+    } catch (error) {
+      toast.error(t('toasts.error'));
+    }
   };
 
-  const handleVerify = (id: string) => {
-    setSubmissions((prev) =>
-      prev.map((s) =>
-        s.id === id ? { ...s, reviewStatus: 'VERIFIED', rejectionReason: undefined } : s,
-      ),
-    );
-    setReviewTarget(null);
-    toast(t('toasts.verified'), { description: t('toasts.verifiedDesc', { id }) });
+  const handleVerify = async (id: string) => {
+    try {
+      await reviewMutation.mutateAsync({ id, payload: { status: 'VERIFIED' } });
+      setReviewTarget(null);
+      toast.success(t('toasts.verified'), { description: t('toasts.verifiedDesc', { id }) });
+    } catch (error) {
+      toast.error(t('toasts.error'));
+    }
   };
 
-  const handleReject = (id: string) => {
+  const handleReject = async (id: string) => {
     if (!rejectReason.trim()) {
       toast.error(t('toasts.reasonRequired'), {
         description: t('toasts.reasonRequiredDesc'),
       });
       return;
     }
-    setSubmissions((prev) =>
-      prev.map((s) =>
-        s.id === id ? { ...s, reviewStatus: 'REJECTED', rejectionReason: rejectReason.trim() } : s,
-      ),
-    );
-    setReviewTarget(null);
-    setRejectReason('');
-    toast(t('toasts.rejected'), {
-      description: t('toasts.rejectedDesc', { id }),
-    });
+    try {
+      await reviewMutation.mutateAsync({
+        id,
+        payload: { status: 'REJECTED', rejectionReason: rejectReason.trim() },
+      });
+      setReviewTarget(null);
+      setRejectReason('');
+      toast.success(t('toasts.rejected'), {
+        description: t('toasts.rejectedDesc', { id }),
+      });
+    } catch (error) {
+      toast.error(t('toasts.error'));
+    }
   };
+
+  if (isPending) return <SubmissionsSkeleton />;
 
   return (
     <div className="space-y-6">
@@ -111,16 +127,16 @@ export const SubmissionsMonitoring = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {submissions.map((s) => (
+                {submissions.map((s: any) => (
                   <TableRow key={s.id}>
                     <TableCell className="font-mono text-xs">{s.id}</TableCell>
-                    <TableCell className="font-medium">{s.leaderName}</TableCell>
-                    <TableCell className="text-center">{s.totalMembers}</TableCell>
+                    <TableCell className="font-medium">{s.leader?.fullName || '-'}</TableCell>
+                    <TableCell className="text-center">{s.members?.length || 0}</TableCell>
                     <TableCell>
                       <PaymentStatusBadge status={s.paymentStatus} />
                     </TableCell>
                     <TableCell>
-                      <ReviewStatusBadge status={s.reviewStatus} />
+                      <ReviewStatusBadge status={s.verifyStatus} />
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
@@ -177,7 +193,7 @@ export const SubmissionsMonitoring = () => {
                       </div>
                       <div className="flex flex-col items-end gap-1.5">
                         <PaymentStatusBadge status={s.paymentStatus} />
-                        <ReviewStatusBadge status={s.reviewStatus} />
+                        <ReviewStatusBadge status={s.verifyStatus} />
                       </div>
                     </div>
 
@@ -185,14 +201,14 @@ export const SubmissionsMonitoring = () => {
                     <div className="flex items-center justify-between gap-4 pt-2">
                       <div className="space-y-1">
                         <h4 className="text-xl font-extrabold tracking-tight text-gray-900">
-                          {s.leaderName}
+                          {s.leader?.fullName || '-'}
                         </h4>
                         <div className="flex items-center gap-2">
                           <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary-50">
                             <Inbox className="h-3 w-3 text-primary-default" strokeWidth={3} />
                           </div>
                           <p className="text-sm font-semibold text-gray-500">
-                            {s.totalMembers}{' '}
+                            {s.members?.length || 0}{' '}
                             <span className="text-gray-400 font-medium">Participants</span>
                           </p>
                         </div>

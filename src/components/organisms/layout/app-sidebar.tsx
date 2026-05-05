@@ -61,11 +61,6 @@ export const AppSidebar = ({
           icon: Inbox,
         },
         {
-          title: 'ProviderSidebar.paymentVerification',
-          url: ROUTES.PROVIDER.PAYMENT_VERIFICATION(slug),
-          icon: CreditCard,
-        },
-        {
           title: 'ProviderSidebar.manifestData',
           url: ROUTES.PROVIDER.SUBMISSIONS(slug),
           icon: FileText,

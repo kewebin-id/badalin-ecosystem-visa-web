@@ -4,7 +4,7 @@ import { Badge } from '@/components/atoms';
 import { HeaderPageContent } from '@/components/molecules';
 import { cn } from '@/shared/utils';
 import { BadgeCheck, BarChart3, Clock, CreditCard, FileSearch, FileText } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useProviderDashboardController } from '../controller';
 import { DashboardSkeleton } from './skeleton';
@@ -100,6 +100,7 @@ export const ProviderDashboardView = () => {
     </div>
   );
 
+  const locale = useLocale();
   const formatStatus = (status: string) => {
     switch (status) {
       case 'IN_REVIEW':
@@ -116,7 +117,7 @@ export const ProviderDashboardView = () => {
   const formatDate = (dateStr: string) => {
     try {
       const date = new Date(dateStr);
-      return new Intl.DateTimeFormat('id-ID', {
+      return new Intl.DateTimeFormat(locale === 'id' ? 'id-ID' : 'en-US', {
         day: '2-digit',
         month: 'short',
         year: 'numeric',

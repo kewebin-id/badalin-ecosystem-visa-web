@@ -12,7 +12,7 @@ export interface ProviderSubmission {
   leaderName: string;
   totalMembers: number;
   paymentStatus: 'PENDING' | 'CHECKING' | 'COMPLETED';
-  reviewStatus: 'PENDING' | 'VERIFIED' | 'REJECTED';
+  reviewStatus: 'PENDING' | 'IN_REVIEW' | 'VERIFIED' | 'REJECTED';
   paymentProofUrl?: string;
   rejectionReason?: string;
   amount: number;

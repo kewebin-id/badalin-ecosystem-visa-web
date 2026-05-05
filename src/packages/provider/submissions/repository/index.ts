@@ -1,3 +1,4 @@
+import { endpoints } from '@/shared/constants/endpoints';
 import { RequestAPI, ResponseREST } from '@/shared/utils/rest-api/types';
 import {
   IFlightManifestPayload,
@@ -20,20 +21,20 @@ export class ProviderSubmissionsRepository implements IProviderSubmissionsReposi
     query: IGetSubmissionsQuery,
   ): Promise<ResponseREST<ISubmissionListResponse>> {
     return this.api.get<ISubmissionListResponse>({
-      endpoint: '/api/v1/p/submissions',
+      endpoint: endpoints.nextApi.provider.submissions.base,
       queryParam: query,
     });
   }
 
   async getSubmissionDetail(id: string): Promise<ResponseREST<ISubmissionResponse>> {
     return this.api.get<ISubmissionResponse>({
-      endpoint: `/api/v1/p/submissions/${id}`,
+      endpoint: `${endpoints.nextApi.provider.submissions.base}/${id}`,
     });
   }
 
   async verifyPayment(id: string): Promise<ResponseREST<IVerifyPaymentResponse>> {
     return this.api.patch<IVerifyPaymentResponse>({
-      endpoint: `/api/v1/p/submissions/${id}/verify-payment`,
+      endpoint: endpoints.nextApi.provider.submissions.verifyPayment(id),
     });
   }
 
@@ -72,7 +73,7 @@ export class ProviderSubmissionsRepository implements IProviderSubmissionsReposi
     payload: IReviewSubmissionPayload,
   ): Promise<ResponseREST<void>> {
     return this.api.patch<void>({
-      endpoint: `/api/v1/p/submissions/${id}/review`,
+      endpoint: endpoints.nextApi.provider.submissions.review(id),
       body: payload,
     });
   }

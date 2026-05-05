@@ -152,6 +152,11 @@
     "maritalStatusPlaceholder": "Select marital status",
     "relationPlaceholder": "Select relation",
     "viewDetail": "View Detail",
+    "memberDetail": "Member Detail",
+    "personalIdentity": "Personal Identity",
+    "travelDocument": "Travel Document",
+    "nationalIdentity": "National Identity",
+    "documentPreview": "Document Preview",
     "edit": "Edit",
     "delete": "Delete",
     "saveChanges": "Save Changes",
@@ -177,6 +182,9 @@
     "updateMemberError": "Failed to update data",
     "deleteMemberSuccess": "Member deleted successfully",
     "deleteMemberError": "Failed to delete member",
+    "deleteConfirmTitle": "Confirm Delete",
+    "deleteConfirmDescription": "Are you sure you want to delete {name}? This action cannot be undone.",
+    "deleteConfirmButton": "Yes, Delete Member",
     "ocrProcessError": "Failed to process OCR",
     "ocrReadError": "Failed to read image. Make sure the file format is correct and try again",
     "systemError": "An internal system error occurred",
@@ -188,6 +196,7 @@
     },
     "makkah": "Makkah",
     "madinah": "Madinah",
+    "transport": "Transportation",
     "nusuk": {
       "guideTitle": "Passport Photo Guide",
       "guideDesc": "To ensure your visa application is processed successfully, please follow these guidelines for your passport photo.",
@@ -455,7 +464,10 @@
     "badges": {
       "payment": "Payment",
       "visa": "Visa",
-      "manifest": "Manifest"
+      "manifest": "Manifest",
+      "inReview": "In Review",
+      "verified": "Verified",
+      "rejected": "Rejected"
     }
   },
   "ProviderSubmissions": {
@@ -475,6 +487,7 @@
       "pending": "Pending",
       "checking": "Checking",
       "completed": "Completed",
+      "inReview": "In Review",
       "verified": "Verified",
       "rejected": "Rejected"
     },
