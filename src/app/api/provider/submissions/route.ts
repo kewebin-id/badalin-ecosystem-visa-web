@@ -42,11 +42,15 @@ export const GET = async (req: NextRequest) => {
 
     Logger.info(`GET ${endpoints.provider.submissions.base(userSlug)} - Response Status: ${res?.code}`, {
       location: 'api/provider/submissions/route.ts - GET',
+      data: res,
     });
 
     return response.handler(res);
   } catch (error: unknown) {
-    Logger.error(error, { location: 'api/provider/submissions/route.ts - GET' });
+    Logger.error(error, { 
+      location: 'api/provider/submissions/route.ts - GET',
+      error: error instanceof Error ? { message: error.message, stack: error.stack } : error 
+    });
     return response[500]({ message: 'Internal server error' });
   }
 };

@@ -54,9 +54,9 @@ export const endpoints = {
       submissions: {
         base: (slug: string = 'p') => `/api/v1/${slug}/submissions`,
         verifyPayment: (slug: string, id: string) =>
-          `/api/v1/${slug}/submissions/transactions/${id}/verify-payment`,
+          `/api/v1/${slug}/submissions/${id}/verify-payment`,
         review: (slug: string, id: string) =>
-          `/api/v1/${slug}/submissions/transactions/${id}/review`,
+          `/api/v1/${slug}/submissions/${id}/review`,
       },
     },
     nextApi: {

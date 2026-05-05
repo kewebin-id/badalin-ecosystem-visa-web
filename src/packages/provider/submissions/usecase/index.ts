@@ -22,11 +22,16 @@ export class ProviderSubmissionsUseCase implements IProviderSubmissionsUseCase {
     try {
       const res = await this.repo.getSubmissions(query);
       if (res.data) {
+        Logger.info('ProviderSubmissionsUseCase.getSubmissions - Success', { data: res.data });
         return { data: res.data, message: res.message };
       }
+      Logger.warn('ProviderSubmissionsUseCase.getSubmissions - Failed', { message: res.message });
       return { error: new Error(res.message || 'Failed to fetch submissions'), message: res.message };
     } catch (error) {
-      Logger.error(error, { location: 'ProviderSubmissionsUseCase.getSubmissions' });
+      Logger.error(error, { 
+        location: 'ProviderSubmissionsUseCase.getSubmissions',
+        error: error instanceof Error ? error.message : error
+      });
       return { error: error as Error, message: 'Internal server error' };
     }
   }

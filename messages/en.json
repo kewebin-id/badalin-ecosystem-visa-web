@@ -475,6 +475,8 @@
     "subtitle": "Manage payment queues and pilgrim document reviews",
     "cardTitle": "Submission List ({count})",
     "cardSubtitle": "Review payment proof and verify pilgrim manifest data",
+    "emptyTitle": "No submissions yet",
+    "emptyDescription": "There are no submission data currently available.",
     "table": {
       "id": "Submission ID",
       "leader": "Leader",

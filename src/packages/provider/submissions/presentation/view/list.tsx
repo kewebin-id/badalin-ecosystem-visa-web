@@ -11,11 +11,8 @@ import {
   TableRow,
 } from '@/components/atoms';
 import { HeaderPageContent, PaymentStatusBadge, ReviewStatusBadge } from '@/components/molecules';
-import {
-  ActionMenuDrawer,
-  ReviewDocumentDialog,
-  VerifyPaymentDialog,
-} from '@/components/organisms/providers/submission';
+import { ActionMenuDrawer, ReviewDocumentDialog, VerifyPaymentDialog } from '@/components/organisms/providers/submission';
+import { EmptyState } from '@/components/templates';
 import { ROUTES } from '@/shared/constants/routes';
 import { useScreenSize } from '@/shared/hooks';
 import { currencyFormat } from '@/shared/utils/formattor';
@@ -112,7 +109,12 @@ export const SubmissionsMonitoring = () => {
           </div>
         </div>
         <div className="px-6 pb-6">
-          {!isMobile ? (
+          {submissions.length === 0 ? (
+            <EmptyState
+              title={t('emptyTitle')}
+              description={t('emptyDescription')}
+            />
+          ) : !isMobile ? (
             <Table>
               <TableHeader>
                 <TableRow>

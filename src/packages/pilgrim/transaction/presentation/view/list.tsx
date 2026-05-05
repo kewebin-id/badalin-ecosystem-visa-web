@@ -5,6 +5,7 @@ import { Card } from '@/components/atoms/card';
 import { Skeleton } from '@/components/atoms/skeleton';
 import { StatusBadge } from '@/components/molecules/badge-status';
 import { DataTable } from '@/components/templates/datatable';
+import { EmptyState } from '@/components/templates/empty-state';
 import { ROUTES } from '@/shared/constants/routes';
 import { formatDate, thousandFormat } from '@/shared/utils';
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table';
@@ -173,7 +174,13 @@ export const TransactionListView = ({
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:hidden">
-        {transactions.map((tx) => (
+        {transactions.length === 0 ? (
+          <EmptyState
+            title={t('emptyTitle')}
+            description={t('emptyDescription')}
+          />
+        ) : (
+          transactions.map((tx) => (
           <Card
             key={tx.id}
             className="p-4 hover:border-primary-default/20 transition-all cursor-pointer group"

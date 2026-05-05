@@ -475,6 +475,8 @@
     "subtitle": "Kelola antrian pembayaran dan review dokumen jamaah",
     "cardTitle": "Daftar Pengajuan ({count})",
     "cardSubtitle": "Tinjau bukti pembayaran dan verifikasi data manifest jamaah",
+    "emptyTitle": "Belum ada pengajuan",
+    "emptyDescription": "Belum ada data pengajuan yang masuk untuk saat ini.",
     "table": {
       "id": "Submission ID",
       "leader": "Leader",
