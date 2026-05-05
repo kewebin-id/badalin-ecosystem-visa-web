@@ -16,8 +16,6 @@ import {
   ReviewDocumentDialog,
   VerifyPaymentDialog,
 } from '@/components/organisms/providers/submission';
-import { PROVIDER_SUBMISSIONS } from '@/lib/provider-mock-data';
-import { ProviderSubmission } from '@/packages/provider/submissions/domain/entities';
 import { ROUTES } from '@/shared/constants/routes';
 import { useScreenSize } from '@/shared/hooks';
 import { currencyFormat } from '@/shared/utils/formattor';
@@ -26,9 +24,8 @@ import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-
 import { useProviderSubmissionsController } from '../controller';
-import { SubmissionsSkeleton } from './skeleton'; // Assuming there is a skeleton
+import { SubmissionsSkeleton } from './skeleton';
 
 export const SubmissionsMonitoring = () => {
   const t = useTranslations('ProviderSubmissions');
@@ -37,7 +34,8 @@ export const SubmissionsMonitoring = () => {
   const params = useParams();
   const slug = (params?.slug as string) || 'p';
 
-  const { useSubmissions, useVerifyPayment, useReviewSubmission } = useProviderSubmissionsController();
+  const { useSubmissions, useVerifyPayment, useReviewSubmission } =
+    useProviderSubmissionsController();
   const { data: res, isPending } = useSubmissions({ page: 1, limit: 50 });
   const verifyPaymentMutation = useVerifyPayment();
   const reviewMutation = useReviewSubmission();
@@ -127,7 +125,7 @@ export const SubmissionsMonitoring = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {submissions.map((s: any) => (
+                {submissions.map((s) => (
                   <TableRow key={s.id}>
                     <TableCell className="font-mono text-xs">{s.id}</TableCell>
                     <TableCell className="font-medium">{s.leader?.fullName || '-'}</TableCell>

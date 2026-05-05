@@ -44,6 +44,11 @@ export const ReviewStatusBadge = ({ status }: { status: ProviderSubmission['revi
   const t = useTranslations('ProviderSubmissions.status');
 
   const config: Record<ProviderSubmission['reviewStatus'], BadgeConfig> = {
+    PENDING: {
+      label: t('pending'),
+      className: 'bg-slate-100 text-slate-600 border-slate-200',
+      dotClassName: 'bg-slate-400',
+    },
     IN_REVIEW: {
       label: t('inReview'),
       className: 'bg-blue-50 text-blue-600 border-blue-100',

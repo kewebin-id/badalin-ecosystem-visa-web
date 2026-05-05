@@ -16,8 +16,8 @@ export interface IMember {
 export interface ISubmissionListItem {
   id: string;
   agencySlug: string;
-  paymentStatus: string;
-  verifyStatus: string;
+  paymentStatus: 'PENDING' | 'CHECKING' | 'COMPLETED';
+  verifyStatus: 'PENDING' | 'IN_REVIEW' | 'VERIFIED' | 'REJECTED';
   totalAmount: number;
   createdAt: string;
   leader: ILeader;
