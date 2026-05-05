@@ -139,7 +139,7 @@ export const useProviderAuthController = () => {
 
         toast.success(result.message);
 
-        window.location.assign(`/${res.slug}/dashboard`);
+        window.location.assign(ROUTES.PROVIDER.DASHBOARD(res.slug));
 
         return result.data;
       },
