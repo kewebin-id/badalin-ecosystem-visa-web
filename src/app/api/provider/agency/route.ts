@@ -31,6 +31,12 @@ export const PATCH = async (req: NextRequest) => {
       location: 'api/provider/agency/route.ts - PATCH',
     });
 
+    if (res?.code !== 200) {
+      return response[res.code as keyof typeof response]({
+        message: res.message,
+      });
+    }
+
     return response.handler(res);
   } catch (error: unknown) {
     Logger.error(error, { location: 'api/provider/agency/route.ts - PATCH' });

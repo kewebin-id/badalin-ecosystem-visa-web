@@ -6,22 +6,19 @@ import { useAuth } from '@/shared/hooks';
 import { cn } from '@/shared/utils';
 import { AlertCircle, CheckCircle2, Globe, Loader2, ShieldCheck, Store } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useProviderAuthController } from '../controller';
 
 export const SetupSlugDialog = ({ open }: { open: boolean }) => {
   const t = useTranslations();
-  const { user, update } = useAuth();
+  const { user } = useAuth();
   const { updateAgencyMutation, checkSlugMutation } = useProviderAuthController();
 
-  const [slug, setSlug] = useState('');
-  const [name, setName] = useState(user?.agency?.name || '');
+  const [slug, setSlug] = useState<string>('');
+  const [name, setName] = useState<string>(user?.agency?.name || '');
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
-  const [isChecking, setIsChecking] = useState(false);
-
-  const router = useRouter();
+  const [isChecking, setIsChecking] = useState<boolean>(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -56,32 +53,13 @@ export const SetupSlugDialog = ({ open }: { open: boolean }) => {
       setIsChecking(false);
     }
   };
-
   const handleSubmit = async () => {
     if (!slug || isAvailable === false) {
       toast.error('Please provide a valid and available slug');
       return;
     }
 
-    try {
-      const res = await updateAgencyMutation.mutateAsync({ slug, name });
-      if (!res) return;
-
-      await update({
-        ...user,
-        agencySlug: res.slug,
-        agency: {
-          ...user?.agency,
-          slug: res.slug,
-          name: res.name,
-          isSlugSetup: true,
-        },
-      });
-
-      toast.success(t('SetupSlug.success'));
-
-      router.push(`/${res.slug}/dashboard`);
-    } catch (error) {}
+    await updateAgencyMutation.mutateAsync({ slug, name });
   };
 
   return (

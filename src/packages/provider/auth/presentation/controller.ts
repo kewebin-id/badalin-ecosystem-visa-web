@@ -1,4 +1,5 @@
 import { ROUTES } from '@/shared/constants';
+import { useAuth } from '@/shared/hooks';
 import { RestAPI } from '@/shared/utils/rest-api';
 import { useMutation } from '@tanstack/react-query';
 import { signIn } from 'next-auth/react';
@@ -18,6 +19,7 @@ export const useProviderAuthController = () => {
   const restApi = new RestAPI();
   const repository = new AuthRepository(restApi);
   const usecase = new AuthUseCase(repository);
+  const { user, update } = useAuth();
 
   const params = useParams();
   const slug = (params?.slug as string) || 'p';
@@ -118,7 +120,27 @@ export const useProviderAuthController = () => {
           toast.error(result.message);
           throw result.error;
         }
+
+        const res = result.data;
+
+        await update({
+          user: {
+            ...user,
+            token: res.newToken || user?.token,
+            agencySlug: res.slug,
+            agency: {
+              ...user?.agency,
+              slug: res.slug,
+              name: res.name,
+              isSlugSetup: true,
+            },
+          },
+        });
+
         toast.success(result.message);
+
+        window.location.assign(`/${res.slug}/dashboard`);
+
         return result.data;
       },
     }),

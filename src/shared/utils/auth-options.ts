@@ -57,12 +57,25 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session }) {
       const dataStoreApi = new RestAPI();
       const authRepository = new AuthRepository(dataStoreApi);
       const authUseCase = new AuthUseCase(authRepository);
 
       try {
+        if (trigger === 'update' && session) {
+          if (session.user) {
+            token.user = {
+              ...(token.user as any),
+              ...session.user,
+            };
+            if (session.user.token) {
+              token.token = session.user.token;
+            }
+          }
+          return token;
+        }
+
         if (account?.provider === 'google' && account.id_token) {
           token.provider = 'google';
           token.idToken = account.id_token;
