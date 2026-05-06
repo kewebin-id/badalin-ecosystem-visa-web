@@ -6,7 +6,6 @@ export type TStep = 'input' | 'login' | 'register';
 export const IDENTIFIER_REGEX = /^(08[0-9]{8,11}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
 
 export const getAuthFormSchema = (step: TStep, locale: 'id' | 'en' = 'id') => {
-  const v = validationMessage('', locale);
   const vi = (label: string) => validationMessage(label, locale);
 
   return z
@@ -41,32 +40,29 @@ export const getAuthFormSchema = (step: TStep, locale: 'id' | 'en' = 'id') => {
 };
 
 export type TAuthFormSchema = z.infer<ReturnType<typeof getAuthFormSchema>>;
- 
- export const getForgotPasswordSchema = (locale: 'id' | 'en' = 'id') => {
-   const vi = (label: string) => validationMessage(label, locale);
- 
-   return z.object({
-     email: z
-       .string()
-       .min(1, vi('Email').required())
-       .email(vi('Email').invalidField()),
-   });
- };
- 
- export type TForgotPasswordSchema = z.infer<ReturnType<typeof getForgotPasswordSchema>>;
- 
- export const getResetPasswordSchema = (locale: 'id' | 'en' = 'id') => {
-   const vi = (label: string) => validationMessage(label, locale);
- 
-   return z
-     .object({
-       password: z.string().min(8, vi('Password').minChar(8)),
-       confirmPassword: z.string().min(8, vi('Confirm Password').minChar(8)),
-     })
-     .refine((data) => data.password === data.confirmPassword, {
-       message: vi('Confirm Password').notSame('Password'),
-       path: ['confirmPassword'],
-     });
- };
- 
- export type TResetPasswordSchema = z.infer<ReturnType<typeof getResetPasswordSchema>>;
+
+export const getForgotPasswordSchema = (locale: 'id' | 'en' = 'id') => {
+  const vi = (label: string) => validationMessage(label, locale);
+
+  return z.object({
+    email: z.string().min(1, vi('Email').required()).email(vi('Email').invalidField()),
+  });
+};
+
+export type TForgotPasswordSchema = z.infer<ReturnType<typeof getForgotPasswordSchema>>;
+
+export const getResetPasswordSchema = (locale: 'id' | 'en' = 'id') => {
+  const vi = (label: string) => validationMessage(label, locale);
+
+  return z
+    .object({
+      password: z.string().min(8, vi('Password').minChar(8)),
+      confirmPassword: z.string().min(8, vi('Confirm Password').minChar(8)),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: vi('Confirm Password').notSame('Password'),
+      path: ['confirmPassword'],
+    });
+};
+
+export type TResetPasswordSchema = z.infer<ReturnType<typeof getResetPasswordSchema>>;

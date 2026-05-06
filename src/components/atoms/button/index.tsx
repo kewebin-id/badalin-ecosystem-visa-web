@@ -91,10 +91,12 @@ const Button = ({
     return (
       <div className="w-full">
         <Slot
-          data-slot="button"
-          className={buttonClassName}
-          {...(props as any)}
-          disabled={buttonDisabled}
+          {...({
+            'data-slot': 'button',
+            className: buttonClassName,
+            ...props,
+            disabled: !!buttonDisabled,
+          } as React.HTMLAttributes<HTMLElement> & { disabled?: boolean })}
         >
           {props.children}
         </Slot>
@@ -109,12 +111,7 @@ const Button = ({
           {buttonContent}
         </Link>
       ) : (
-        <button
-          data-slot="button"
-          className={buttonClassName}
-          disabled={buttonDisabled}
-          {...(props as any)}
-        >
+        <button data-slot="button" className={buttonClassName} disabled={buttonDisabled} {...props}>
           {buttonContent}
         </button>
       )}

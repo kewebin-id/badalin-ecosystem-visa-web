@@ -8,33 +8,33 @@ interface StatusBadgeProps {
 
 export const StatusBadge = ({ status }: StatusBadgeProps) => {
   const t = useTranslations('TransactionHistory.statuses');
-  
+
   const getStyles = () => {
     switch (status.toUpperCase()) {
       case 'SUBMIT':
         return {
-           variant: 'default' as const,
-           label: t('SUBMIT')
+          variant: 'default' as const,
+          label: t('SUBMIT'),
         };
       case 'PROCESS':
         return {
-           variant: 'warning' as const,
-           label: t('PROCESS')
+          variant: 'warning' as const,
+          label: t('PROCESS'),
         };
       case 'ISSUED':
         return {
-           variant: 'ocean' as const,
-           label: t('ISSUED')
+          variant: 'ocean' as const,
+          label: t('ISSUED'),
         };
       case 'EXPIRED':
         return {
-           variant: 'destructive' as const,
-           label: t('EXPIRED')
+          variant: 'destructive' as const,
+          label: t('EXPIRED'),
         };
       default:
         return {
-           variant: 'dark' as const,
-           label: status
+          variant: 'dark' as const,
+          label: status,
         };
     }
   };
@@ -42,8 +42,8 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
   const { variant, label } = getStyles();
 
   return (
-    <Badge 
-      variant={variant} 
+    <Badge
+      variant={variant}
       className="px-3 py-1 rounded-full font-bold text-[10px] uppercase tracking-wider shadow-sm"
     >
       {label}

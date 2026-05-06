@@ -26,7 +26,7 @@ export const PATCH = async (req: NextRequest, { params }: { params: Promise<{ id
 
     const user = session?.user;
     const userSlug = user?.agency?.slug || user?.agencySlug || session?.agencySlug || 'p';
-    
+
     const restApi = new RestAPI(undefined, session.token as string);
     const res = await restApi.patch({
       endpoint: endpoints.provider.submissions.verifyPayment(userSlug, id),
@@ -37,13 +37,18 @@ export const PATCH = async (req: NextRequest, { params }: { params: Promise<{ id
       },
     });
 
-    Logger.info(`PATCH ${endpoints.provider.submissions.verifyPayment(userSlug, id)} - Response Status: ${res?.code}`, {
-      location: 'api/provider/submissions/[id]/verify-payment/route.ts - PATCH',
-    });
+    Logger.info(
+      `PATCH ${endpoints.provider.submissions.verifyPayment(userSlug, id)} - Response Status: ${res?.code}`,
+      {
+        location: 'api/provider/submissions/[id]/verify-payment/route.ts - PATCH',
+      },
+    );
 
     return response.handler(res);
   } catch (error: unknown) {
-    Logger.error(error, { location: 'api/provider/submissions/[id]/verify-payment/route.ts - PATCH' });
+    Logger.error(error, {
+      location: 'api/provider/submissions/[id]/verify-payment/route.ts - PATCH',
+    });
     return response[500]({ message: 'Internal server error' });
   }
 };

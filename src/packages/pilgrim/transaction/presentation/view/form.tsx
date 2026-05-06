@@ -14,7 +14,7 @@ import { motion } from 'framer-motion';
 import { AlertCircle, ArrowLeft, ArrowRight, Clock, Info, Plane } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { TWizardForm, useTransactionController, useTransactionForm } from '../controller';
 
@@ -155,20 +155,18 @@ export const TransactionFormView = () => {
     }
   };
 
-  const mapBackendPathToFrontend = (path: string): string => {
+  const mapBackendPathToFrontend = useCallback((path: string) => {
     if (path.startsWith('flights.0.')) {
       const field = path.replace('flights.0.', '');
-      if (field === 'no') return 'departureFlightNo';
-      if (field === 'carrier') return 'departureCarrier';
-      if (field === 'eta') return 'departureFlightEta';
+      if (field === 'flightNo') return 'departureFlightNo';
       if (field === 'etd') return 'departureFlightEtd';
+      if (field === 'eta') return 'departureFlightEta';
     }
     if (path.startsWith('flights.1.')) {
       const field = path.replace('flights.1.', '');
-      if (field === 'no') return 'returnFlightNo';
-      if (field === 'carrier') return 'returnCarrier';
-      if (field === 'eta') return 'returnFlightEta';
+      if (field === 'flightNo') return 'returnFlightNo';
       if (field === 'etd') return 'returnFlightEtd';
+      if (field === 'eta') return 'returnFlightEta';
     }
     if (path.startsWith('hotels.0.')) {
       const field = path.replace('hotels.0.', '');
@@ -187,14 +185,14 @@ export const TransactionFormView = () => {
       if (field === 'roomType') return 'hotelMadinahRoomType';
     }
     return path;
-  };
+  }, []);
 
-  const handleValidateSubmission = async () => {
+  const handleValidateSubmission = useCallback(async () => {
     try {
       setApiErrors([]);
       setApiWarnings([]);
       form.clearErrors();
-      
+
       const values = form.getValues() as TWizardForm;
       const res = await previewMutation.mutateAsync(values);
 
@@ -214,8 +212,8 @@ export const TransactionFormView = () => {
           if (err.path === 'agencySlug' || err.path === 'pilgrimIds') {
             systemErrors.push(err.message);
           } else {
-            const mappedPath = mapBackendPathToFrontend(err.path);
-            form.setError(mappedPath as any, { message: err.message });
+            const mappedPath = mapBackendPathToFrontend(err.path) as keyof TWizardForm;
+            form.setError(mappedPath, { message: err.message });
           }
         });
         const displayMessage =
@@ -224,23 +222,29 @@ export const TransactionFormView = () => {
             : res.message || 'Validation failed';
 
         setApiErrors(
-          systemErrors.length > 0
-            ? systemErrors
-            : errors.length === 0
-              ? [displayMessage]
-              : [],
+          systemErrors.length > 0 ? systemErrors : errors.length === 0 ? [displayMessage] : [],
         );
         setApiWarnings(res.data?.warnings || []);
         setShowErrorModal(true);
       }
-    } catch (error) {}
-  };
+    } catch {}
+  }, [
+    form,
+    previewMutation,
+    mapBackendPathToFrontend,
+    setTotalAmount,
+    setBreakdown,
+    setIsValidated,
+    setApiErrors,
+    setApiWarnings,
+    setShowErrorModal,
+  ]);
 
   useEffect(() => {
     if (step === 3 && !isValidated) {
       handleValidateSubmission();
     }
-  }, [step]);
+  }, [step, isValidated, handleValidateSubmission]);
 
   const nextStep = async () => {
     const fieldsToValidate = getStepFields(step);
@@ -303,20 +307,24 @@ export const TransactionFormView = () => {
     );
   };
 
-  const flattenErrors = (errors: any, prefix = ''): { key: string; message: string }[] => {
-    return Object.entries(errors).reduce((acc: any[], [key, value]: [string, any]) => {
-      const currentPath = prefix
-        ? isNaN(Number(key))
-          ? `${prefix}.${key}`
-          : `${prefix}.${key}`
-        : key;
-      if (value?.message) {
-        acc.push({ key: currentPath, message: value.message });
-      } else if (typeof value === 'object' && value !== null) {
-        acc.push(...flattenErrors(value, currentPath));
-      }
-      return acc;
-    }, []);
+  const flattenErrors = (
+    errorsObj: Record<string, unknown>,
+    prefix = '',
+  ): { key: string; message: string }[] => {
+    return Object.entries(errorsObj).reduce(
+      (acc: { key: string; message: string }[], [key, value]) => {
+        const currentPath = prefix ? `${prefix}.${key}` : key;
+        const val = value as Record<string, unknown> | undefined;
+
+        if (val && typeof val.message === 'string') {
+          acc.push({ key: currentPath, message: val.message });
+        } else if (typeof val === 'object' && val !== null) {
+          acc.push(...flattenErrors(val, currentPath));
+        }
+        return acc;
+      },
+      [],
+    );
   };
 
   return (
@@ -352,8 +360,8 @@ export const TransactionFormView = () => {
         ))}
       </div>
 
-      <FormProvider {...(form as any)}>
-        <form onSubmit={handleSubmit(onSubmit as any)} className="space-y-8">
+      <FormProvider {...form}>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           <Card className="p-6!">
             {step === 0 && <SelectMembersForm />}
             {step === 1 && <LogisticsForm />}

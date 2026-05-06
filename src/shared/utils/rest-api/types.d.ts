@@ -2,35 +2,35 @@ export interface RequestAPI {
   get: <T extends Partial<object> | undefined | void>(payload: {
     endpoint: string;
     queryParam?: object;
-    config?: any;
+    config?: import('axios').AxiosRequestConfig;
     isNextApi?: boolean;
   }) => Promise<ResponseREST<T>>;
   post: <T extends Partial<object> | undefined | void>(payload: {
     endpoint: string;
     body?: object;
     queryParam?: object;
-    config?: any;
+    config?: import('axios').AxiosRequestConfig;
     isNextApi?: boolean;
   }) => Promise<ResponseREST<T>>;
   put: <T extends Partial<object> | undefined | void>(payload: {
     endpoint: string;
     body?: object;
     queryParam?: object;
-    config?: any;
+    config?: import('axios').AxiosRequestConfig;
     isNextApi?: boolean;
   }) => Promise<ResponseREST<T>>;
   patch: <T extends Partial<object> | undefined | void>(payload: {
     endpoint: string;
     body?: object;
     queryParam?: object;
-    config?: any;
+    config?: import('axios').AxiosRequestConfig;
     isNextApi?: boolean;
   }) => Promise<ResponseREST<T>>;
   delete: <T extends Partial<object> | undefined | void>(payload: {
     endpoint: string;
     bodyparam?: object;
     queryParam?: object;
-    config?: any;
+    config?: import('axios').AxiosRequestConfig;
     isNextApi?: boolean;
   }) => Promise<ResponseREST<T>>;
 }

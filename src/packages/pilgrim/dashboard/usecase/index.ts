@@ -18,10 +18,10 @@ export class DashboardUseCase implements IDashboardUseCase {
         data,
         message: validationMessage().historyFetched,
       };
-    } catch (error: any) {
+    } catch (error) {
       return {
-        error,
-        message: error?.message || validationMessage()[500](),
+        error: error instanceof Error ? error : new Error(String(error)),
+        message: error instanceof Error ? error.message : validationMessage()[500](),
       };
     }
   };

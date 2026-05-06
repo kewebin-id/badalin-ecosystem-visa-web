@@ -18,7 +18,11 @@ export const InputText = (props: InputTextProps) => {
   return <InputTextRoot {...props} />;
 };
 
-const InputTextWatcher = (props: InputTextProps & { methods: any }) => {
+const InputTextWatcher = (
+  props: InputTextProps & {
+    methods: import('react-hook-form').UseFormReturn<Record<string, unknown>>;
+  },
+) => {
   const watchedValue = useWatch({
     control: props.methods.control,
     name: props.name || '',
@@ -62,7 +66,7 @@ const InputTextRoot = ({
   isReadingOcr,
   disabled,
   watchedValue,
-}: InputTextProps & { watchedValue?: any }) => {
+}: InputTextProps & { watchedValue?: unknown }) => {
   const [inputState, setInputState] = useState<string | number | undefined>(value);
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
@@ -84,9 +88,9 @@ const InputTextRoot = ({
 
   useEffect(() => {
     if (watchedValue !== undefined && watchedValue !== inputState) {
-      setInputState(watchedValue);
+      setInputState((watchedValue as string | number | undefined) ?? undefined);
     }
-  }, [watchedValue]);
+  }, [watchedValue, inputState]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -198,13 +202,13 @@ const InputTextRoot = ({
           <label
             className={cn(
               styles[`form-label-inside${inputState || value || watchedValue ? '-active' : ''}`],
-              handleIsFocused || inputState || value || watchedValue
+              handleIsFocused || inputState || value || !!watchedValue
                 ? 'text-gray-500'
                 : 'text-gray-400',
             )}
           >
             <span className="text-nowrap">{label}</span>
-            {required && (handleIsFocused || inputState || value || watchedValue) && (
+            {required && (handleIsFocused || inputState || value || !!watchedValue) && (
               <span className="text-danger-500">*</span>
             )}
           </label>

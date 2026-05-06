@@ -135,7 +135,7 @@ export const MemberFormView = () => {
       fields.push('relation');
     }
     if (data.gender) {
-      setValue('gender', data.gender as any);
+      setValue('gender', data.gender as 'Male' | 'Female');
       fields.push('gender');
     }
     if (data.maritalStatus) {
@@ -201,14 +201,6 @@ export const MemberFormView = () => {
   const selfieValue = useMemo<UploadFile[]>(
     () => (selfiePreview ? [{ name: 'selfie.jpg', base64: selfiePreview }] : []),
     [selfiePreview],
-  );
-  const passportValue = useMemo<UploadFile[]>(
-    () => (passportPreview ? [{ name: 'passport.jpg', base64: passportPreview }] : []),
-    [passportPreview],
-  );
-  const ktpValue = useMemo<UploadFile[]>(
-    () => (ktpPreview ? [{ name: 'ktp.jpg', base64: ktpPreview }] : []),
-    [ktpPreview],
   );
 
   const genderOptions = useMemo(

@@ -40,7 +40,7 @@ export const ProviderLoginView: FC = () => {
         identifier: data.email,
         password: data.password,
       });
-    } catch (error) {
+    } catch {
       // Error is handled by mutation/toast
     }
   };

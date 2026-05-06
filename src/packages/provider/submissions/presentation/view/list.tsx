@@ -11,7 +11,11 @@ import {
   TableRow,
 } from '@/components/atoms';
 import { HeaderPageContent, PaymentStatusBadge, ReviewStatusBadge } from '@/components/molecules';
-import { ActionMenuDrawer, ReviewDocumentDialog, VerifyPaymentDialog } from '@/components/organisms/providers/submission';
+import {
+  ActionMenuDrawer,
+  ReviewDocumentDialog,
+  VerifyPaymentDialog,
+} from '@/components/organisms/providers/submission';
 import { EmptyState } from '@/components/templates';
 import { ROUTES } from '@/shared/constants/routes';
 import { useScreenSize } from '@/shared/hooks';
@@ -21,6 +25,7 @@ import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { ProviderSubmission } from '../../domain/entities';
 import { useProviderSubmissionsController } from '../controller';
 import { SubmissionsSkeleton } from './skeleton';
 
@@ -37,12 +42,19 @@ export const SubmissionsMonitoring = () => {
   const verifyPaymentMutation = useVerifyPayment();
   const reviewMutation = useReviewSubmission();
 
-  const [paymentTarget, setPaymentTarget] = useState<any | null>(null);
-  const [reviewTarget, setReviewTarget] = useState<any | null>(null);
-  const [actionMenuTarget, setActionMenuTarget] = useState<any | null>(null);
+  const [paymentTarget, setPaymentTarget] = useState<ProviderSubmission | null>(null);
+  const [reviewTarget, setReviewTarget] = useState<ProviderSubmission | null>(null);
+  const [actionMenuTarget, setActionMenuTarget] = useState<ProviderSubmission | null>(null);
   const [rejectReason, setRejectReason] = useState('');
 
-  const submissions = res?.data?.data || [];
+  const submissions: ProviderSubmission[] = (res?.data?.data || []).map((s) => ({
+    id: s.id,
+    leaderName: s.leader?.fullName || '-',
+    totalMembers: s.members?.length || 0,
+    paymentStatus: s.paymentStatus,
+    reviewStatus: s.verifyStatus,
+    amount: s.totalAmount,
+  }));
 
   const handleMarkCompleted = async (id: string) => {
     try {
@@ -51,7 +63,7 @@ export const SubmissionsMonitoring = () => {
       toast.success(t('toasts.success'), {
         description: t('manifest.saveSuccessDesc', { id }),
       });
-    } catch (error) {
+    } catch {
       toast.error(t('toasts.error'));
     }
   };
@@ -61,7 +73,7 @@ export const SubmissionsMonitoring = () => {
       await reviewMutation.mutateAsync({ id, payload: { status: 'VERIFIED' } });
       setReviewTarget(null);
       toast.success(t('toasts.verified'), { description: t('toasts.verifiedDesc', { id }) });
-    } catch (error) {
+    } catch {
       toast.error(t('toasts.error'));
     }
   };
@@ -83,7 +95,7 @@ export const SubmissionsMonitoring = () => {
       toast.success(t('toasts.rejected'), {
         description: t('toasts.rejectedDesc', { id }),
       });
-    } catch (error) {
+    } catch {
       toast.error(t('toasts.error'));
     }
   };
@@ -110,10 +122,7 @@ export const SubmissionsMonitoring = () => {
         </div>
         <div className="px-6 pb-6">
           {submissions.length === 0 ? (
-            <EmptyState
-              title={t('emptyTitle')}
-              description={t('emptyDescription')}
-            />
+            <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
           ) : !isMobile ? (
             <Table>
               <TableHeader>
@@ -130,13 +139,13 @@ export const SubmissionsMonitoring = () => {
                 {submissions.map((s) => (
                   <TableRow key={s.id}>
                     <TableCell className="font-mono text-xs">{s.id}</TableCell>
-                    <TableCell className="font-medium">{s.leader?.fullName || '-'}</TableCell>
-                    <TableCell className="text-center">{s.members?.length || 0}</TableCell>
+                    <TableCell className="font-medium">{s.leaderName}</TableCell>
+                    <TableCell className="text-center">{s.totalMembers}</TableCell>
                     <TableCell>
                       <PaymentStatusBadge status={s.paymentStatus} />
                     </TableCell>
                     <TableCell>
-                      <ReviewStatusBadge status={s.verifyStatus} />
+                      <ReviewStatusBadge status={s.reviewStatus} />
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
@@ -193,7 +202,7 @@ export const SubmissionsMonitoring = () => {
                       </div>
                       <div className="flex flex-col items-end gap-1.5">
                         <PaymentStatusBadge status={s.paymentStatus} />
-                        <ReviewStatusBadge status={s.verifyStatus} />
+                        <ReviewStatusBadge status={s.reviewStatus} />
                       </div>
                     </div>
 
@@ -201,14 +210,14 @@ export const SubmissionsMonitoring = () => {
                     <div className="flex items-center justify-between gap-4 pt-2">
                       <div className="space-y-1">
                         <h4 className="text-xl font-extrabold tracking-tight text-gray-900">
-                          {s.leader?.fullName || '-'}
+                          {s.leaderName}
                         </h4>
                         <div className="flex items-center gap-2">
                           <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary-50">
                             <Inbox className="h-3 w-3 text-primary-default" strokeWidth={3} />
                           </div>
                           <p className="text-sm font-semibold text-gray-500">
-                            {s.members?.length || 0}{' '}
+                            {s.totalMembers}{' '}
                             <span className="text-gray-400 font-medium">Participants</span>
                           </p>
                         </div>

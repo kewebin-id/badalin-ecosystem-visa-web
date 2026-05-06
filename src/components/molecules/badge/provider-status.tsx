@@ -33,7 +33,12 @@ export const PaymentStatusBadge = ({ status }: { status: ProviderSubmission['pay
   const current = config[status];
 
   return (
-    <Badge className={cn('rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider', current.className)}>
+    <Badge
+      className={cn(
+        'rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider',
+        current.className,
+      )}
+    >
       <span className={cn('mr-1.5 h-1.5 w-1.5 rounded-full', current.dotClassName)} />
       {current.label}
     </Badge>
@@ -69,7 +74,12 @@ export const ReviewStatusBadge = ({ status }: { status: ProviderSubmission['revi
   const current = config[status];
 
   return (
-    <Badge className={cn('rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider', current.className)}>
+    <Badge
+      className={cn(
+        'rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider',
+        current.className,
+      )}
+    >
       <span className={cn('mr-1.5 h-1.5 w-1.5 rounded-full', current.dotClassName)} />
       {current.label}
     </Badge>

@@ -18,7 +18,7 @@ export const POST = async (req: NextRequest) => {
       if (!rawBody) {
         return response[400]({ message: 'Empty body' });
       }
-    } catch (readError) {
+    } catch {
       Logger.error('Failed to read request body', { location: 'api/visa/upload/route.ts - POST' });
       return response[400]({ message: 'Failed to read request body' });
     }
@@ -46,7 +46,7 @@ export const POST = async (req: NextRequest) => {
     }
 
     const restApi = new RestAPI(undefined, session.token as string);
-    const res = await restApi.post({
+    const res = await restApi.post<Record<string, unknown>>({
       endpoint: endpoints.visa.upload,
       body,
       config: {
@@ -60,7 +60,7 @@ export const POST = async (req: NextRequest) => {
       location: 'api/visa/upload/route.ts - POST',
     });
 
-    return response.handler(res as any);
+    return response.handler(res);
   } catch (error: unknown) {
     Logger.error(error, {
       location: 'api/visa/upload/route.ts - POST',

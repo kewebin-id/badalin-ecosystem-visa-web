@@ -55,23 +55,28 @@ export const DialogDrawer: FC<DialogDrawerProps> = ({
                 'p-5 flex items-start justify-between w-full',
               )}
             >
-              <div className={cn("flex flex-col flex-1", showCloseButton && "pr-4")}>
-                <DialogTitle className={cn("text-xl font-bold text-gray-900", titleClassName)}>{title}</DialogTitle>
+              <div className={cn('flex flex-col flex-1', showCloseButton && 'pr-4')}>
+                <DialogTitle className={cn('text-xl font-bold text-gray-900', titleClassName)}>
+                  {title}
+                </DialogTitle>
                 {description && (
-                  <DialogDescription className={cn("text-sm text-gray-500 mt-1 leading-relaxed", descriptionClassName)}>
+                  <DialogDescription
+                    className={cn(
+                      'text-sm text-gray-500 mt-1 leading-relaxed',
+                      descriptionClassName,
+                    )}
+                  >
                     {description}
                   </DialogDescription>
                 )}
                 {!title && !description && <div className="h-1" />}
               </div>
               {showCloseButton && (
-                <div 
+                <div
                   onClick={() => setOpen(false)}
                   className="p-1 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer group"
                 >
-                  <X
-                    className="size-5 text-gray-400 group-hover:text-gray-600 transition-colors"
-                  />
+                  <X className="size-5 text-gray-400 group-hover:text-gray-600 transition-colors" />
                 </div>
               )}
             </div>

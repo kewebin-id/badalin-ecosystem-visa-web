@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/shared/utils";
-import { ReactNode } from "react";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/shared/utils';
+import { ReactNode } from 'react';
 
 interface NavLinkProps {
   href: string;
@@ -15,14 +15,10 @@ interface NavLinkProps {
 
 export const NavLink = ({ href, children, className, activeClassName, onClick }: NavLinkProps) => {
   const pathname = usePathname();
-  const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
+  const isActive = pathname === href || (href !== '/' && pathname.startsWith(href));
 
   return (
-    <Link 
-      href={href} 
-      className={cn(className, isActive && activeClassName)}
-      onClick={onClick}
-    >
+    <Link href={href} className={cn(className, isActive && activeClassName)} onClick={onClick}>
       {children}
     </Link>
   );

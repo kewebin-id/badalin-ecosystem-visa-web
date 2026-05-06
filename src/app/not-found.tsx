@@ -27,7 +27,9 @@ const NotFoundPage = () => {
 
         <div className="space-y-4">
           <div className="relative inline-block">
-            <h1 className="text-8xl font-black text-primary-900 tracking-tighter opacity-10">404</h1>
+            <h1 className="text-8xl font-black text-primary-900 tracking-tighter opacity-10">
+              404
+            </h1>
             <h2 className="text-3xl font-bold text-gray-900 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full">
               Destination Not Found
             </h2>

@@ -126,7 +126,7 @@ export const Maps = ({
             updateMarkerPosition(lat, lon);
           }
         })
-        .catch((error) => {
+        .catch(() => {
           toast.error('Failed to get location. Please ensure location permission is enabled.');
         });
     });
@@ -153,7 +153,7 @@ export const Maps = ({
 
       const json: ILonLat[] = await response.json();
       setSearchResults(json);
-    } catch (error) {
+    } catch {
       setSearchResults([]);
     } finally {
       setLoading(false);
@@ -186,11 +186,11 @@ export const Maps = ({
             });
             updateMarkerPosition(latitude, longitude);
           }
-        } catch (err) {
+        } catch {
           toast.error('Gagal mendapatkan lokasi. Pastikan izin lokasi aktif.');
         }
       },
-      (err) => {
+      () => {
         toast.error('Gagal mendapatkan lokasi. Pastikan izin lokasi aktif.');
       },
       { enableHighAccuracy: true },

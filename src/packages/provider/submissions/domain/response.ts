@@ -33,7 +33,7 @@ export interface ISubmissionListResponse {
   };
 }
 
-export interface ISubmissionResponse extends ISubmissionListItem {}
+export type ISubmissionResponse = ISubmissionListItem;
 
 export interface IVerifyPaymentResponse {
   id: string;

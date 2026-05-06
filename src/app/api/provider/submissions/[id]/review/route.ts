@@ -28,7 +28,7 @@ export const PATCH = async (req: NextRequest, { params }: { params: Promise<{ id
 
     const user = session?.user;
     const userSlug = user?.agency?.slug || user?.agencySlug || session?.agencySlug || 'p';
-    
+
     const restApi = new RestAPI(undefined, session.token as string);
     const res = await restApi.patch({
       endpoint: endpoints.provider.submissions.review(userSlug, id),
@@ -40,9 +40,12 @@ export const PATCH = async (req: NextRequest, { params }: { params: Promise<{ id
       },
     });
 
-    Logger.info(`PATCH ${endpoints.provider.submissions.review(userSlug, id)} - Response Status: ${res?.code}`, {
-      location: 'api/provider/submissions/[id]/review/route.ts - PATCH',
-    });
+    Logger.info(
+      `PATCH ${endpoints.provider.submissions.review(userSlug, id)} - Response Status: ${res?.code}`,
+      {
+        location: 'api/provider/submissions/[id]/review/route.ts - PATCH',
+      },
+    );
 
     return response.handler(res);
   } catch (error: unknown) {

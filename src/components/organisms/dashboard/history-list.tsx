@@ -54,9 +54,7 @@ export const HistoryList = () => {
           <div className="h-10 w-2 bg-primary-default rounded-full shadow-[0_0_15px_rgba(var(--primary-default),0.3)]" />
           <h2 className="text-3xl font-black text-dark-950 tracking-tight">{t('title')}</h2>
         </div>
-        <p className="text-sm font-medium text-gray-400">
-          {t('total', { count: history.length })}
-        </p>
+        <p className="text-sm font-medium text-gray-400">{t('total', { count: history.length })}</p>
       </div>
 
       {!history || history.length === 0 ? (

@@ -92,7 +92,9 @@ export const TransportRawdahForm = () => {
                 type="button"
                 variant="primaryOutline"
                 size="sm"
-                onClick={() => handleAddTransport(opt.value as any)}
+                onClick={() =>
+                  handleAddTransport(opt.value as 'BUS' | 'TRAIN' | 'TAXI' | 'MPV' | 'OTHER')
+                }
                 className="rounded-full h-8 px-4 text-[10px]!"
               >
                 <Plus className="size-3 mr-1" /> {t(`form.transportTypeOptions.${opt.value}`)}
@@ -151,7 +153,10 @@ export const TransportRawdahForm = () => {
                         shouldValidate: true,
                       });
                     }}
-                    errorMessage={(errors.transportations?.[index] as any)?.imageUrls?.message}
+                    errorMessage={
+                      (errors.transportations?.[index] as Record<string, { message?: string }>)
+                        ?.imageUrls?.message
+                    }
                   />
                 </div>
                 <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -165,7 +170,10 @@ export const TransportRawdahForm = () => {
                     }))}
                     name={`transportations.${index}.type`}
                     required
-                    errorMessage={(errors.transportations?.[index] as any)?.type?.message}
+                    errorMessage={
+                      (errors.transportations?.[index] as Record<string, { message?: string }>)
+                        ?.type?.message
+                    }
                   />
                   <InputText
                     useLabelInside
@@ -175,7 +183,10 @@ export const TransportRawdahForm = () => {
                     register={register}
                     name={`transportations.${index}.company`}
                     required
-                    errorMessage={(errors.transportations?.[index] as any)?.company?.message}
+                    errorMessage={
+                      (errors.transportations?.[index] as Record<string, { message?: string }>)
+                        ?.company?.message
+                    }
                   />
                   <InputText
                     useLabelInside
@@ -185,7 +196,10 @@ export const TransportRawdahForm = () => {
                     register={register}
                     name={`transportations.${index}.total`}
                     required
-                    errorMessage={(errors.transportations?.[index] as any)?.total?.message}
+                    errorMessage={
+                      (errors.transportations?.[index] as Record<string, { message?: string }>)
+                        ?.total?.message
+                    }
                   />
 
                   <InputText
@@ -196,7 +210,10 @@ export const TransportRawdahForm = () => {
                     register={register}
                     name={`transportations.${index}.from`}
                     required
-                    errorMessage={(errors.transportations?.[index] as any)?.from?.message}
+                    errorMessage={
+                      (errors.transportations?.[index] as Record<string, { message?: string }>)
+                        ?.from?.message
+                    }
                   />
                   <InputText
                     useLabelInside
@@ -206,7 +223,10 @@ export const TransportRawdahForm = () => {
                     register={register}
                     name={`transportations.${index}.to`}
                     required
-                    errorMessage={(errors.transportations?.[index] as any)?.to?.message}
+                    errorMessage={
+                      (errors.transportations?.[index] as Record<string, { message?: string }>)?.to
+                        ?.message
+                    }
                   />
 
                   <DatePicker
@@ -227,8 +247,10 @@ export const TransportRawdahForm = () => {
                     }}
                     minDate={new Date().toISOString()}
                     errorMessage={
-                      (errors.transportations?.[index] as any)?.date?.message ||
-                      (errors.transportations?.[index] as any)?.time?.message
+                      (errors.transportations?.[index] as Record<string, { message?: string }>)
+                        ?.date?.message ||
+                      (errors.transportations?.[index] as Record<string, { message?: string }>)
+                        ?.time?.message
                     }
                   />
                 </div>

@@ -18,7 +18,9 @@ import { IProviderSubmissionsUseCase } from '../port/usecase.port';
 export class ProviderSubmissionsUseCase implements IProviderSubmissionsUseCase {
   constructor(private repo: IProviderSubmissionsRepository) {}
 
-  async getSubmissions(query: IGetSubmissionsQuery): Promise<IUsecaseResponse<ISubmissionListResponse>> {
+  async getSubmissions(
+    query: IGetSubmissionsQuery,
+  ): Promise<IUsecaseResponse<ISubmissionListResponse>> {
     try {
       const res = await this.repo.getSubmissions(query);
       if (res.data) {
@@ -26,11 +28,14 @@ export class ProviderSubmissionsUseCase implements IProviderSubmissionsUseCase {
         return { data: res.data, message: res.message };
       }
       Logger.warn('ProviderSubmissionsUseCase.getSubmissions - Failed', { message: res.message });
-      return { error: new Error(res.message || 'Failed to fetch submissions'), message: res.message };
+      return {
+        error: new Error(res.message || 'Failed to fetch submissions'),
+        message: res.message,
+      };
     } catch (error) {
-      Logger.error(error, { 
+      Logger.error(error, {
         location: 'ProviderSubmissionsUseCase.getSubmissions',
-        error: error instanceof Error ? error.message : error
+        error: error instanceof Error ? error.message : error,
       });
       return { error: error as Error, message: 'Internal server error' };
     }
@@ -42,7 +47,10 @@ export class ProviderSubmissionsUseCase implements IProviderSubmissionsUseCase {
       if (res.data) {
         return { data: res.data, message: res.message };
       }
-      return { error: new Error(res.message || 'Failed to fetch submission detail'), message: res.message };
+      return {
+        error: new Error(res.message || 'Failed to fetch submission detail'),
+        message: res.message,
+      };
     } catch (error) {
       Logger.error(error, { location: 'ProviderSubmissionsUseCase.getSubmissionDetail' });
       return { error: error as Error, message: 'Internal server error' };
@@ -62,52 +70,76 @@ export class ProviderSubmissionsUseCase implements IProviderSubmissionsUseCase {
     }
   }
 
-  async addFlightManifest(id: string, payloads: IFlightManifestPayload[]): Promise<IUsecaseResponse<boolean>> {
+  async addFlightManifest(
+    id: string,
+    payloads: IFlightManifestPayload[],
+  ): Promise<IUsecaseResponse<boolean>> {
     try {
       const res = await this.repo.addFlightManifest(id, payloads);
       if (res.code === 200 || res.code === 201) {
         return { data: true, message: res.message };
       }
-      return { error: new Error(res.message || 'Failed to add flight manifest'), message: res.message };
+      return {
+        error: new Error(res.message || 'Failed to add flight manifest'),
+        message: res.message,
+      };
     } catch (error) {
       Logger.error(error, { location: 'ProviderSubmissionsUseCase.addFlightManifest' });
       return { error: error as Error, message: 'Internal server error' };
     }
   }
 
-  async addHotelManifest(id: string, payloads: IHotelManifestPayload[]): Promise<IUsecaseResponse<boolean>> {
+  async addHotelManifest(
+    id: string,
+    payloads: IHotelManifestPayload[],
+  ): Promise<IUsecaseResponse<boolean>> {
     try {
       const res = await this.repo.addHotelManifest(id, payloads);
       if (res.code === 200 || res.code === 201) {
         return { data: true, message: res.message };
       }
-      return { error: new Error(res.message || 'Failed to add hotel manifest'), message: res.message };
+      return {
+        error: new Error(res.message || 'Failed to add hotel manifest'),
+        message: res.message,
+      };
     } catch (error) {
       Logger.error(error, { location: 'ProviderSubmissionsUseCase.addHotelManifest' });
       return { error: error as Error, message: 'Internal server error' };
     }
   }
 
-  async addTransportManifest(id: string, payloads: ITransportManifestPayload[]): Promise<IUsecaseResponse<boolean>> {
+  async addTransportManifest(
+    id: string,
+    payloads: ITransportManifestPayload[],
+  ): Promise<IUsecaseResponse<boolean>> {
     try {
       const res = await this.repo.addTransportManifest(id, payloads);
       if (res.code === 200 || res.code === 201) {
         return { data: true, message: res.message };
       }
-      return { error: new Error(res.message || 'Failed to add transport manifest'), message: res.message };
+      return {
+        error: new Error(res.message || 'Failed to add transport manifest'),
+        message: res.message,
+      };
     } catch (error) {
       Logger.error(error, { location: 'ProviderSubmissionsUseCase.addTransportManifest' });
       return { error: error as Error, message: 'Internal server error' };
     }
   }
 
-  async reviewSubmission(id: string, payload: IReviewSubmissionPayload): Promise<IUsecaseResponse<boolean>> {
+  async reviewSubmission(
+    id: string,
+    payload: IReviewSubmissionPayload,
+  ): Promise<IUsecaseResponse<boolean>> {
     try {
       const res = await this.repo.reviewSubmission(id, payload);
       if (res.code === 200 || res.code === 201) {
         return { data: true, message: res.message };
       }
-      return { error: new Error(res.message || 'Failed to review submission'), message: res.message };
+      return {
+        error: new Error(res.message || 'Failed to review submission'),
+        message: res.message,
+      };
     } catch (error) {
       Logger.error(error, { location: 'ProviderSubmissionsUseCase.reviewSubmission' });
       return { error: error as Error, message: 'Internal server error' };

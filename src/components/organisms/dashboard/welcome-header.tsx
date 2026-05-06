@@ -16,14 +16,14 @@ export const WelcomeHeader = ({ name }: WelcomeHeaderProps) => {
         </span>
       </div>
       <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-dark-950 leading-[1.1]">
-        {t('greeting')}<br />
+        {t('greeting')}
+        <br />
         <span className="bg-linear-to-r from-primary-default to-ocean-default bg-clip-text text-transparent">
           {name || t('defaultName')}
-        </span> 👋
+        </span>{' '}
+        👋
       </h1>
-      <p className="text-gray-500 text-lg md:text-xl font-medium max-w-md">
-        {t('welcomeMessage')}
-      </p>
+      <p className="text-gray-500 text-lg md:text-xl font-medium max-w-md">{t('welcomeMessage')}</p>
     </div>
   );
 };

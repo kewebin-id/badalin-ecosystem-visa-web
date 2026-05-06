@@ -18,6 +18,9 @@ export interface IProviderSubmissionsRepository {
   verifyPayment(id: string): Promise<ResponseREST<IVerifyPaymentResponse>>;
   addFlightManifest(id: string, payloads: IFlightManifestPayload[]): Promise<ResponseREST<void>>;
   addHotelManifest(id: string, payloads: IHotelManifestPayload[]): Promise<ResponseREST<void>>;
-  addTransportManifest(id: string, payloads: ITransportManifestPayload[]): Promise<ResponseREST<void>>;
+  addTransportManifest(
+    id: string,
+    payloads: ITransportManifestPayload[],
+  ): Promise<ResponseREST<void>>;
   reviewSubmission(id: string, payload: IReviewSubmissionPayload): Promise<ResponseREST<void>>;
 }

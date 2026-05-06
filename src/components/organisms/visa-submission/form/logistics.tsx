@@ -28,7 +28,6 @@ export const LogisticsForm = () => {
     watch,
     setValue,
     register,
-    getValues,
     formState: { errors },
   } = useFormContext<TWizardForm>();
   const [isAutoDetected, setIsAutoDetected] = useState<Record<string, boolean>>({});
@@ -97,28 +96,56 @@ export const LogisticsForm = () => {
     handleOcrSuccess(data);
     const field = 'departureTicketUrls' as Path<TWizardForm>;
     const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
-    setValue(field, [...prevValues, data?.publicUrl || ''] as any, { shouldValidate: true });
+    setValue(
+      field,
+      [...prevValues, data?.publicUrl || ''] as import('react-hook-form').PathValue<
+        TWizardForm,
+        Path<TWizardForm>
+      >,
+      { shouldValidate: true },
+    );
   });
 
   const returnTicketOcr = useProcessOcr((data) => {
     handleOcrSuccess(data);
     const field = 'returnTicketUrls' as Path<TWizardForm>;
     const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
-    setValue(field, [...prevValues, data?.publicUrl || ''] as any, { shouldValidate: true });
+    setValue(
+      field,
+      [...prevValues, data?.publicUrl || ''] as import('react-hook-form').PathValue<
+        TWizardForm,
+        Path<TWizardForm>
+      >,
+      { shouldValidate: true },
+    );
   });
 
   const makkahHotelOcr = useProcessOcr((data) => {
     handleOcrSuccess(data);
     const field = 'hotelMakkahVoucherUrls' as Path<TWizardForm>;
     const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
-    setValue(field, [...prevValues, data?.publicUrl || ''] as any, { shouldValidate: true });
+    setValue(
+      field,
+      [...prevValues, data?.publicUrl || ''] as import('react-hook-form').PathValue<
+        TWizardForm,
+        Path<TWizardForm>
+      >,
+      { shouldValidate: true },
+    );
   });
 
   const madinahHotelOcr = useProcessOcr((data) => {
     handleOcrSuccess(data);
     const field = 'hotelMadinahVoucherUrls' as Path<TWizardForm>;
     const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
-    setValue(field, [...prevValues, data?.publicUrl || ''] as any, { shouldValidate: true });
+    setValue(
+      field,
+      [...prevValues, data?.publicUrl || ''] as import('react-hook-form').PathValue<
+        TWizardForm,
+        Path<TWizardForm>
+      >,
+      { shouldValidate: true },
+    );
   });
 
   useEffect(() => {

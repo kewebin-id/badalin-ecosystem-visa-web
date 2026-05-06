@@ -30,14 +30,19 @@ export class TransactionUseCase implements ITransactionUseCase {
       }
 
       // Handle both array directly, meta object and top-level pagination properties
-      const items = Array.isArray(res.data) ? res.data : (res.data as any).items || [];
-      const total = (res.data as any).meta?.total ?? (res.data as any).totalItems ?? items.length;
-      const page = (res.data as any).meta?.page ?? (res.data as any).currentPage ?? 1;
-      const limit = (res.data as any).meta?.limit ?? (res.data as any).limit ?? 10;
-      const totalPages =
-        (res.data as any).meta?.totalPages ??
-        (res.data as any).totalPages ??
-        Math.ceil(total / limit);
+      const resData = res.data as {
+        items?: IApiTransaction[];
+        meta?: { total?: number; page?: number; limit?: number; totalPages?: number };
+        totalItems?: number;
+        currentPage?: number;
+        limit?: number;
+        totalPages?: number;
+      };
+      const items = Array.isArray(res.data) ? res.data : resData.items || [];
+      const total = resData.meta?.total ?? resData.totalItems ?? items.length;
+      const page = resData.meta?.page ?? resData.currentPage ?? 1;
+      const limit = resData.meta?.limit ?? resData.limit ?? 10;
+      const totalPages = resData.meta?.totalPages ?? resData.totalPages ?? Math.ceil(total / limit);
 
       return {
         code: 200,
@@ -71,7 +76,7 @@ export class TransactionUseCase implements ITransactionUseCase {
         message: res.message,
         data: this.mapToDomain(res.data),
       };
-    } catch (error) {
+    } catch {
       return { code: 500, error: new Error('Terjadi kesalahan saat mengambil detail transaksi') };
     }
   }
@@ -90,7 +95,7 @@ export class TransactionUseCase implements ITransactionUseCase {
         };
       }
       return { code: 201, message: res.message, data: this.mapToDomain(res.data) };
-    } catch (error) {
+    } catch {
       return { code: 500, error: new Error('Terjadi kesalahan saat membuat pengajuan visa') };
     }
   }
@@ -106,7 +111,7 @@ export class TransactionUseCase implements ITransactionUseCase {
         };
       }
       return { code: 200, message: res.message, data: this.mapToDomain(res.data) };
-    } catch (error) {
+    } catch {
       return { code: 500, error: new Error('Terjadi kesalahan saat mengunggah bukti pembayaran') };
     }
   }
@@ -126,7 +131,7 @@ export class TransactionUseCase implements ITransactionUseCase {
         };
       }
       return { code: 200, message: res.message, data: this.mapToDomain(res.data) };
-    } catch (error) {
+    } catch {
       return { code: 500, error: new Error('Terjadi kesalahan saat memperbarui pengajuan visa') };
     }
   }
@@ -146,7 +151,7 @@ export class TransactionUseCase implements ITransactionUseCase {
         message: res.message,
         data: { ...res.data, ocrType: ocrType as TOcrType },
       };
-    } catch (error) {
+    } catch {
       return { code: 500, error: new Error('Terjadi kesalahan saat memproses OCR') };
     }
   }
@@ -165,17 +170,14 @@ export class TransactionUseCase implements ITransactionUseCase {
         };
       }
       return { code: 200, message: res.message, data: res.data };
-    } catch (error) {
+    } catch {
       return {
         error: new Error('Terjadi kesalahan saat melakukan preview pengajuan visa'),
       };
     }
   }
 
-  async upload(
-    base64: string,
-    ocrType?: string,
-  ): Promise<IUsecaseResponse<ILogisticsOcrResponse>> {
+  async upload(base64: string, ocrType?: string): Promise<IUsecaseResponse<ILogisticsOcrResponse>> {
     try {
       const res = await this.repository.upload(base64, ocrType);
       if (res.code !== 200 || !res.data) {
@@ -190,24 +192,29 @@ export class TransactionUseCase implements ITransactionUseCase {
         message: res.message,
         data: { ...res.data, ocrType: ocrType as TOcrType },
       };
-    } catch (error) {
+    } catch {
       return { code: 500, error: new Error('Terjadi kesalahan saat mengunggah file') };
     }
   }
 
-  private mapToDomain(item: any): ITransaction {
-    const flights = item.flights || [];
+  private mapToDomain(item: IApiTransaction): ITransaction {
     const hotels = item.hotels || [];
 
     // Derive route from hotels
-    const cities = Array.from(new Set(hotels.map((h: any) => h.city))).filter(Boolean);
+    const cities = Array.from(new Set(hotels.map((h: { city?: string }) => h.city))).filter(
+      Boolean,
+    );
     const derivedRoute = cities.length > 0 ? cities.join(' - ') : 'Umrah';
 
     return {
       ...item,
       route: item.route || derivedRoute,
-      invoiceAmount: item.invoiceAmount || item.totalAmount || 0,
-      pilgrimIds: item.members?.map((m: any) => (typeof m === 'string' ? m : m.id)) || [],
-    };
+      invoiceAmount:
+        item.invoiceAmount || (item as unknown as { totalAmount?: number }).totalAmount || 0,
+      pilgrimIds:
+        (item as unknown as { members?: { id: string }[] })?.members?.map(
+          (m: { id?: string } | string) => (typeof m === 'string' ? m : m.id),
+        ) || [],
+    } as unknown as ITransaction;
   }
 }

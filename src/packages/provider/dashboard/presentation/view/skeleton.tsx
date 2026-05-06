@@ -2,11 +2,7 @@
 
 import { Skeleton } from '@/components/atoms';
 import { cn } from '@/shared/utils';
-import { useTranslations } from 'next-intl';
-
 export const DashboardSkeleton = () => {
-  const t = useTranslations('ProviderDashboard');
-
   const CardWrapper = ({
     children,
     className,

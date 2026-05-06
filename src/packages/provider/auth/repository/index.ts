@@ -103,7 +103,7 @@ export class AuthRepository implements IAuthRepository {
 
   updateAgency = async (body: { slug: string; name?: string }) => {
     try {
-      return await this.restApi.patch<any>({
+      return await this.restApi.patch<Record<string, unknown>>({
         endpoint: endpoints.nextApi.provider.agency.base,
         body,
         isNextApi: true,

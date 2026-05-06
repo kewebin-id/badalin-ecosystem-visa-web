@@ -1,6 +1,4 @@
 import { FileSearch, Clock, CheckCircle2 } from 'lucide-react';
-import { TPaymentStatus } from './transaction';
-
 export const TRANSPORT_CATEGORIES = [
   'Bandara → Hotel (Arrival)',
   'Hotel → Masjidil Haram',

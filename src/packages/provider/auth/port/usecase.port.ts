@@ -19,6 +19,9 @@ export interface IAuthUsecase {
   forgotPassword(data: IForgotPasswordRequest): Promise<IUsecaseResponse<boolean>>;
   resetPassword(data: IResetPasswordRequest): Promise<IUsecaseResponse<boolean>>;
   checkSlug(slug: string): Promise<IUsecaseResponse<{ available: boolean }>>;
-  updateAgency(data: { slug: string; name?: string }): Promise<IUsecaseResponse<any>>;
+  updateAgency(data: {
+    slug: string;
+    name?: string;
+  }): Promise<IUsecaseResponse<Record<string, unknown>>>;
   validateSession(): Promise<IUsecaseResponse<{ valid: boolean }>>;
 }

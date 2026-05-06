@@ -192,7 +192,7 @@ Sidebar.displayName = 'Sidebar';
 const SidebarTrigger = React.forwardRef<
   HTMLButtonElement,
   React.ComponentPropsWithoutRef<typeof Button>
->(({ className, onClick, variant, size, asChild, isSubmitting, href, target, ...props }, ref) => {
+>(({ className, onClick, ...props }, ref) => {
   const { toggleSidebar, state } = useSidebar();
 
   return (
@@ -253,7 +253,7 @@ const SidebarInput = React.forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <InputText
-      inputRef={ref as any}
+      inputRef={ref as React.MutableRefObject<HTMLInputElement | null>}
       data-sidebar="input"
       className={cn(
         'h-8 w-full bg-background shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring',
@@ -433,7 +433,7 @@ const SidebarMenuButton = React.forwardRef<
   React.ComponentProps<'button'> & {
     asChild?: boolean;
     isActive?: boolean;
-    tooltip?: string | React.ComponentProps<any>;
+    tooltip?: string | React.ComponentProps<React.ElementType>;
   } & VariantProps<typeof sidebarMenuButtonVariants>
 >(
   (
@@ -526,10 +526,6 @@ const SidebarMenuSkeleton = React.forwardRef<
     showIcon?: boolean;
   }
 >(({ className, showIcon = false, ...props }, ref) => {
-  const width = React.useMemo(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`;
-  }, []);
-
   return (
     <div
       ref={ref}

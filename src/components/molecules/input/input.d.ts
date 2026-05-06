@@ -22,7 +22,16 @@ export interface InputProps {
 }
 
 export interface IInputTextType {
-  type: 'text' | 'number' | 'password' | 'email' | 'price' | 'only-number' | 'time' | 'datetime-local' | 'date';
+  type:
+    | 'text'
+    | 'number'
+    | 'password'
+    | 'email'
+    | 'price'
+    | 'only-number'
+    | 'time'
+    | 'datetime-local'
+    | 'date';
 }
 
 export interface InputTextProps extends IInputTextType {

@@ -17,7 +17,6 @@ export const ImagePreviewModal = ({
   onOpenChange,
   imageSrc,
   imageAlt = 'Preview',
-  imageName,
 }: ImagePreviewModalProps) => {
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });

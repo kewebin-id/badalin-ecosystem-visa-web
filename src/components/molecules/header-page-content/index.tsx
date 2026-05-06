@@ -44,13 +44,9 @@ export const HeaderPageContent = ({
           </div>
         )}
         <div className="min-w-0">
-          <h1 className="text-2xl font-bold text-foreground truncate tracking-tight">
-            {title}
-          </h1>
+          <h1 className="text-2xl font-bold text-foreground truncate tracking-tight">{title}</h1>
           {subtitle && (
-            <p className="text-sm text-muted-foreground font-medium line-clamp-1">
-              {subtitle}
-            </p>
+            <p className="text-sm text-muted-foreground font-medium line-clamp-1">{subtitle}</p>
           )}
         </div>
       </div>

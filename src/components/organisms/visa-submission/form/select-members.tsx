@@ -51,7 +51,7 @@ export const SelectMembersForm = () => {
                     setValue(
                       'pilgrimIds',
                       current.filter((id: string) => id !== m.id),
-                      { shouldValidate: true }
+                      { shouldValidate: true },
                     );
                   }
                 }}

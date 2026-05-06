@@ -1,5 +1,11 @@
 import { IUsecaseResponse } from '@/shared/domain/response.usecase';
-import { IFamilyMember, ICreateMemberRequest, IUpdateMemberRequest, IPaginatedPilgrims, IPaginationParams } from '../domain/member';
+import {
+  IFamilyMember,
+  ICreateMemberRequest,
+  IUpdateMemberRequest,
+  IPaginatedPilgrims,
+  IPaginationParams,
+} from '../domain/member';
 
 export interface IManagementUseCase {
   getMembers(params?: IPaginationParams): Promise<IUsecaseResponse<IPaginatedPilgrims>>;
@@ -7,5 +13,8 @@ export interface IManagementUseCase {
   createMember(data: ICreateMemberRequest): Promise<IUsecaseResponse<IFamilyMember>>;
   updateMember(data: IUpdateMemberRequest): Promise<IUsecaseResponse<IFamilyMember>>;
   deleteMember(id: string): Promise<IUsecaseResponse<boolean>>;
-  processOcr(file: File, type: 'passport' | 'ktp'): Promise<IUsecaseResponse<Partial<IFamilyMember> & { confidence: number; publicUrl?: string }>>;
+  processOcr(
+    file: File,
+    type: 'passport' | 'ktp',
+  ): Promise<IUsecaseResponse<Partial<IFamilyMember> & { confidence: number; publicUrl?: string }>>;
 }

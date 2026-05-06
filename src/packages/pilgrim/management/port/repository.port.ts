@@ -1,9 +1,5 @@
 import { ResponseREST } from '@/shared/utils/rest-api/types';
 import {
-  IFamilyMember,
-  ICreateMemberRequest,
-  IUpdateMemberRequest,
-  IPaginatedPilgrims,
   IPaginationParams,
   IUploadResponse,
   IApiFamilyMember,

@@ -48,48 +48,47 @@ export const endpoints = {
       checkSlug: '/api/v1/p/agency/check-slug',
       validateSession: '/api/v1/p/agency/validate',
     },
+    dashboard: {
+      summary: (slug: string = 'p') => `/api/v1/${slug}/dashboard/summary`,
+    },
+    submissions: {
+      base: (slug: string = 'p') => `/api/v1/${slug}/submissions`,
+      verifyPayment: (slug: string, id: string) =>
+        `/api/v1/${slug}/submissions/${id}/verify-payment`,
+      review: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/review`,
+    },
+  },
+  nextApi: {
+    auth: {
+      checkUser: '/api/auth/check-user',
+      register: '/api/auth/register',
+      login: '/api/auth/login',
+      socialAuth: '/api/auth/social-auth',
+      forgotPassword: '/api/auth/forgot-password',
+      resetPassword: '/api/auth/reset-password',
+    },
+    provider: {
+      auth: {
+        verifyToken: '/api/provider/auth/verify-token',
+        register: '/api/provider/auth/register',
+        login: '/api/provider/auth/login',
+        forgotPassword: '/api/provider/auth/forgot-password',
+        resetPassword: '/api/provider/auth/reset-password',
+      },
+      agency: {
+        base: '/api/provider/agency',
+        checkSlug: '/api/provider/agency/check-slug',
+        validateSession: '/api/provider/agency/validate',
+      },
       dashboard: {
-        summary: (slug: string = 'p') => `/api/v1/${slug}/dashboard/summary`,
+        summary: '/api/provider/dashboard/summary',
       },
       submissions: {
-        base: (slug: string = 'p') => `/api/v1/${slug}/submissions`,
-        verifyPayment: (slug: string, id: string) =>
-          `/api/v1/${slug}/submissions/${id}/verify-payment`,
-        review: (slug: string, id: string) =>
-          `/api/v1/${slug}/submissions/${id}/review`,
+        base: '/api/provider/submissions',
+        verifyPayment: (id: string) => `/api/provider/submissions/${id}/verify-payment`,
+        review: (id: string) => `/api/provider/submissions/${id}/review`,
       },
     },
-    nextApi: {
-      auth: {
-        checkUser: '/api/auth/check-user',
-        register: '/api/auth/register',
-        login: '/api/auth/login',
-        socialAuth: '/api/auth/social-auth',
-        forgotPassword: '/api/auth/forgot-password',
-        resetPassword: '/api/auth/reset-password',
-      },
-      provider: {
-        auth: {
-          verifyToken: '/api/provider/auth/verify-token',
-          register: '/api/provider/auth/register',
-          login: '/api/provider/auth/login',
-          forgotPassword: '/api/provider/auth/forgot-password',
-          resetPassword: '/api/provider/auth/reset-password',
-        },
-        agency: {
-          base: '/api/provider/agency',
-          checkSlug: '/api/provider/agency/check-slug',
-          validateSession: '/api/provider/agency/validate',
-        },
-        dashboard: {
-          summary: '/api/provider/dashboard/summary',
-        },
-        submissions: {
-          base: '/api/provider/submissions',
-          verifyPayment: (id: string) => `/api/provider/submissions/${id}/verify-payment`,
-          review: (id: string) => `/api/provider/submissions/${id}/review`,
-        },
-      },
     visa: {
       dashboard: {
         history: '/api/dashboard',

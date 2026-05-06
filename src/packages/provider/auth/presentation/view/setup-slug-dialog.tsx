@@ -6,7 +6,7 @@ import { useAuth } from '@/shared/hooks';
 import { cn } from '@/shared/utils';
 import { AlertCircle, CheckCircle2, Globe, Loader2, ShieldCheck, Store } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useProviderAuthController } from '../controller';
 
@@ -20,6 +20,25 @@ export const SetupSlugDialog = ({ open }: { open: boolean }) => {
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const [isChecking, setIsChecking] = useState<boolean>(false);
 
+  const handleCheckSlug = useCallback(
+    async (val: string) => {
+      if (!val || val.length < 3) {
+        setIsAvailable(null);
+        return;
+      }
+      setIsChecking(true);
+      try {
+        const res = await checkSlugMutation.mutateAsync(val);
+        setIsAvailable(res?.available ?? false);
+      } catch {
+        setIsAvailable(false);
+      } finally {
+        setIsChecking(false);
+      }
+    },
+    [checkSlugMutation],
+  );
+
   useEffect(() => {
     const timer = setTimeout(() => {
       if (slug && slug.length >= 3) {
@@ -30,7 +49,7 @@ export const SetupSlugDialog = ({ open }: { open: boolean }) => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [slug]);
+  }, [slug, handleCheckSlug]);
 
   useEffect(() => {
     if (user?.agency?.name) {
@@ -38,21 +57,6 @@ export const SetupSlugDialog = ({ open }: { open: boolean }) => {
     }
   }, [user]);
 
-  const handleCheckSlug = async (val: string) => {
-    if (!val || val.length < 3) {
-      setIsAvailable(null);
-      return;
-    }
-    setIsChecking(true);
-    try {
-      const res = await checkSlugMutation.mutateAsync(val);
-      setIsAvailable(res?.available ?? false);
-    } catch (error) {
-      setIsAvailable(false);
-    } finally {
-      setIsChecking(false);
-    }
-  };
   const handleSubmit = async () => {
     if (!slug || isAvailable === false) {
       toast.error('Please provide a valid and available slug');

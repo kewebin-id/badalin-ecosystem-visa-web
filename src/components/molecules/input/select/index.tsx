@@ -26,7 +26,11 @@ export const InputSelect: FC<InputSelelctProps> = (props) => {
   return <InputSelectBase {...props} />;
 };
 
-const InputSelectControlled = (props: InputSelelctProps & { control: any }) => {
+const InputSelectControlled = (
+  props: InputSelelctProps & {
+    control: import('react-hook-form').Control<Record<string, unknown>>;
+  },
+) => {
   const { field, fieldState } = useController({
     name: props.name || '',
     control: props.control,
@@ -35,7 +39,7 @@ const InputSelectControlled = (props: InputSelelctProps & { control: any }) => {
   return (
     <InputSelectBase
       {...props}
-      value={field.value}
+      value={field.value as string}
       onValueChange={field.onChange}
       fieldRef={field.ref}
       error={fieldState.error?.message}
@@ -45,7 +49,7 @@ const InputSelectControlled = (props: InputSelelctProps & { control: any }) => {
 };
 
 interface InputSelectBaseProps extends InputSelelctProps {
-  fieldRef?: any;
+  fieldRef?: import('react').Ref<HTMLButtonElement>;
   error?: string;
   onValueChange?: (value: string) => void;
 }

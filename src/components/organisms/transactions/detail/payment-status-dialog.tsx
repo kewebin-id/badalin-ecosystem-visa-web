@@ -11,11 +11,7 @@ interface PaymentStatusDialogProps {
   message?: string | null;
 }
 
-export const PaymentStatusDialog = ({
-  open,
-  onOpenChange,
-  message,
-}: PaymentStatusDialogProps) => {
+export const PaymentStatusDialog = ({ open, onOpenChange, message }: PaymentStatusDialogProps) => {
   const t = useTranslations('VisaTransaction.dialog');
 
   return (
@@ -36,11 +32,7 @@ export const PaymentStatusDialog = ({
               : 'bg-primary-default/10 text-primary-default',
           )}
         >
-          {message ? (
-            <FileText className="size-10" />
-          ) : (
-            <CheckCircle2 className="size-10" />
-          )}
+          {message ? <FileText className="size-10" /> : <CheckCircle2 className="size-10" />}
         </div>
 
         <div className="space-y-2">
@@ -57,15 +49,11 @@ export const PaymentStatusDialog = ({
             <p className="text-xs font-black text-warning-700 uppercase tracking-widest mb-1">
               {t('systemNote')}
             </p>
-            <p className="text-sm font-medium text-warning-600 italic">
-              "{message}"
-            </p>
+            <p className="text-sm font-medium text-warning-600 italic">"{message}"</p>
           </div>
         )}
 
-        <p className="text-xs text-muted-foreground font-medium pt-2">
-          {t('footer')}
-        </p>
+        <p className="text-xs text-muted-foreground font-medium pt-2">{t('footer')}</p>
       </div>
     </DialogDrawer>
   );

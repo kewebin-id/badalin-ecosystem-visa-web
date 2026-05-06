@@ -24,7 +24,11 @@ interface TransactionListViewProps {
   onViewDetail: (id: string) => void;
   pageCount: number;
   pagination: { pageIndex: number; pageSize: number };
-  onPaginationChange: (pagination: any) => void;
+  onPaginationChange: (
+    pagination: import('@tanstack/react-table').Updater<
+      import('@tanstack/react-table').PaginationState
+    >,
+  ) => void;
   search: string;
   onSearchChange: (value?: string) => void;
   onRetry?: () => void;
@@ -41,7 +45,6 @@ export const TransactionListView = ({
   onSearchChange,
 }: TransactionListViewProps) => {
   const t = useTranslations('VisaTransaction');
-  const tCommon = useTranslations('Common');
 
   const columns = useMemo<ColumnDef<ITransaction>[]>(
     () => [
@@ -94,13 +97,16 @@ export const TransactionListView = ({
         cell: ({ row }) => {
           const displayStatus = getTransactionDisplayStatus(row.original);
           return (
-            <StatusBadge status={displayStatus.status} label={t(displayStatus.labelKey as any)} />
+            <StatusBadge
+              status={displayStatus.status}
+              label={t(displayStatus.labelKey as Parameters<typeof t>[0])}
+            />
           );
         },
       },
       {
         id: 'actions',
-        cell: ({ row }) => (
+        cell: ({ row }) =>
           row.original.paymentStatus === 'PENDING' ? (
             <Button
               variant="transparent"
@@ -115,11 +121,10 @@ export const TransactionListView = ({
                 <Pencil className="h-4 w-4" />
               </Link>
             </Button>
-          ) : null
-        ),
+          ) : null,
       },
     ],
-    [t, tCommon, onViewDetail],
+    [t],
   );
 
   const onPaginationChangeCallback = useCallback(onPaginationChange, [onPaginationChange]);
@@ -175,61 +180,59 @@ export const TransactionListView = ({
 
       <div className="grid grid-cols-1 gap-4 lg:hidden">
         {transactions.length === 0 ? (
-          <EmptyState
-            title={t('emptyTitle')}
-            description={t('emptyDescription')}
-          />
+          <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
         ) : (
           transactions.map((tx) => (
-          <Card
-            key={tx.id}
-            className="p-4 hover:border-primary-default/20 transition-all cursor-pointer group"
-            onClick={() => onViewDetail(tx.id)}
-          >
-            <div className="flex items-start justify-between">
-              <div className="min-w-0 flex-1">
-                <p className="font-bold text-foreground truncate">
-                  {tx.id.split('-')[0].toUpperCase()}
-                </p>
-                <p className="text-xs text-muted-foreground font-medium">{tx.route || 'Umrah'}</p>
+            <Card
+              key={tx.id}
+              className="p-4 hover:border-primary-default/20 transition-all cursor-pointer group"
+              onClick={() => onViewDetail(tx.id)}
+            >
+              <div className="flex items-start justify-between">
+                <div className="min-w-0 flex-1">
+                  <p className="font-bold text-foreground truncate">
+                    {tx.id.split('-')[0].toUpperCase()}
+                  </p>
+                  <p className="text-xs text-muted-foreground font-medium">{tx.route || 'Umrah'}</p>
+                </div>
+                {(() => {
+                  const displayStatus = getTransactionDisplayStatus(tx);
+                  return (
+                    <StatusBadge
+                      status={displayStatus.status}
+                      label={t(displayStatus.labelKey as Parameters<typeof t>[0])}
+                    />
+                  );
+                })()}
               </div>
-              {(() => {
-                const displayStatus = getTransactionDisplayStatus(tx);
-                return (
-                  <StatusBadge
-                    status={displayStatus.status}
-                    label={t(displayStatus.labelKey as any)}
-                  />
-                );
-              })()}
-            </div>
-            <div className="flex items-center justify-between pt-3 border-t border-gray-50 mt-3">
-              <div className="flex flex-col">
-                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
-                  {t('form.estimatedTotal')}
-                </span>
-                <span className="text-sm font-black text-foreground">
-                  IDR {thousandFormat(tx.invoiceAmount)}
-                </span>
+              <div className="flex items-center justify-between pt-3 border-t border-gray-50 mt-3">
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                    {t('form.estimatedTotal')}
+                  </span>
+                  <span className="text-sm font-black text-foreground">
+                    IDR {thousandFormat(tx.invoiceAmount)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1">
+                  {tx.paymentStatus === 'PENDING' && (
+                    <Button
+                      variant="transparent"
+                      size="icon"
+                      className="h-9 w-9 text-gray-400 hover:text-primary-default"
+                      asChild
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Link href={`${ROUTES.PILGRIM.TRANSACTION.FORM}?id=${tx.id}`}>
+                        <Pencil className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                  )}
+                </div>
               </div>
-              <div className="flex items-center gap-1">
-                {tx.paymentStatus === 'PENDING' && (
-                  <Button
-                    variant="transparent"
-                    size="icon"
-                    className="h-9 w-9 text-gray-400 hover:text-primary-default"
-                    asChild
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Link href={`${ROUTES.PILGRIM.TRANSACTION.FORM}?id=${tx.id}`}>
-                      <Pencil className="h-4 w-4" />
-                    </Link>
-                  </Button>
-                )}
-              </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          ))
+        )}
       </div>
     </>
   );

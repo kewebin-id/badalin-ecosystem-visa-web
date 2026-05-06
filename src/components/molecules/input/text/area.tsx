@@ -59,10 +59,8 @@ export const InputTextarea = ({
             htmlFor={id}
             className={cn(
               styles[`form-area-label-inside${isFocused || inputState || value ? '-active' : ''}`],
-              isFocused || value || inputState
-                ? 'text-gray-500 w-[91%]!'
-                : 'text-gray-400',
-              'cursor-text'
+              isFocused || value || inputState ? 'text-gray-500 w-[91%]!' : 'text-gray-400',
+              'cursor-text',
             )}
           >
             <span>{label}</span>
@@ -140,9 +138,7 @@ export const InputTextarea = ({
               className,
               disabled && 'cursor-not-allowed bg-gray-100! border-gray-200!',
               useLabelInside &&
-                styles[
-                  `form-area-input-inside${errorMessage ? 'error' : value ? '-active' : ''}`
-                ],
+                styles[`form-area-input-inside${errorMessage ? 'error' : value ? '-active' : ''}`],
               errorMessage ? styles['form-input-error'] : styles['form-input'],
               icon &&
                 iconPosition &&

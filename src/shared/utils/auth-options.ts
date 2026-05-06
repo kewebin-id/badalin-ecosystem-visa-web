@@ -45,8 +45,8 @@ export const authOptions: NextAuthOptions = {
             token: loginData.token,
             ...loginData.user,
           } as User & IUser & { token: string };
-        } catch (error) {
-          Logger.error(error, { location: 'NextAuth.authorize' });
+        } catch {
+          Logger.error('Login failed', { location: 'NextAuth.authorize' });
           return null;
         }
       },
@@ -66,7 +66,7 @@ export const authOptions: NextAuthOptions = {
         if (trigger === 'update' && session) {
           if (session.user) {
             token.user = {
-              ...(token.user as any),
+              ...(token.user as unknown as Record<string, unknown>),
               ...session.user,
             };
             if (session.user.token) {
@@ -109,8 +109,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         return token;
-      } catch (err) {
-        console.error('NextAuth JWT callback error:', err);
+      } catch {
         return token;
       }
     },

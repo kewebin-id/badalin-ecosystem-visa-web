@@ -12,6 +12,7 @@ import {
   IResetPasswordRequest,
   IVerifyTokenRequest,
 } from '../domain/request';
+import { ProviderSubmission } from '@/packages/provider/submissions/domain/entities';
 import { AuthRepository } from '../repository';
 import { AuthUseCase } from '../usecase';
 
@@ -45,7 +46,10 @@ export const useProviderAuthController = () => {
 
       const { getSession } = await import('next-auth/react');
       const session = await getSession();
-      const userSlug = (session?.user as any)?.agency?.slug || (session?.user as any)?.agencySlug || slug;
+      const userSlug =
+        (session?.user as { agency?: { slug: string }; agencySlug?: string })?.agency?.slug ||
+        (session?.user as { agency?: { slug: string }; agencySlug?: string })?.agencySlug ||
+        slug;
 
       toast.success('Login successful');
       window.location.assign(ROUTES.PROVIDER.DASHBOARD(userSlug));
@@ -136,7 +140,12 @@ export const useProviderAuthController = () => {
           throw result.error;
         }
 
-        const res = result.data;
+        const res = result.data as unknown as ProviderSubmission & {
+          newToken?: string;
+          slug: string;
+          name: string;
+        };
+        if (!res) return;
 
         await update({
           user: {

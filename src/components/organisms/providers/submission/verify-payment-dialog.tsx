@@ -77,11 +77,7 @@ export const VerifyPaymentDialog: FC<VerifyPaymentDialogProps> = ({
               className="object-contain"
             />
           ) : (
-            <NotFoundComp
-              className="w-full h-full"
-              label={t('noProof')}
-              message=""
-            />
+            <NotFoundComp className="w-full h-full" label={t('noProof')} message="" />
           )}
         </div>
       </div>

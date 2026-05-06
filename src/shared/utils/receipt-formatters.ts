@@ -94,7 +94,9 @@ export const fundingSourceBadgeColors: Record<string, string> = {
   COMPANY_TO_VENDOR: 'bg-indigo-50 text-indigo-700 border-indigo-200',
 };
 
-export const getItemStatus = (item: any): 'PENDING' | 'APPROVED' | 'REJECTED' | 'EDITED' => {
+export const getItemStatus = (item: {
+  status?: string;
+}): 'PENDING' | 'APPROVED' | 'REJECTED' | 'EDITED' => {
   if (item.status === 'APPROVED' || item.status === 'VERIFIED') return 'APPROVED';
   if (item.status === 'REJECTED') return 'REJECTED';
   if (item.status === 'EDITED') return 'EDITED';

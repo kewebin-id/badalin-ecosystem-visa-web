@@ -35,7 +35,11 @@ export const response = {
       { status: HttpStatusCode.Created },
     );
   },
-  [207]: <T extends Partial<object> | undefined | void>({ code, message, data }: ResponseREST<T>) => {
+  [207]: <T extends Partial<object> | undefined | void>({
+    code,
+    message,
+    data,
+  }: ResponseREST<T>) => {
     return NextResponse.json(
       {
         code: code || 207,

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Calendar } from '@/components/atoms';
+import { Calendar } from '@/components/atoms';
 import { cn } from '@/shared/utils';
 import { CalendarFold, X } from 'lucide-react';
 import moment from 'moment';

@@ -40,14 +40,21 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
           if (res && !res.valid) {
             await signOut();
           }
-        } catch (error) {
+        } catch {
           await signOut();
         }
       }
     };
 
     checkAndSyncSession();
-  }, [params?.slug, user?.agencySlug]);
+  }, [
+    params?.slug,
+    user?.agencySlug,
+    user?.agency?.slug,
+    user?.role,
+    validateSessionMutation,
+    signOut,
+  ]);
 
   const isProvider = user?.role === 'PROVIDER';
   const isSlugSetup = user?.agency?.isSlugSetup;

@@ -3,5 +3,7 @@
 .card {
   @apply flex flex-col items-stretch rounded-[2rem] border border-gray-100 shadow-sm bg-white animate-in fade-in slide-in-from-top-4 duration-500;
   background: linear-gradient(135deg, #ffffff 0%, #fdfdfd 100%);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.04),
+    0 8px 10px -6px rgba(0, 0, 0, 0.04);
 }

@@ -5,14 +5,12 @@ import { ILoginRequest, IRegisterRequest, IResetPasswordRequest } from '../domai
 import { AuthRepository } from '../repository';
 import { AuthUseCase } from '../usecase';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { ROUTES, validationMessage } from '@/shared/constants';
 
 export const useAuthController = () => {
   const restApi = new RestAPI();
   const repository = new AuthRepository(restApi);
   const usecase = new AuthUseCase(repository);
-  const router = useRouter();
 
   const registerMutation = useMutation({
     mutationFn: async (payload: IRegisterRequest) => {

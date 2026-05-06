@@ -23,7 +23,9 @@ export class AuthUseCase implements IAuthUsecase {
     this.repository = repository;
   }
 
-  verifyToken = async (data: IVerifyTokenRequest): Promise<IUsecaseResponse<IVerifyTokenResponse>> => {
+  verifyToken = async (
+    data: IVerifyTokenRequest,
+  ): Promise<IUsecaseResponse<IVerifyTokenResponse>> => {
     try {
       const result = await this.repository.verifyToken(data);
       if (result?.data) {
@@ -42,7 +44,9 @@ export class AuthUseCase implements IAuthUsecase {
     }
   };
 
-  register = async (data: IRegisterProviderRequest): Promise<IUsecaseResponse<IRegisterProviderResponse>> => {
+  register = async (
+    data: IRegisterProviderRequest,
+  ): Promise<IUsecaseResponse<IRegisterProviderResponse>> => {
     try {
       const result = await this.repository.register(data);
       if (result?.data?.id) {
@@ -119,7 +123,10 @@ export class AuthUseCase implements IAuthUsecase {
     }
   };
 
-  updateAgency = async (data: { slug: string; name?: string }): Promise<IUsecaseResponse<any>> => {
+  updateAgency = async (data: {
+    slug: string;
+    name?: string;
+  }): Promise<IUsecaseResponse<Record<string, unknown>>> => {
     try {
       const result = await this.repository.updateAgency(data);
       if (result?.data) {

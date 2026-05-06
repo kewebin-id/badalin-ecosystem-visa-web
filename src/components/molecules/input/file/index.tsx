@@ -58,24 +58,27 @@ export const InputFile = ({
     name: string;
   } | null>(null);
 
-  const validateFile = (file: File): boolean => {
-    const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
-    if (!allowedTypes.includes(fileExtension)) {
-      toast.error('Invalid file type', {
-        description: `Allowed types: ${allowedTypes.join(', ')}`,
-      });
-      return false;
-    }
-    if (file.size > maxSize) {
-      toast.error('File too large', {
-        description: `Maximum size is ${maxSize / (1024 * 1024)}MB`,
-      });
-      return false;
-    }
-    return true;
-  };
+  const validateFile = useCallback(
+    (file: File): boolean => {
+      const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+      if (!allowedTypes.includes(fileExtension)) {
+        toast.error('Invalid file type', {
+          description: `Allowed types: ${allowedTypes.join(', ')}`,
+        });
+        return false;
+      }
+      if (file.size > maxSize) {
+        toast.error('File too large', {
+          description: `Maximum size is ${maxSize / (1024 * 1024)}MB`,
+        });
+        return false;
+      }
+      return true;
+    },
+    [allowedTypes, maxSize],
+  );
 
-  const convertToBase64 = (file: File): Promise<string> => {
+  const convertToBase64 = useCallback((file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => {
@@ -87,11 +90,14 @@ export const InputFile = ({
       };
       reader.readAsDataURL(file);
     });
-  };
+  }, []);
 
-  const checkDuplicateFile = (fileName: string, currentFiles: UploadFile[]): boolean => {
-    return currentFiles.some((file) => file.name === fileName);
-  };
+  const checkDuplicateFile = useCallback(
+    (fileName: string, currentFiles: UploadFile[]): boolean => {
+      return currentFiles.some((file) => file.name === fileName);
+    },
+    [],
+  );
 
   const handleFileSelect = useCallback(
     async (files: FileList | null) => {
@@ -144,7 +150,7 @@ export const InputFile = ({
         });
       }
     },
-    [value, maxFiles, allowedTypes, onChange],
+    [value, maxFiles, onChange, checkDuplicateFile, validateFile, convertToBase64],
   );
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

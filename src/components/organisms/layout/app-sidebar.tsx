@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage, Button } from '@/components/atoms';
+import { Button } from '@/components/atoms';
 import { Skeleton } from '@/components/atoms/skeleton';
 import { UserAvatar } from '@/components/molecules/user-avatar';
 import {
@@ -19,7 +19,16 @@ import { ROUTES } from '@/shared/constants/routes';
 import { useAuth } from '@/shared/hooks';
 import { cn } from '@/shared/utils';
 import { AnimatePresence, motion } from 'framer-motion';
-import { LayoutDashboard, LogOut, PanelLeftClose, Plane, Users, Inbox, CreditCard, FileText, Settings } from 'lucide-react';
+import {
+  LayoutDashboard,
+  LogOut,
+  PanelLeftClose,
+  Plane,
+  Users,
+  Inbox,
+  FileText,
+  Settings,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
 

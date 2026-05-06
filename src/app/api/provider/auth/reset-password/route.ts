@@ -26,9 +26,12 @@ export const POST = async (req: NextRequest) => {
       },
     });
 
-    Logger.info(`POST ${endpoints.provider.auth.resetPassword} - Response: ${JSON.stringify(res)}`, {
-      location: 'api/provider/auth/reset-password/route.ts - POST',
-    });
+    Logger.info(
+      `POST ${endpoints.provider.auth.resetPassword} - Response: ${JSON.stringify(res)}`,
+      {
+        location: 'api/provider/auth/reset-password/route.ts - POST',
+      },
+    );
 
     return response.handler(res);
   } catch (error: unknown) {

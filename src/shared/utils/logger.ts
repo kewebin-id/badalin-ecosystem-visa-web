@@ -1,8 +1,10 @@
-type LogLevel = 'log' | 'info' | 'error';
+type LogLevel = 'log' | 'info' | 'warn' | 'error';
 
 interface LogOptions {
   location?: string;
-  error?: Error;
+  error?: Error | unknown;
+  data?: unknown;
+  [key: string]: unknown;
 }
 
 const getTimestamp = (): string => {
@@ -33,8 +35,16 @@ const logMessage = (level: LogLevel, message: Error | unknown, options: LogOptio
 
   if (options.error) {
     logMessage += `\nError: ${
-      options.error instanceof Error ? options.error.stack : options.error
+      options.error instanceof Error ? options.error.stack : JSON.stringify(options.error, null, 2)
     }`;
+  }
+
+  // Handle data and other custom properties
+  const rest = { ...options };
+  delete rest.location;
+  delete rest.error;
+  if (Object.keys(rest).length > 0) {
+    logMessage += `\nMetadata: ${JSON.stringify(rest, null, 2)}`;
   }
 
   logMessage += `\n===============================`;
@@ -49,6 +59,10 @@ const Logger = {
 
   info: (message: Error | unknown, options: LogOptions = {}) => {
     console.info(logMessage('info', message, options));
+  },
+
+  warn: (message: Error | unknown, options: LogOptions = {}) => {
+    console.warn(logMessage('warn', message, options));
   },
 
   error: (message: Error | unknown, options: LogOptions = {}) => {

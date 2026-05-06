@@ -16,7 +16,10 @@ export class ProviderDashboardUseCase implements IProviderDashboardUseCase {
       if (res.data) {
         return { data: res.data, message: res.message };
       }
-      return { error: new Error(res.message || 'Failed to fetch dashboard summary'), message: res.message };
+      return {
+        error: new Error(res.message || 'Failed to fetch dashboard summary'),
+        message: res.message,
+      };
     } catch (error) {
       Logger.error(error, { location: 'ProviderDashboardUseCase.getSummary' });
       return { error: error as Error, message: 'Internal server error' };

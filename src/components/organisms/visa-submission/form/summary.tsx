@@ -5,14 +5,7 @@ import { TWizardForm } from '@/packages/pilgrim/transaction/presentation/control
 import { cn } from '@/shared/utils';
 import { formatDate } from '@/shared/utils/formattor';
 import { motion } from 'framer-motion';
-import {
-  Calendar,
-  Car,
-  ChevronDown,
-  Hotel,
-  Info,
-  Plane,
-} from 'lucide-react';
+import { Calendar, Car, ChevronDown, Hotel, Info, Plane } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -41,7 +34,7 @@ export const SummaryForm = ({ totalAmount, breakdown, isLoading }: SummaryFormPr
     label,
     value,
   }: {
-    icon: any;
+    icon: import('lucide-react').LucideIcon;
     label: string;
     value: string | React.ReactNode;
   }) => (
@@ -215,10 +208,19 @@ export const SummaryForm = ({ totalAmount, breakdown, isLoading }: SummaryFormPr
                     <p className="text-[10px] font-black text-primary-default uppercase tracking-widest px-2">
                       {t('form.uploadedDocuments')}
                     </p>
-                    <FileList urls={formValues.departureTicketUrls} label={t('form.departureSection')} />
+                    <FileList
+                      urls={formValues.departureTicketUrls}
+                      label={t('form.departureSection')}
+                    />
                     <FileList urls={formValues.returnTicketUrls} label={t('form.returnSection')} />
-                    <FileList urls={formValues.hotelMakkahVoucherUrls} label={tDashboard('makkah')} />
-                    <FileList urls={formValues.hotelMadinahVoucherUrls} label={tDashboard('madinah')} />
+                    <FileList
+                      urls={formValues.hotelMakkahVoucherUrls}
+                      label={tDashboard('makkah')}
+                    />
+                    <FileList
+                      urls={formValues.hotelMadinahVoucherUrls}
+                      label={tDashboard('madinah')}
+                    />
                     {formValues.transportations?.map((t, i) => (
                       <FileList
                         key={i}

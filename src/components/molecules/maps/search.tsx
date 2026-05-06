@@ -86,7 +86,7 @@ export const InteractiveMap: React.FC<IInteractiveMapProps> = ({
 
       const json: ILonLat[] = await response.json();
       setSearchResults(json);
-    } catch (error) {
+    } catch {
       setSearchResults([]);
     } finally {
       setLoading(false);

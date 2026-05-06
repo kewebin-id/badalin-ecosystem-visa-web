@@ -9,7 +9,6 @@ import { toast } from 'sonner';
 import { isBase64 } from '@/shared/utils/validator';
 import * as z from 'zod';
 import {
-  IApiTransaction,
   ICreateTransactionRequest,
   ILogisticsOcrResponse,
   ITransaction,
@@ -66,7 +65,7 @@ const getWizardSchema = (t: (key: string) => string) =>
             time: z.string().min(1, t('form.validationRequired')),
             from: z.string().min(1, t('form.validationRequired')),
             to: z.string().min(1, t('form.validationRequired')),
-            total: z.coerce.number().min(1, t('form.validationRequired')),
+            total: z.number().min(1, t('form.validationRequired')),
             imageUrls: z.array(z.string()).optional(),
           }),
         )
@@ -211,7 +210,7 @@ export const useTransactionController = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const wizardSchema = useMemo(() => getWizardSchema(t as any), [t]);
+  const wizardSchema = useMemo(() => getWizardSchema(t as (key: string) => string), [t]);
 
   const handleUploadImages = async (form: TWizardForm): Promise<TWizardForm> => {
     const uploadedForm = { ...form };
@@ -350,10 +349,10 @@ export const useTransactionController = () => {
 
 export const useTransactionForm = (initialData?: Partial<ITransaction>) => {
   const t = useTranslations('VisaTransaction');
-  const wizardSchema = useMemo(() => getWizardSchema(t as any), [t]);
+  const wizardSchema = useMemo(() => getWizardSchema(t as (key: string) => string), [t]);
 
   return useForm<TWizardForm>({
-    resolver: zodResolver(wizardSchema) as any,
+    resolver: zodResolver(wizardSchema),
     mode: 'all',
     values: useMemo(() => {
       // Mapping API data back to flat form
@@ -361,8 +360,6 @@ export const useTransactionForm = (initialData?: Partial<ITransaction>) => {
       const fRet = initialData?.flights?.find((f) => f.type === 'RETURN');
       const hM = initialData?.hotels?.find((h) => h.city === 'MAKKAH');
       const hD = initialData?.hotels?.find((h) => h.city === 'MADINAH');
-      const tB = initialData?.transportations?.find((t) => t.type === 'BUS');
-      const tT = initialData?.transportations?.find((t) => t.type === 'TRAIN');
 
       const initial: TWizardForm = {
         pilgrimIds: initialData?.pilgrimIds || [],
@@ -393,14 +390,14 @@ export const useTransactionForm = (initialData?: Partial<ITransaction>) => {
         hotelMadinahRoomType: hD?.roomType || '',
 
         transportations:
-          initialData?.transportations?.map((t) => ({
-            type: t.type,
-            company: t.company,
-            date: t.date,
-            time: t.time,
-            from: t.from,
-            to: t.to,
-            total: t.totalVehicle || 1,
+          initialData?.transportations?.map((trans) => ({
+            type: trans.type,
+            company: trans.company,
+            date: trans.date,
+            time: trans.time,
+            from: trans.from,
+            to: trans.to,
+            total: (trans.totalVehicle as number) || 1,
           })) || [],
 
         rawdahMenTime: initialData?.rawdahMenTime || '',
@@ -414,7 +411,7 @@ export const useTransactionForm = (initialData?: Partial<ITransaction>) => {
         ocrConfidence: 0,
       };
 
-      return initial;
+      return initial as TWizardForm;
     }, [initialData]),
   });
 };

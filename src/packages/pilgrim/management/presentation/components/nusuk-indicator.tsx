@@ -139,8 +139,8 @@ export const NusukIndicator = ({
                   status === 'SAFE'
                     ? 'bg-emerald-500'
                     : status === 'WARNING'
-                    ? 'bg-amber-500'
-                    : 'bg-rose-500',
+                      ? 'bg-amber-500'
+                      : 'bg-rose-500',
                 )}
                 style={{ width: `${score}%` }}
               />
@@ -174,7 +174,10 @@ export const NusukIndicator = ({
             checked={isWarningConfirmed}
             onChange={(e) => onWarningConfirm(e.target.checked)}
           />
-          <label htmlFor="confirm-warning" className="text-xs font-medium text-amber-800 cursor-pointer">
+          <label
+            htmlFor="confirm-warning"
+            className="text-xs font-medium text-amber-800 cursor-pointer"
+          >
             Saya sudah memeriksa data dan yakin benar
           </label>
         </div>
@@ -193,9 +196,7 @@ export const NusukIndicator = ({
         disabledSubmitButton={false}
       >
         <div className="space-y-4 pb-4">
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            {t('rejectedDesc')}
-          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">{t('rejectedDesc')}</p>
           <GuideBlock />
         </div>
       </DialogDrawer>

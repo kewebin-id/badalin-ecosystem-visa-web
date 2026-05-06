@@ -13,25 +13,13 @@ interface UserAvatarProps {
   fallbackClassName?: string;
 }
 
-export const UserAvatar = ({
-  name,
-  src,
-  seed,
-  className,
-  fallbackClassName,
-}: UserAvatarProps) => {
+export const UserAvatar = ({ name, src, seed, className, fallbackClassName }: UserAvatarProps) => {
   const initials = getInitials(name);
   const backgroundColor = getAvatarColor(seed || name);
 
   return (
     <Avatar className={cn('size-10', className)}>
-      {src && (
-        <AvatarImage
-          src={src}
-          alt={name}
-          className="object-cover"
-        />
-      )}
+      {src && <AvatarImage src={src} alt={name} className="object-cover" />}
       <AvatarFallback
         className={cn('font-bold text-white', fallbackClassName)}
         style={{ backgroundColor }}

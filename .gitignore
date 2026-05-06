@@ -55,3 +55,6 @@ public/workbox-*.js
 # test
 /test-setup.ts
 *-plan.md
+
+# linter
+*output*

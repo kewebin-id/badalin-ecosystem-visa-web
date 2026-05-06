@@ -34,7 +34,7 @@ export const DetailSidebarActions = ({
         <div className="bg-gray-50 rounded-2xl p-4 flex flex-col items-center text-center gap-3 border border-gray-100">
           <StatusBadge
             status={displayStatus.status}
-            label={t(displayStatus.labelKey as any)}
+            label={t(displayStatus.labelKey as Parameters<typeof t>[0])}
             className="text-xs font-black px-4 py-1.5 rounded-full"
           />
           {transaction.updatedAt && (

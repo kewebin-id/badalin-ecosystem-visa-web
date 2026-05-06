@@ -1,8 +1,6 @@
 import { ICheckSlugResponse } from '@/packages/provider/auth/domain/response';
 import { endpoints } from '@/shared/constants/endpoints';
-import { getAuthTokenFromRequest } from '@/shared/hooks/use-auth-server';
 import Logger from '@/shared/utils/logger';
-import { RestAPI } from '@/shared/utils/rest-api';
 import { createAuthenticatedApi } from '@/shared/utils/rest-api/server';
 import { response } from '@/shared/utils/rest-api/response';
 import { NextRequest } from 'next/server';

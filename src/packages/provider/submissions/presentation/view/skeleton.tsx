@@ -27,7 +27,10 @@ export const SubmissionsSkeleton = () => {
           </div>
           {/* Table Rows Placeholder */}
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="flex justify-between items-center py-4 border-b border-gray-50 last:border-0">
+            <div
+              key={i}
+              className="flex justify-between items-center py-4 border-b border-gray-50 last:border-0"
+            >
               <Skeleton className="h-4 w-16" />
               <Skeleton className="h-4 w-32" />
               <Skeleton className="h-4 w-8" />

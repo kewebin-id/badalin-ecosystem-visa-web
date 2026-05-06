@@ -2,10 +2,6 @@ import { endpoints } from '@/shared/constants/endpoints';
 import { RequestAPI } from '@/shared/utils/rest-api/types';
 import { ResponseREST } from '@/shared/utils/rest-api/types';
 import {
-  IFamilyMember,
-  ICreateMemberRequest,
-  IUpdateMemberRequest,
-  IPaginatedPilgrims,
   IPaginationParams,
   IUploadResponse,
   IApiFamilyMember,
@@ -70,7 +66,7 @@ export class ManagementRepository implements IManagementRepository {
         },
         isNextApi: true,
       });
-    } catch (error) {
+    } catch {
       return { code: 500, message: 'Gagal mengunggah file' };
     }
   }
@@ -87,7 +83,7 @@ export class ManagementRepository implements IManagementRepository {
         },
         isNextApi: true,
       });
-    } catch (error) {
+    } catch {
       return { code: 500, message: 'Gagal memproses file' };
     }
   }

@@ -24,7 +24,8 @@ export const Pagination = ({
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       <span className="text-sm text-muted-foreground mr-2">
-        {t('page', { current: currentPage, total: totalPages }) || `Page ${currentPage} of ${totalPages}`}
+        {t('page', { current: currentPage, total: totalPages }) ||
+          `Page ${currentPage} of ${totalPages}`}
       </span>
       <div className="flex items-center gap-1">
         <Button

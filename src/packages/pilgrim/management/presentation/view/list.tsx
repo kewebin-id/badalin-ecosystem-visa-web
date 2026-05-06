@@ -140,7 +140,7 @@ export const ManagementListView = () => {
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   }, []);
 
-  const onPaginationChange = useCallback(setPagination, []);
+  const onPaginationChange = useCallback(setPagination, [setPagination]);
 
   const table = useReactTable({
     data: members,

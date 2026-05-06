@@ -89,7 +89,7 @@ export class ManagementUseCase implements IManagementUseCase {
           items: res.data.items.map((item) => this.mapToDomain(item)),
         },
       };
-    } catch (error) {
+    } catch {
       return { code: 500, error: new Error('Terjadi kesalahan saat mengambil data anggota') };
     }
   }
@@ -109,7 +109,7 @@ export class ManagementUseCase implements IManagementUseCase {
         message: res.message,
         data: this.mapToDomain(res.data),
       };
-    } catch (error) {
+    } catch {
       return { code: 500, error: new Error('Terjadi kesalahan saat mengambil detail anggota') };
     }
   }
@@ -126,7 +126,7 @@ export class ManagementUseCase implements IManagementUseCase {
         };
       }
       return { code: Number(res.code), message: res.message, data: this.mapToDomain(res.data) };
-    } catch (error) {
+    } catch {
       return { code: 500, error: new Error('Terjadi kesalahan saat menambahkan anggota') };
     }
   }
@@ -143,7 +143,7 @@ export class ManagementUseCase implements IManagementUseCase {
         };
       }
       return { code: Number(res.code), message: res.message, data: this.mapToDomain(res.data) };
-    } catch (error) {
+    } catch {
       return { code: 500, error: new Error('Terjadi kesalahan saat memperbarui data anggota') };
     }
   }
@@ -159,7 +159,7 @@ export class ManagementUseCase implements IManagementUseCase {
         };
       }
       return { code: Number(res.code), message: res.message, data: true };
-    } catch (error) {
+    } catch {
       return { code: 500, error: new Error('Terjadi kesalahan saat menghapus anggota') };
     }
   }
@@ -212,7 +212,7 @@ export class ManagementUseCase implements IManagementUseCase {
           publicUrl: res.data.publicUrl,
         },
       };
-    } catch (error) {
+    } catch {
       return { code: 500, error: new Error('Terjadi kesalahan saat memproses OCR') };
     }
   }
@@ -291,7 +291,7 @@ export class ManagementUseCase implements IManagementUseCase {
       'akteKelahiranUrl',
     ];
 
-    const dataObj = data as unknown as Record<string, any>;
+    const dataObj = data as unknown as Record<string, unknown>;
 
     for (const field of fields) {
       const value = dataObj[field];

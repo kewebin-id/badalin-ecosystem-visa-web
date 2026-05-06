@@ -25,9 +25,12 @@ export const GET = async (req: NextRequest) => {
       },
     });
 
-    Logger.info(`GET ${endpoints.provider.agency.validateSession} - Response: ${JSON.stringify(res)}`, {
-      location: 'api/provider/agency/validate/route.ts - GET',
-    });
+    Logger.info(
+      `GET ${endpoints.provider.agency.validateSession} - Response: ${JSON.stringify(res)}`,
+      {
+        location: 'api/provider/agency/validate/route.ts - GET',
+      },
+    );
 
     return response.handler(res);
   } catch (error: unknown) {

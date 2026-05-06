@@ -80,7 +80,7 @@ export class TransactionRepository implements ITransactionRepository {
         },
         isNextApi: true,
       });
-    } catch (error) {
+    } catch {
       return { code: 500, message: 'Gagal memproses file' };
     }
   }
