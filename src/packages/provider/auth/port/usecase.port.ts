@@ -23,5 +23,5 @@ export interface IAuthUsecase {
     slug: string;
     name?: string;
   }): Promise<IUsecaseResponse<Record<string, unknown>>>;
-  validateSession(): Promise<IUsecaseResponse<{ valid: boolean }>>;
+  validateSession(slug?: string): Promise<IUsecaseResponse<{ valid: boolean }>>;
 }

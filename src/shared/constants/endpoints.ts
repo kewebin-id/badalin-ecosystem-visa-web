@@ -46,7 +46,7 @@ export const endpoints = {
     agency: {
       base: '/api/v1/p/agency',
       checkSlug: '/api/v1/p/agency/check-slug',
-      validateSession: '/api/v1/p/agency/validate',
+      validateSession: (slug: string = 'p') => `/api/v1/${slug}/agency/validate`,
     },
     dashboard: {
       summary: (slug: string = 'p') => `/api/v1/${slug}/dashboard/summary`,
@@ -56,6 +56,9 @@ export const endpoints = {
       verifyPayment: (slug: string, id: string) =>
         `/api/v1/${slug}/submissions/${id}/verify-payment`,
       review: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/review`,
+      flightManifest: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/manifest/flight`,
+      hotelManifest: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/manifest/hotel`,
+      transportManifest: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/manifest/transport`,
     },
   },
   nextApi: {
@@ -87,6 +90,9 @@ export const endpoints = {
         base: '/api/provider/submissions',
         verifyPayment: (id: string) => `/api/provider/submissions/${id}/verify-payment`,
         review: (id: string) => `/api/provider/submissions/${id}/review`,
+        flightManifest: (id: string) => `/api/provider/submissions/${id}/manifest/flight`,
+        hotelManifest: (id: string) => `/api/provider/submissions/${id}/manifest/hotel`,
+        transportManifest: (id: string) => `/api/provider/submissions/${id}/manifest/transport`,
       },
     },
     visa: {

@@ -114,10 +114,11 @@ export class AuthRepository implements IAuthRepository {
     }
   };
 
-  validateSession = async () => {
+  validateSession = async (slug?: string) => {
     try {
       return await this.restApi.get<{ valid: boolean }>({
         endpoint: endpoints.nextApi.provider.agency.validateSession,
+        queryParam: { slug },
         isNextApi: true,
       });
     } catch (error) {

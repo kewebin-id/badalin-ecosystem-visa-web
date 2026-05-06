@@ -56,7 +56,9 @@ export const AppSidebar = ({
 
   const isProvider = user?.role === 'PROVIDER';
 
-  const menuItems = isProvider
+  const menuItems = isLoadingAuth
+    ? []
+    : isProvider
     ? [
         {
           title: 'ProviderSidebar.dashboard',

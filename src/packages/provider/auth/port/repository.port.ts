@@ -24,5 +24,5 @@ export interface IAuthRepository {
     slug: string;
     name?: string;
   }): Promise<ResponseREST<Record<string, unknown>>>;
-  validateSession(): Promise<ResponseREST<{ valid: boolean }>>;
+  validateSession(slug?: string): Promise<ResponseREST<{ valid: boolean }>>;
 }

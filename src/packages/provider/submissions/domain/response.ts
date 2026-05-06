@@ -22,6 +22,8 @@ export interface ISubmissionListItem {
   createdAt: string;
   leader: ILeader;
   members: IMember[];
+  proofOfPayment?: string;
+  rejectionReason?: string;
 }
 
 export interface ISubmissionListResponse {

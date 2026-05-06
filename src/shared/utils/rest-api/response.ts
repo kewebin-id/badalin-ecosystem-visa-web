@@ -117,27 +117,35 @@ export const response = {
     );
   },
   handler: <T extends Partial<object> | undefined | void>(payload: ResponseREST<T>) => {
-    const code = payload.code || HttpStatusCode.Ok;
+    if (payload && typeof payload.code === 'number') {
+      const code = payload.code;
 
-    switch (code) {
-      case HttpStatusCode.Ok:
-        return response[HttpStatusCode.Ok](payload);
-      case HttpStatusCode.Created:
-        return response[HttpStatusCode.Created](payload);
-      case 207:
-        return response[207](payload);
-      case HttpStatusCode.BadRequest:
-        return response[HttpStatusCode.BadRequest](payload);
-      case HttpStatusCode.Unauthorized:
-        return response[HttpStatusCode.Unauthorized](payload);
-      case HttpStatusCode.Forbidden:
-        return response[HttpStatusCode.Forbidden](payload);
-      case HttpStatusCode.NotFound:
-        return response[HttpStatusCode.NotFound](payload);
-      case HttpStatusCode.InternalServerError:
-        return response[HttpStatusCode.InternalServerError](payload);
-      default:
-        return response[HttpStatusCode.BadRequest](payload);
+      switch (code) {
+        case HttpStatusCode.Ok:
+          return response[HttpStatusCode.Ok](payload);
+        case HttpStatusCode.Created:
+          return response[HttpStatusCode.Created](payload);
+        case 207:
+          return response[207](payload);
+        case HttpStatusCode.BadRequest:
+          return response[HttpStatusCode.BadRequest](payload);
+        case HttpStatusCode.Unauthorized:
+          return response[HttpStatusCode.Unauthorized](payload);
+        case HttpStatusCode.Forbidden:
+          return response[HttpStatusCode.Forbidden](payload);
+        case HttpStatusCode.NotFound:
+          return response[HttpStatusCode.NotFound](payload);
+        case HttpStatusCode.InternalServerError:
+          return response[HttpStatusCode.InternalServerError](payload);
+        default:
+          return response[HttpStatusCode.BadRequest](payload);
+      }
     }
+
+    return response[HttpStatusCode.Ok]({
+      code: HttpStatusCode.Ok,
+      message: 'Success!',
+      data: payload as T,
+    });
   },
 };

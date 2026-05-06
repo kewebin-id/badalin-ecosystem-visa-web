@@ -15,9 +15,12 @@ export const GET = async (req: NextRequest) => {
     if (!session?.token) return response[401]({ message: 'Unauthorized' });
     if (!apiKey) return response[500]({ message: 'Internal server error' });
 
+    const { searchParams } = new URL(req.url);
+    const slug = searchParams.get('slug') || 'p';
+
     const restApi = new RestAPI(undefined, session.token as string);
     const res = await restApi.get({
-      endpoint: endpoints.provider.agency.validateSession,
+      endpoint: endpoints.provider.agency.validateSession(slug),
       config: {
         headers: {
           'x-api-key': apiKey,

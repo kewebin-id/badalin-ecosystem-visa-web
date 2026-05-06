@@ -8,7 +8,7 @@ import { useAuth } from '@/shared/hooks';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AppHeader } from '../../organisms/layout/app-header';
 import { AppSidebar } from '../../organisms/layout/app-sidebar';
 
@@ -19,42 +19,66 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const { validateSessionMutation } = useProviderAuthController();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const hasValidated = useRef(false);
+  const isValidating = useRef(false);
 
+  // 1. Handle Slug Synchronization (Redirect if typo or missing)
   useEffect(() => {
-    const checkAndSyncSession = async () => {
-      if (user?.role === 'PROVIDER') {
-        // 1. Check if slug matches user's agencySlug
+    if (user?.role === 'PROVIDER') {
+      const currentSlug = params?.slug as string;
+      const userSlug = user?.agencySlug || user?.agency?.slug;
+
+      // If we are at /p but user already has a slug, redirect to their slug
+      if (userSlug && userSlug !== 'p' && (!currentSlug || currentSlug === 'p')) {
+        const currentPath = window.location.pathname;
+        const newPath = currentPath.startsWith('/p/')
+          ? currentPath.replace('/p/', `/${userSlug}/`)
+          : `/${userSlug}${currentPath === '/' ? '/dashboard' : currentPath}`;
+        window.location.assign(newPath);
+        return;
+      }
+
+      // If we are at a wrong slug, redirect to the correct one
+      if (currentSlug && userSlug && currentSlug !== userSlug) {
+        const currentPath = window.location.pathname;
+        const newPath = currentPath.replace(`/${currentSlug}`, `/${userSlug}`);
+        window.location.assign(newPath);
+      }
+    }
+  }, [params?.slug, user?.role, user?.agencySlug, user?.agency?.slug]);
+
+  // 2. Handle Session Validation (Run only once after mount/refresh/login)
+  useEffect(() => {
+    const checkSession = async () => {
+      if (user?.role === 'PROVIDER' && !hasValidated.current && !isValidating.current) {
         const currentSlug = params?.slug as string;
         const userSlug = user?.agencySlug || user?.agency?.slug;
 
-        if (currentSlug && userSlug && currentSlug !== userSlug) {
-          const currentPath = window.location.pathname;
-          const newPath = currentPath.replace(`/${currentSlug}`, `/${userSlug}`);
-          window.location.assign(newPath);
-          return;
-        }
+        // ONLY validate if the slug is correct or if we are at 'p' (and don't have a slug yet)
+        // This prevents 403/401 from backend due to slug mismatch
+        const isCorrectSlug = currentSlug === userSlug;
+        const isDefaultState = currentSlug === 'p' && (!userSlug || userSlug === 'p');
 
-        // 2. Validate session with backend
-        try {
-          const res = await validateSessionMutation.mutateAsync();
-          if (res && !res.valid) {
-            await signOut();
+        if (isCorrectSlug || isDefaultState) {
+          try {
+            isValidating.current = true;
+            hasValidated.current = true;
+            const res = await validateSessionMutation.mutateAsync(currentSlug);
+            if (res && !res.valid) {
+              await signOut();
+            }
+          } catch (error) {
+            console.error('Session validation failed:', error);
+            // Don't force signout on network errors, only on explicit invalid session
+          } finally {
+            isValidating.current = false;
           }
-        } catch {
-          await signOut();
         }
       }
     };
 
-    checkAndSyncSession();
-  }, [
-    params?.slug,
-    user?.agencySlug,
-    user?.agency?.slug,
-    user?.role,
-    validateSessionMutation,
-    signOut,
-  ]);
+    checkSession();
+  }, [user?.role, params?.slug, user?.agencySlug, user?.agency?.slug, validateSessionMutation, signOut]);
 
   const isProvider = user?.role === 'PROVIDER';
   const isSlugSetup = user?.agency?.isSlugSetup;

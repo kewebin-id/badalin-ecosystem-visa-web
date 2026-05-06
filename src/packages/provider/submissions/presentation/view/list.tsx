@@ -53,7 +53,9 @@ export const SubmissionsMonitoring = () => {
     totalMembers: s.members?.length || 0,
     paymentStatus: s.paymentStatus,
     reviewStatus: s.verifyStatus,
-    amount: s.totalAmount,
+    amount: Number(s.totalAmount || 0),
+    paymentProofUrl: s.proofOfPayment,
+    rejectionReason: s.rejectionReason,
   }));
 
   const handleMarkCompleted = async (id: string) => {

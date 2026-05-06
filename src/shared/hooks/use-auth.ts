@@ -2,6 +2,7 @@
 
 import { IUser } from '@/packages/pilgrim/auth/domain/response';
 import { signOut as nextAuthSignout, useSession } from 'next-auth/react';
+import { useCallback } from 'react';
 
 /**
  * Client-side auth hook using NextAuth session
@@ -15,7 +16,7 @@ export const useAuth = () => {
 
   const user = session?.user as unknown as IUser & { token: string };
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     const isProvider = user?.role === 'PROVIDER';
     const slug = user?.agency?.slug || 'p';
     const callbackUrl = isProvider ? `/${slug}/auth/login` : '/auth/login';
@@ -39,7 +40,7 @@ export const useAuth = () => {
       callbackUrl,
       redirect: true,
     });
-  };
+  }, [user?.role, user?.agency?.slug]);
 
   return {
     isLoggedIn,

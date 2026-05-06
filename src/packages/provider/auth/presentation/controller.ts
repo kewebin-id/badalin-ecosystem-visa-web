@@ -4,6 +4,7 @@ import { RestAPI } from '@/shared/utils/rest-api';
 import { useMutation } from '@tanstack/react-query';
 import { signIn } from 'next-auth/react';
 import { useParams } from 'next/navigation';
+import { useMemo } from 'react';
 import { toast } from 'sonner';
 import {
   IForgotPasswordRequest,
@@ -17,13 +18,13 @@ import { AuthRepository } from '../repository';
 import { AuthUseCase } from '../usecase';
 
 export const useProviderAuthController = () => {
-  const restApi = new RestAPI();
-  const repository = new AuthRepository(restApi);
-  const usecase = new AuthUseCase(repository);
   const { user, update } = useAuth();
-
   const params = useParams();
   const slug = (params?.slug as string) || 'p';
+
+  const restApi = useMemo(() => new RestAPI(), []);
+  const repository = useMemo(() => new AuthRepository(restApi), [restApi]);
+  const usecase = useMemo(() => new AuthUseCase(repository), [repository]);
 
   const loginMutation = useMutation({
     mutationFn: async (payload: ILoginRequest) => {
@@ -115,8 +116,8 @@ export const useProviderAuthController = () => {
   });
 
   const validateSessionMutation = useMutation({
-    mutationFn: async () => {
-      const result = await usecase.validateSession();
+    mutationFn: async (slug?: string) => {
+      const result = await usecase.validateSession(slug);
       if (result.error) {
         throw result.error;
       }
@@ -124,50 +125,63 @@ export const useProviderAuthController = () => {
     },
   });
 
-  return {
-    loginMutation,
-    registerMutation,
-    verifyTokenMutation,
-    forgotPasswordMutation,
-    resetPasswordMutation,
-    checkSlugMutation,
-    validateSessionMutation,
-    updateAgencyMutation: useMutation({
-      mutationFn: async (payload: { slug: string; name?: string }) => {
-        const result = await usecase.updateAgency(payload);
-        if (result.error) {
-          toast.error(result.message);
-          throw result.error;
-        }
+  const updateAgencyMutation = useMutation({
+    mutationFn: async (payload: { slug: string; name?: string }) => {
+      const result = await usecase.updateAgency(payload);
+      if (result.error) {
+        toast.error(result.message);
+        throw result.error;
+      }
 
-        const res = result.data as unknown as ProviderSubmission & {
-          newToken?: string;
-          slug: string;
-          name: string;
-        };
-        if (!res) return;
+      const res = result.data as unknown as ProviderSubmission & {
+        newToken?: string;
+        slug: string;
+        name: string;
+      };
+      if (!res) return;
 
-        await update({
-          user: {
-            ...user,
-            token: res.newToken || user?.token,
-            agencySlug: res.slug,
-            agency: {
-              ...user?.agency,
-              slug: res.slug,
-              name: res.name,
-              isSlugSetup: true,
-            },
+      await update({
+        user: {
+          ...user,
+          token: res.newToken || user?.token,
+          agencySlug: res.slug,
+          agency: {
+            ...user?.agency,
+            slug: res.slug,
+            name: res.name,
+            isSlugSetup: true,
           },
-        });
+        },
+      });
 
-        toast.success(result.message);
+      toast.success(result.message);
+      window.location.assign(ROUTES.PROVIDER.DASHBOARD(res.slug));
+      return result.data;
+    },
+  });
 
-        window.location.assign(ROUTES.PROVIDER.DASHBOARD(res.slug));
-
-        return result.data;
-      },
+  return useMemo(
+    () => ({
+      loginMutation,
+      registerMutation,
+      verifyTokenMutation,
+      forgotPasswordMutation,
+      resetPasswordMutation,
+      checkSlugMutation,
+      validateSessionMutation,
+      updateAgencyMutation,
+      slug,
     }),
-    slug,
-  };
+    [
+      loginMutation,
+      registerMutation,
+      verifyTokenMutation,
+      forgotPasswordMutation,
+      resetPasswordMutation,
+      checkSlugMutation,
+      validateSessionMutation,
+      updateAgencyMutation,
+      slug,
+    ],
+  );
 };

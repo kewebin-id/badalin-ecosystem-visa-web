@@ -145,9 +145,9 @@ export class AuthUseCase implements IAuthUsecase {
     }
   };
 
-  validateSession = async (): Promise<IUsecaseResponse<{ valid: boolean }>> => {
+  validateSession = async (slug?: string): Promise<IUsecaseResponse<{ valid: boolean }>> => {
     try {
-      const result = await this.repository.validateSession();
+      const result = await this.repository.validateSession(slug);
       return { data: { valid: result.data?.valid ?? false }, message: result.message };
     } catch (err) {
       Logger.error(err, { location: 'ProviderAuthUseCase.validateSession' });
