@@ -2,6 +2,7 @@
 
 import { Badge, Button, Card } from '@/components/atoms';
 import { ISubmissionListItem } from '@/packages/provider/submissions/domain/response';
+import { cn } from '@/shared/utils';
 import { Info } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
@@ -30,6 +31,8 @@ export const DetailReviewSidebar = ({
 
   const validMembersCount = Object.values(memberStatuses).filter((s) => s.valid).length;
   const totalMembers = submission.members?.length || 0;
+  const isAllMembersProcessed = Object.keys(memberStatuses).length === totalMembers;
+  const isComplete = paymentAction !== null && logisticsValid !== null && isAllMembersProcessed;
 
   return (
     <Card className="p-6 sticky top-6 border-2 border-gray-900 shadow-xl shadow-gray-100 h-fit">
@@ -58,8 +61,15 @@ export const DetailReviewSidebar = ({
           <span className="text-sm font-medium text-gray-500">
             {t('table.members')} ({validMembersCount}/{totalMembers})
           </span>
-          {validMembersCount === totalMembers ? (
-            <Badge className="bg-green-500 text-white border-none">ALL VALID</Badge>
+          {isAllMembersProcessed ? (
+            <Badge
+              className={cn(
+                validMembersCount === totalMembers ? 'bg-green-500' : 'bg-blue-500',
+                'text-white border-none',
+              )}
+            >
+              {validMembersCount === totalMembers ? 'ALL VALID' : 'CHECKED'}
+            </Badge>
           ) : (
             <Badge className="bg-yellow-500 text-white border-none">INCOMPLETE</Badge>
           )}
@@ -79,7 +89,7 @@ export const DetailReviewSidebar = ({
       </div>
 
       <div className="space-y-3">
-        <Button onClick={onFinalSubmit} disabled={isSubmitting}>
+        <Button onClick={onFinalSubmit} disabled={isSubmitting || !isComplete}>
           {ta('submit')}
         </Button>
         <Button variant="transparent" onClick={onCancel}>

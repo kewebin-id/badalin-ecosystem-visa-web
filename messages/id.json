@@ -577,7 +577,7 @@
     },
     "detail": {
       "title": "Review Submission",
-      "subtitle": "Diajukan oleh {leader} pada {date}",
+      "subtitle": "Submission {id} · Diajukan oleh {leader} pada {date}",
       "backToList": "Kembali ke Daftar",
       "sections": {
         "payment": "Validasi Pembayaran",

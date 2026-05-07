@@ -577,7 +577,7 @@
     },
     "detail": {
       "title": "Review Submission",
-      "subtitle": "Submitted by {leader} on {date}",
+      "subtitle": "Submission {id} · Submitted by {leader} on {date}",
       "backToList": "Back to List",
       "sections": {
         "payment": "Payment Validation",

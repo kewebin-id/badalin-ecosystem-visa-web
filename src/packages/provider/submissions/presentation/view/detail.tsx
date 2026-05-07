@@ -146,7 +146,8 @@ export const SubmissionDetailView = () => {
       <HeaderPageContent
         title={t('detail.title')}
         subtitle={t('detail.subtitle', {
-          leader: submission.leader?.fullName,
+          id: submission.id.slice(0, 8).toUpperCase(),
+          leader: submission.leader?.fullName || '-',
           date: moment(submission.createdAt).format('DD MMMM YYYY, HH:mm'),
         })}
         onBack={() => router.push(ROUTES.PROVIDER.SUBMISSIONS(slug as string))}
