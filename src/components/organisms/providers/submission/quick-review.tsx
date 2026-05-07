@@ -34,7 +34,7 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
             </div>
             <div>
               <p className="text-xs font-bold text-purple-400 uppercase tracking-wider">Kontak Leader</p>
-              <p className="text-sm font-black text-purple-900">{submission.leader.phoneNumber}</p>
+              <p className="text-sm font-black text-purple-900">{submission.leader?.phoneNumber || '-'}</p>
             </div>
           </div>
         </Card>
@@ -45,7 +45,7 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
             </div>
             <div>
               <p className="text-xs font-bold text-orange-400 uppercase tracking-wider">Status Visa</p>
-              <p className="text-sm font-black text-orange-900">{submission.verifyStatus}</p>
+              <p className="text-sm font-black text-orange-900">{submission.verifyStatus || '-'}</p>
             </div>
           </div>
         </Card>
@@ -64,7 +64,7 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
             {submission.flights?.map((f, i) => (
               <div key={i} className="p-3 bg-gray-50 rounded-xl border border-gray-100">
                 <p className="text-sm font-bold text-gray-900">{f.carrier} ({f.flightNo})</p>
-                <p className="text-xs text-gray-500">{moment(f.flightDate).format('DD MMM YYYY')} • {f.type}</p>
+                <p className="text-xs text-gray-500">{f.flightDate ? moment(f.flightDate).format('DD MMM YYYY') : '-'} • {f.type}</p>
                 <ImageThumbnailList images={f.imageUrls} onPreview={onPreview} altPrefix="Tiket" />
               </div>
             ))}
@@ -76,7 +76,10 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
             {submission.hotels?.map((h, i) => (
               <div key={i} className="p-3 bg-gray-50 rounded-xl border border-gray-100">
                 <p className="text-sm font-bold text-gray-900">{h.name} - {h.city}</p>
-                <p className="text-xs text-gray-500">In: {moment(h.checkIn).format('DD MMM')} • Out: {moment(h.checkOut).format('DD MMM')}</p>
+                <p className="text-xs text-gray-500">
+                  In: {h.checkIn ? moment(h.checkIn).format('DD MMM') : '-'} • 
+                  Out: {h.checkOut ? moment(h.checkOut).format('DD MMM') : '-'}
+                </p>
                 <ImageThumbnailList images={h.imageUrls} onPreview={onPreview} altPrefix="Voucher" />
               </div>
             ))}
@@ -90,7 +93,7 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
             {submission.transportations?.map((t, i) => (
               <div key={i} className="p-3 bg-gray-50 rounded-xl border border-gray-100">
                 <p className="text-sm font-bold text-gray-900">{t.company} ({t.type})</p>
-                <p className="text-xs text-gray-500">{moment(t.date).format('DD MMM YYYY')} • {t.from} - {t.to}</p>
+                <p className="text-xs text-gray-500">{t.date ? moment(t.date).format('DD MMM YYYY') : '-'} • {t.from} - {t.to}</p>
                 <ImageThumbnailList images={t.imageUrls} onPreview={onPreview} altPrefix="Bukti" />
               </div>
             ))}
@@ -113,21 +116,21 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {submission.members.map((m) => (
+              {(submission.members || []).map((m) => (
                 <tr key={m.id} className="hover:bg-gray-50/50 transition-colors">
                   <td className="p-3">
-                    <p className="font-bold text-gray-900">{m.fullName}</p>
-                    <p className="text-xs text-gray-400">{m.relation}</p>
+                    <p className="font-bold text-gray-900">{m.fullName || '-'}</p>
+                    <p className="text-xs text-gray-400">{m.relation || '-'}</p>
                   </td>
                   <td className="p-3">
-                    <p className="font-mono text-xs">{m.passportNumber}</p>
-                    <p className="text-[10px] text-gray-400">{m.nik}</p>
+                    <p className="font-mono text-xs">{m.passportNumber || '-'}</p>
+                    <p className="text-[10px] text-gray-400">{m.nik || '-'}</p>
                   </td>
                   <td className="p-3">
                     <ImageThumbnailList 
                       images={[m.photoUrl, m.passportUrl, m.ktpUrl].filter(Boolean) as string[]} 
                       onPreview={onPreview} 
-                      altPrefix={m.fullName}
+                      altPrefix={m.fullName || 'Jamaah'}
                       className="!mt-0"
                     />
                   </td>

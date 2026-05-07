@@ -41,17 +41,17 @@ export const exportManifestToExcel = (submission: ISubmissionListItem): void => 
   merges.push({ s: { r: headerRowIdx, c: 8 }, e: { r: headerRowIdx + 1, c: 8 } }); // PHONE NO
 
   // Row 5: Header Data
-  const adultCount = submission.members.length; // Assuming all are adults for now or calculate if logic exists
+  const adultCount = submission.members?.length || 0;
   aoa.push([
-    submission.id.split('-')[0].toUpperCase(),
-    submission.leader.fullName,
+    submission.id?.split('-')[0].toUpperCase() || 'N/A',
+    submission.leader?.fullName || '-',
     '',
     adultCount,
     '', // Child count placeholder
-    submission.leader.fullName,
+    submission.leader?.fullName || '-',
     '',
     '',
-    submission.leader.phoneNumber
+    submission.leader?.phoneNumber || '-'
   ]);
   merges.push({ s: { r: aoa.length - 1, c: 1 }, e: { r: aoa.length - 1, c: 2 } });
   merges.push({ s: { r: aoa.length - 1, c: 5 }, e: { r: aoa.length - 1, c: 7 } });

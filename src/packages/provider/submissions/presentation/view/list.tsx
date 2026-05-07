@@ -14,6 +14,7 @@ import {
   DialogDrawer,
   HeaderPageContent,
   ImagePreviewModal,
+  LoadingOverlay,
   PaymentStatusBadge,
   ReviewStatusBadge,
 } from '@/components/molecules';
@@ -44,6 +45,7 @@ export const SubmissionsMonitoring = () => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState<{ src: string; alt: string } | null>(null);
   const [isFetchingDetail, setIsFetchingDetail] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   const handleOpenReview = async (id: string) => {
     setIsFetchingDetail(id);
@@ -67,6 +69,35 @@ export const SubmissionsMonitoring = () => {
     }
   };
 
+  const handleExport = async (id: string) => {
+    setIsExporting(true);
+    const loadingToast = toast.loading('Fetching data and generating Excel...');
+    try {
+      const detail = await queryClient.fetchQuery({
+        queryKey: ['provider', 'submissions', id],
+        queryFn: () => usecase.getSubmissionDetail(id),
+      });
+
+      if (detail?.data) {
+        exportManifestToExcel(detail.data);
+        toast.success('Excel generated successfully', {
+          id: loadingToast,
+        });
+      } else {
+        toast.error('Failed to fetch submission details', {
+          id: loadingToast,
+        });
+      }
+    } catch (error) {
+      console.error('Export error:', error);
+      toast.error('An error occurred during export', {
+        id: loadingToast,
+      });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   const handlePreview = (image: { src: string; alt: string }) => {
     setPreviewImage(image);
     setIsPreviewOpen(true);
@@ -87,6 +118,7 @@ export const SubmissionsMonitoring = () => {
 
   return (
     <div className="space-y-6">
+      <LoadingOverlay isLoading={isExporting} message="Sedang mengunduh data manifest..." />
       <HeaderPageContent title={t('title')} subtitle={t('subtitle')} hideBack />
 
       <Card className="overflow-hidden !p-0">
@@ -151,33 +183,7 @@ export const SubmissionsMonitoring = () => {
                             variant="primary"
                             size="sm"
                             className="cursor-pointer gap-2"
-                            onClick={async () => {
-                              const loadingToast = toast.loading(
-                                'Fetching data and generating Excel...',
-                              );
-                              try {
-                                const detail = await queryClient.fetchQuery({
-                                  queryKey: ['provider', 'submissions', s.id],
-                                  queryFn: () => usecase.getSubmissionDetail(s.id),
-                                });
-
-                                if (detail?.data) {
-                                  exportManifestToExcel(detail.data);
-                                  toast.success('Excel generated successfully', {
-                                    id: loadingToast,
-                                  });
-                                } else {
-                                  toast.error('Failed to fetch submission details', {
-                                    id: loadingToast,
-                                  });
-                                }
-                              } catch (error) {
-                                console.error('Export error:', error);
-                                toast.error('An error occurred during export', {
-                                  id: loadingToast,
-                                });
-                              }
-                            }}
+                            onClick={() => handleExport(s.id)}
                           >
                             <FileSpreadsheet className="h-4 w-4" />
                             <span>Export</span>
@@ -238,33 +244,7 @@ export const SubmissionsMonitoring = () => {
 
                         {s.paymentStatus === 'COMPLETED' && s.reviewStatus === 'VERIFIED' && (
                           <button
-                            onClick={async () => {
-                              const loadingToast = toast.loading(
-                                'Fetching data and generating Excel...',
-                              );
-                              try {
-                                const detail = await queryClient.fetchQuery({
-                                  queryKey: ['provider', 'submissions', s.id],
-                                  queryFn: () => usecase.getSubmissionDetail(s.id),
-                                });
-
-                                if (detail?.data) {
-                                  exportManifestToExcel(detail.data);
-                                  toast.success('Excel generated successfully', {
-                                    id: loadingToast,
-                                  });
-                                } else {
-                                  toast.error('Failed to fetch submission details', {
-                                    id: loadingToast,
-                                  });
-                                }
-                              } catch (error) {
-                                console.error('Export error:', error);
-                                toast.error('An error occurred during export', {
-                                  id: loadingToast,
-                                });
-                              }
-                            }}
+                            onClick={() => handleExport(s.id)}
                             className="flex-1 flex h-12 px-4 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all active:scale-90 cursor-pointer border border-emerald-100 gap-2 font-bold text-sm"
                           >
                             <FileSpreadsheet className="h-5 w-5" />
