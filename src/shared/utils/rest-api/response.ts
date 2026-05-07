@@ -117,9 +117,9 @@ export const response = {
     );
   },
   handler: <T extends Partial<object> | undefined | void>(payload: ResponseREST<T>) => {
-    if (payload && typeof payload.code === 'number') {
-      const code = payload.code;
-
+    const code = Number(payload?.code || payload?.statusCode || payload?.status);
+    
+    if (code && !isNaN(code)) {
       switch (code) {
         case HttpStatusCode.Ok:
           return response[HttpStatusCode.Ok](payload);
@@ -138,6 +138,9 @@ export const response = {
         case HttpStatusCode.InternalServerError:
           return response[HttpStatusCode.InternalServerError](payload);
         default:
+          if (code >= 200 && code < 300) {
+            return response[HttpStatusCode.Ok](payload);
+          }
           return response[HttpStatusCode.BadRequest](payload);
       }
     }
