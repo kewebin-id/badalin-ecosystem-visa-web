@@ -30,6 +30,8 @@ const getWizardSchema = (t: (key: string) => string) =>
       // Flight Departure
       departureFlightNo: z.string().min(1, t('form.validationRequired')),
       departureCarrier: z.string().min(1, t('form.validationRequired')),
+      departureFlightFrom: z.string().min(1, t('form.validationRequired')),
+      departureFlightTo: z.string().min(1, t('form.validationRequired')),
       departureFlightDate: z.string().optional(),
       departureFlightEta: z.string().min(1, t('form.validationRequired')),
       departureFlightEtd: z.string().min(1, t('form.validationRequired')),
@@ -37,6 +39,8 @@ const getWizardSchema = (t: (key: string) => string) =>
       // Flight Return
       returnFlightNo: z.string().min(1, t('form.validationRequired')),
       returnCarrier: z.string().min(1, t('form.validationRequired')),
+      returnFlightFrom: z.string().min(1, t('form.validationRequired')),
+      returnFlightTo: z.string().min(1, t('form.validationRequired')),
       returnFlightDate: z.string().optional(),
       returnFlightEta: z.string().min(1, t('form.validationRequired')),
       returnFlightEtd: z.string().min(1, t('form.validationRequired')),
@@ -143,6 +147,8 @@ const transformToRequest = (data: TWizardForm): ICreateTransactionRequest => {
         type: 'DEPARTURE',
         flightNo: data.departureFlightNo,
         carrier: data.departureCarrier,
+        from: data.departureFlightFrom,
+        to: data.departureFlightTo,
         flightDate: data.departureFlightEta
           ? new Date(data.departureFlightEta).toISOString().split('T')[0]
           : '',
@@ -154,6 +160,8 @@ const transformToRequest = (data: TWizardForm): ICreateTransactionRequest => {
         type: 'RETURN',
         flightNo: data.returnFlightNo,
         carrier: data.returnCarrier,
+        from: data.returnFlightFrom,
+        to: data.returnFlightTo,
         flightDate: data.returnFlightEta
           ? new Date(data.returnFlightEta).toISOString().split('T')[0]
           : '',
@@ -367,12 +375,16 @@ export const useTransactionForm = (initialData?: Partial<ITransaction>) => {
 
         departureFlightNo: fDep?.flightNo || '',
         departureCarrier: fDep?.carrier || '',
+        departureFlightFrom: fDep?.from || '',
+        departureFlightTo: fDep?.to || '',
         departureFlightDate: fDep?.flightDate || '',
         departureFlightEta: fDep?.eta || '',
         departureFlightEtd: fDep?.etd || '',
 
         returnFlightNo: fRet?.flightNo || '',
         returnCarrier: fRet?.carrier || '',
+        returnFlightFrom: fRet?.from || '',
+        returnFlightTo: fRet?.to || '',
         returnFlightDate: fRet?.flightDate || '',
         returnFlightEta: fRet?.eta || '',
         returnFlightEtd: fRet?.etd || '',

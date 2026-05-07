@@ -280,6 +280,8 @@
       "flightNo": "Nomor Penerbangan",
       "carrier": "Maskapai",
       "flightDate": "Tanggal Penerbangan",
+      "flightFrom": "Kota Asal",
+      "flightTo": "Kota Tujuan",
       "transportType": "Tipe Transportasi",
       "tripRoute": "Rute Perjalanan",
       "hotelMakkahName": "Nama Hotel Makkah",
@@ -506,6 +508,8 @@
         "subtitle": "Informasi maskapai, nomor penerbangan, dan jadwal tiba/pulang",
         "flightNo": "Flight No",
         "carrier": "Carrier",
+        "from": "Kota Asal",
+        "to": "Kota Tujuan",
         "date": "Tanggal",
         "eta": "ETA (Tiba)",
         "etd": "ETD (Berangkat Pulang)"

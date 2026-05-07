@@ -280,6 +280,8 @@
       "flightNo": "Flight Number",
       "carrier": "Carrier",
       "flightDate": "Flight Date",
+      "flightFrom": "From (City)",
+      "flightTo": "To (City)",
       "transportType": "Transport Type",
       "tripRoute": "Trip Route",
       "hotelMakkahName": "Makkah Hotel Name",
@@ -506,6 +508,8 @@
         "subtitle": "Airline info, flight number, and arrival/return schedule",
         "flightNo": "Flight No",
         "carrier": "Carrier",
+        "from": "From",
+        "to": "To",
         "date": "Date",
         "eta": "ETA (Arrival)",
         "etd": "ETD (Departure Return)"

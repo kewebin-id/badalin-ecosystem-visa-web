@@ -220,6 +220,26 @@ export const LogisticsForm = () => {
               required
               errorMessage={errors.departureFlightNo?.message}
             />
+            <InputText
+              useLabelInside
+              size="lg"
+              label={t('flightFrom')}
+              type="text"
+              register={register}
+              name="departureFlightFrom"
+              required
+              errorMessage={errors.departureFlightFrom?.message}
+            />
+            <InputText
+              useLabelInside
+              size="lg"
+              label={t('flightTo')}
+              type="text"
+              register={register}
+              name="departureFlightTo"
+              required
+              errorMessage={errors.departureFlightTo?.message}
+            />
 
             <DatePicker
               useLabelInside
@@ -310,6 +330,26 @@ export const LogisticsForm = () => {
               name="returnFlightNo"
               required
               errorMessage={errors.returnFlightNo?.message}
+            />
+            <InputText
+              useLabelInside
+              size="lg"
+              label={t('flightFrom')}
+              type="text"
+              register={register}
+              name="returnFlightFrom"
+              required
+              errorMessage={errors.returnFlightFrom?.message}
+            />
+            <InputText
+              useLabelInside
+              size="lg"
+              label={t('flightTo')}
+              type="text"
+              register={register}
+              name="returnFlightTo"
+              required
+              errorMessage={errors.returnFlightTo?.message}
             />
 
             <DatePicker

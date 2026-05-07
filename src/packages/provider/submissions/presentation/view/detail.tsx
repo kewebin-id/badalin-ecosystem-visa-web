@@ -9,7 +9,7 @@ import {
 import moment from 'moment';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 import { NotFoundComp } from '@/components/atoms';
@@ -49,8 +49,14 @@ export const SubmissionDetailView = () => {
   const [paymentReason, setPaymentReason] = useState('');
   const [memberStatuses, setMemberStatuses] = useState<
     Record<string, { valid: boolean; reason?: string }>
-  >({});
+  >(submission?.resultSnapshot?.memberStatuses || {});
   const [logisticsValid, setLogisticsValid] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (submission?.resultSnapshot?.memberStatuses) {
+      setMemberStatuses(submission.resultSnapshot.memberStatuses);
+    }
+  }, [submission]);
   const [logisticsReason, setLogisticsReason] = useState('');
   const [previewImage, setPreviewImage] = useState<{ src: string; alt: string } | null>(null);
 
@@ -114,6 +120,7 @@ export const SubmissionDetailView = () => {
         payload: {
           status,
           rejectionReason: reason,
+          resultSnapshot: { memberStatuses },
         },
       });
 

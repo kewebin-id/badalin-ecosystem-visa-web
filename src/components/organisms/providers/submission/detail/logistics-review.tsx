@@ -55,7 +55,13 @@ export const DetailLogisticsReview = ({
                   {flight.carrier} ({flight.flightNo})
                 </p>
                 <p className="text-gray-500 font-medium">
+                  Dari {flight.from || '-'} ke {flight.to || '-'}
+                </p>
+                <p className="text-gray-500 font-medium">
                   {moment(flight.flightDate).format('DD MMM YYYY')} • {flight.type}
+                </p>
+                <p className="text-xs text-gray-400 font-bold uppercase mt-1">
+                  ETA: {flight.eta} • ETD: {flight.etd}
                 </p>
                 <ImageThumbnailList
                   images={flight.imageUrls}

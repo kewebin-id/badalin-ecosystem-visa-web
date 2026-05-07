@@ -32,6 +32,10 @@ export interface ISubmissionListItem {
   flights?: IFlight[];
   hotels?: IHotel[];
   transportations?: ITransportation[];
+  resultSnapshot?: {
+    memberStatuses?: Record<string, { valid: boolean; reason?: string }>;
+    [key: string]: any;
+  };
 }
 
 export interface ISubmissionListResponse {

@@ -38,4 +38,5 @@ export interface ITransportManifestPayload {
 export interface IReviewSubmissionPayload {
   status: 'VERIFIED' | 'REJECTED';
   rejectionReason?: string;
+  resultSnapshot?: any;
 }

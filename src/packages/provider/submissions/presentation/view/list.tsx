@@ -21,7 +21,7 @@ import {
 import { SubmissionQuickReview } from '@/components/organisms/providers/submission/quick-review';
 import { EmptyState } from '@/components/templates';
 import { useScreenSize } from '@/shared/hooks';
-import { exportManifestToExcel } from '@/shared/utils/manifest-export';
+import { exportSubmissionToZip } from '@/shared/utils/manifest-export';
 import { useQueryClient } from '@tanstack/react-query';
 import { Eye, FileSpreadsheet, Inbox, Loader2, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -71,7 +71,7 @@ export const SubmissionsMonitoring = () => {
 
   const handleExport = async (id: string) => {
     setIsExporting(true);
-    const loadingToast = toast.loading('Fetching data and generating Excel...');
+    const loadingToast = toast.loading('Fetching data and generating Archive (ZIP)...');
     try {
       const detail = await queryClient.fetchQuery({
         queryKey: ['provider', 'submissions', id],
@@ -79,8 +79,8 @@ export const SubmissionsMonitoring = () => {
       });
 
       if (detail?.data) {
-        exportManifestToExcel(detail.data);
-        toast.success('Excel generated successfully', {
+        await exportSubmissionToZip(detail.data);
+        toast.success('Archive generated successfully', {
           id: loadingToast,
         });
       } else {

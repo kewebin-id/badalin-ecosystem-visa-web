@@ -12,6 +12,12 @@ interface SubmissionQuickReviewProps {
 }
 
 export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuickReviewProps) => {
+  const membersToShow = (submission.members || []).filter((m) => {
+    const status = submission.resultSnapshot?.memberStatuses?.[m.id];
+    if (status) return status.valid;
+    return true;
+  });
+
   return (
     <div className="space-y-6 py-4">
       {/* Summary Section */}
@@ -23,7 +29,7 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
             </div>
             <div>
               <p className="text-xs font-bold text-blue-400 uppercase tracking-wider">Total Jamaah</p>
-              <p className="text-lg font-black text-blue-900">{submission.members.length}</p>
+              <p className="text-lg font-black text-blue-900">{membersToShow.length}</p>
             </div>
           </div>
         </Card>
@@ -64,7 +70,10 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
             {submission.flights?.map((f, i) => (
               <div key={i} className="p-3 bg-gray-50 rounded-xl border border-gray-100">
                 <p className="text-sm font-bold text-gray-900">{f.carrier} ({f.flightNo})</p>
-                <p className="text-xs text-gray-500">{f.flightDate ? moment(f.flightDate).format('DD MMM YYYY') : '-'} • {f.type}</p>
+                <p className="text-xs text-gray-500">
+                  {f.from || '-'} to {f.to || '-'} • {f.flightDate ? moment(f.flightDate).format('DD MMM YYYY') : '-'}
+                </p>
+                <p className="text-[10px] text-gray-400 uppercase font-bold">ETA: {f.eta} • ETD: {f.etd}</p>
                 <ImageThumbnailList images={f.imageUrls} onPreview={onPreview} altPrefix="Tiket" />
               </div>
             ))}
@@ -116,7 +125,7 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {(submission.members || []).map((m) => (
+              {membersToShow.map((m) => (
                 <tr key={m.id} className="hover:bg-gray-50/50 transition-colors">
                   <td className="p-3">
                     <p className="font-bold text-gray-900">{m.fullName || '-'}</p>
