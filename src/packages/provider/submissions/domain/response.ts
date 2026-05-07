@@ -35,12 +35,10 @@ export interface ISubmissionListItem {
 }
 
 export interface ISubmissionListResponse {
-  data: ISubmissionListItem[];
-  meta: {
-    total: number;
-    page: number;
-    limit: number;
-  };
+  items: ISubmissionListItem[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
 }
 
 export type ISubmissionResponse = ISubmissionListItem;

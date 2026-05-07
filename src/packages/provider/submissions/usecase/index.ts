@@ -2,15 +2,15 @@ import { IUsecaseResponse } from '@/shared/domain/response.usecase';
 import Logger from '@/shared/utils/logger';
 import {
   IFlightManifestPayload,
+  IGetSubmissionsQuery,
   IHotelManifestPayload,
   IReviewSubmissionPayload,
   ITransportManifestPayload,
-  IGetSubmissionsQuery,
 } from '../domain/request';
 import {
   ISubmissionListResponse,
-  IVerifyPaymentResponse,
   ISubmissionResponse,
+  IVerifyPaymentResponse,
 } from '../domain/response';
 import { IProviderSubmissionsRepository } from '../port/repository.port';
 import { IProviderSubmissionsUseCase } from '../port/usecase.port';
@@ -24,10 +24,8 @@ export class ProviderSubmissionsUseCase implements IProviderSubmissionsUseCase {
     try {
       const res = await this.repo.getSubmissions(query);
       if (res.data) {
-        Logger.info('ProviderSubmissionsUseCase.getSubmissions - Success', { data: res.data });
         return { data: res.data, message: res.message };
       }
-      Logger.warn('ProviderSubmissionsUseCase.getSubmissions - Failed', { message: res.message });
       return {
         error: new Error(res.message || 'Failed to fetch submissions'),
         message: res.message,

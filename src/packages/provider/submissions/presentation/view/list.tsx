@@ -30,7 +30,7 @@ export const SubmissionsMonitoring = () => {
   const { useSubmissions } = useProviderSubmissionsController();
   const { data: res, isPending } = useSubmissions({ page: 1, limit: 50 });
 
-  const submissions: ProviderSubmission[] = (res?.data?.data || []).map((s) => ({
+  const submissions: ProviderSubmission[] = (res?.data?.items || []).map((s) => ({
     id: s.id,
     leaderName: s.leader?.fullName || '-',
     totalMembers: s.members?.length || 0,

@@ -120,9 +120,8 @@ export interface ICreateTransactionRequest {
 
 export interface IPaginatedTransactions {
   items: ITransaction[];
-  total: number;
-  page: number;
-  limit: number;
+  totalItems: number;
+  currentPage: number;
   totalPages: number;
 }
 

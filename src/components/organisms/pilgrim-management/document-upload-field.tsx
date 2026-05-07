@@ -4,11 +4,11 @@ import { Button, Image } from '@/components/atoms';
 import { DialogDrawer } from '@/components/molecules/dialog-drawer';
 import { ImagePreviewModal } from '@/components/molecules/image-preview-modal';
 import { InputFile, UploadFile } from '@/components/molecules/input/file';
+import { INusukCompatibility } from '@/packages/pilgrim/management/domain/member';
 import { cn } from '@/shared/utils/merge-class';
 import { Eye, FileText, Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import { INusukCompatibility } from '../../domain/member';
 import { GuideBlock, NusukIndicator } from './nusuk-indicator';
 
 interface DocumentUploadFieldProps {

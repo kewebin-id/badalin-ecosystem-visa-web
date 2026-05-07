@@ -1,4 +1,6 @@
+import { ROUTES } from '@/shared/constants';
 import { RestAPI } from '@/shared/utils/rest-api';
+import { isBase64 } from '@/shared/utils/validator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
@@ -6,7 +8,6 @@ import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { isBase64 } from '@/shared/utils/validator';
 import * as z from 'zod';
 import {
   ICreateTransactionRequest,
@@ -269,12 +270,12 @@ export const useTransactionController = () => {
         return useCase.createTransaction(transformToRequest(uploadedForm));
       },
       onSuccess: (res) => {
-        if (res.code === 201) {
+        if (!res.error) {
           queryClient.invalidateQueries({ queryKey: ['visa-transactions'] });
           toast.success('Pengajuan visa berhasil dibuat!');
-          router.push('/transactions');
+          router.push(ROUTES.PILGRIM.TRANSACTION.INDEX);
         } else {
-          toast.error(res.message || 'Gagal membuat pengajuan');
+          toast.error(res.message || res.error.message || 'Gagal membuat pengajuan');
         }
       },
       onError: (err: Error) => toast.error(err.message),
@@ -288,13 +289,13 @@ export const useTransactionController = () => {
         return useCase.updateTransaction(id, transformToRequest(uploadedForm));
       },
       onSuccess: (res) => {
-        if (res.code === 200) {
+        if (!res.error) {
           queryClient.invalidateQueries({ queryKey: ['visa-transactions'] });
           queryClient.invalidateQueries({ queryKey: ['visa-transaction', res.data?.id] });
           toast.success('Pengajuan visa berhasil diperbarui!');
-          router.push('/transactions');
+          router.push(ROUTES.PILGRIM.TRANSACTION.INDEX);
         } else {
-          toast.error(res.message || 'Gagal memperbarui pengajuan');
+          toast.error(res.message || res.error.message || 'Gagal memperbarui pengajuan');
         }
       },
       onError: (err: Error) => toast.error(err.message),
@@ -316,12 +317,12 @@ export const useTransactionController = () => {
       mutationFn: ({ id, file }: { id: string; file: File }) =>
         useCase.updatePaymentProof(id, file),
       onSuccess: (res) => {
-        if (res.code === 200) {
+        if (!res.error) {
           queryClient.invalidateQueries({ queryKey: ['visa-transactions'] });
           queryClient.invalidateQueries({ queryKey: ['visa-transaction', res.data?.id] });
           toast.success('Bukti pembayaran berhasil diunggah!');
         } else {
-          toast.error(res.message || 'Gagal mengunggah bukti pembayaran');
+          toast.error(res.message || res.error.message || 'Gagal mengunggah bukti pembayaran');
         }
       },
       onError: (err: Error) => toast.error(err.message),

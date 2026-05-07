@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 
 export interface IUsecaseResponse<T extends object | void | boolean> {
-  code?: number;
   error?: Error;
   message?: string;
   data?: T;

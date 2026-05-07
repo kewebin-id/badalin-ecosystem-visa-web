@@ -1,3 +1,4 @@
+import { ITransaction } from '@/packages/pilgrim/transaction/domain/transaction';
 import { endpoints } from '@/shared/constants/endpoints';
 import { getAuthTokenFromRequest } from '@/shared/hooks/use-auth-server';
 import Logger from '@/shared/utils/logger';
@@ -22,7 +23,7 @@ export const GET = async (req: NextRequest) => {
     if (!apiKey) return response[500]({ message: 'Internal server error' });
 
     const restApi = new RestAPI(undefined, session.token as string);
-    const res = await restApi.get({
+    const res = await restApi.get<ITransaction[]>({
       endpoint: endpoints.visa.submissions.base,
       queryParam: { page, limit, search },
       config: {
@@ -39,6 +40,7 @@ export const GET = async (req: NextRequest) => {
 
     return response.handler(res);
   } catch (error: unknown) {
+
     Logger.error(error, { location: 'api/visa/submissions/route.ts - GET' });
     return response[500]({ message: 'Internal server error' });
   }

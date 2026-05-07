@@ -75,12 +75,12 @@ export const useManagementController = () => {
     useMutation({
       mutationFn: (data: ICreateMemberRequest) => useCase.createMember(data),
       onSuccess: (res) => {
-        if (res.code === 201 || res.code === 200) {
+        if (!res.error) {
           queryClient.invalidateQueries({ queryKey: ['family-members'] });
           toast.success(res.message || t('addMemberSuccess'));
           router.push(ROUTES.PILGRIM.FAMILY.INDEX);
         } else {
-          toast.error(res.message || res.error?.message || t('addMemberError'));
+          toast.error(res.message || res.error.message || t('addMemberError'));
         }
       },
       onError: (err: Error) => toast.error(err.message || t('systemError')),
@@ -90,12 +90,12 @@ export const useManagementController = () => {
     useMutation({
       mutationFn: (data: IUpdateMemberRequest) => useCase.updateMember(data),
       onSuccess: (res) => {
-        if (res.code === 200 || res.code === 201) {
+        if (!res.error) {
           queryClient.invalidateQueries({ queryKey: ['family-members'] });
           toast.success(res.message || t('updateMemberSuccess'));
           router.push(ROUTES.PILGRIM.FAMILY.INDEX);
         } else {
-          toast.error(res.message || res.error?.message || t('updateMemberError'));
+          toast.error(res.message || res.error.message || t('updateMemberError'));
         }
       },
       onError: (err: Error) => toast.error(err.message || t('systemError')),
@@ -105,11 +105,11 @@ export const useManagementController = () => {
     useMutation({
       mutationFn: (memberId: string) => useCase.deleteMember(memberId),
       onSuccess: (res) => {
-        if (res.code === 200 || res.code === 201) {
+        if (!res.error) {
           queryClient.invalidateQueries({ queryKey: ['family-members'] });
           toast.success(res.message || t('deleteMemberSuccess'));
         } else {
-          toast.error(res.message || res.error?.message || t('deleteMemberError'));
+          toast.error(res.message || res.error.message || t('deleteMemberError'));
         }
       },
       onError: (err: Error) => toast.error(err.message || t('systemError')),

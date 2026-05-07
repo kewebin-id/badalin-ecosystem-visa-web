@@ -1,10 +1,10 @@
 import { Button, Image } from '@/components/atoms';
 import { DialogDrawer } from '@/components/molecules/dialog-drawer';
+import { INusukCompatibility } from '@/packages/pilgrim/management/domain/member';
 import { cn } from '@/shared/utils/merge-class';
 import { AlertCircle, AlertTriangle, CheckCircle2, Info, Lightbulb } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { INusukCompatibility } from '../../domain/member';
 
 export interface GuideBlockProps {
   hideExample?: boolean;

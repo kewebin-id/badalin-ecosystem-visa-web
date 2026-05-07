@@ -37,8 +37,7 @@ export const TransactionManagementView = () => {
 
   const transactions = transactionsRes?.data?.items || [];
   const pageCount = transactionsRes?.data?.totalPages || 0;
-  const hasError =
-    transactionsRes?.error || (transactionsRes?.code && transactionsRes.code !== 200);
+  const hasError = transactionsRes?.error;
 
   return (
     <div className="space-y-6 text-left">

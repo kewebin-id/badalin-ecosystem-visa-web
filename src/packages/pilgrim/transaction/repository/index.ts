@@ -17,11 +17,18 @@ export class TransactionRepository implements ITransactionRepository {
     limit?: number;
     search?: string;
   }): Promise<
-    ResponseREST<{ items: IApiTransaction[]; meta: { total: number; page: number; limit: number } }>
+    ResponseREST<{
+      items: IApiTransaction[];
+      totalItems: number;
+      currentPage: number;
+      totalPages: number;
+    }>
   > {
     return this.api.get<{
       items: IApiTransaction[];
-      meta: { total: number; page: number; limit: number };
+      totalItems: number;
+      currentPage: number;
+      totalPages: number;
     }>({
       endpoint: endpoints.nextApi.visa.submissions.base,
       queryParam: params,

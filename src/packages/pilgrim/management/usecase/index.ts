@@ -70,19 +70,16 @@ export class ManagementUseCase implements IManagementUseCase {
       const res = await this.repository.findAll(params);
       if (res.code !== 200) {
         return {
-          code: Number(res.code),
           message: res.message,
           error: new Error(res.message || 'Gagal mengambil data anggota'),
         };
       }
       if (!res.data) {
         return {
-          code: 500,
           error: new Error('Data tidak ditemukan'),
         };
       }
       return {
-        code: Number(res.code),
         message: res.message,
         data: {
           ...res.data,
@@ -90,7 +87,7 @@ export class ManagementUseCase implements IManagementUseCase {
         },
       };
     } catch {
-      return { code: 500, error: new Error('Terjadi kesalahan saat mengambil data anggota') };
+      return { error: new Error('Terjadi kesalahan saat mengambil data anggota') };
     }
   }
 
@@ -99,18 +96,16 @@ export class ManagementUseCase implements IManagementUseCase {
       const res = await this.repository.findById(id);
       if (res.code !== 200 || !res.data) {
         return {
-          code: Number(res.code),
           message: res.message,
           error: new Error(res.message || 'Gagal mengambil detail anggota'),
         };
       }
       return {
-        code: Number(res.code),
         message: res.message,
         data: this.mapToDomain(res.data),
       };
     } catch {
-      return { code: 500, error: new Error('Terjadi kesalahan saat mengambil detail anggota') };
+      return { error: new Error('Terjadi kesalahan saat mengambil detail anggota') };
     }
   }
 
@@ -120,14 +115,13 @@ export class ManagementUseCase implements IManagementUseCase {
       const res = await this.repository.create(this.mapToApi(data) as IApiCreateMemberRequest);
       if (res.code !== 201 || !res.data) {
         return {
-          code: Number(res.code),
           message: res.message,
           error: new Error(res.message || 'Gagal menambahkan anggota'),
         };
       }
-      return { code: Number(res.code), message: res.message, data: this.mapToDomain(res.data) };
+      return { message: res.message, data: this.mapToDomain(res.data) };
     } catch {
-      return { code: 500, error: new Error('Terjadi kesalahan saat menambahkan anggota') };
+      return { error: new Error('Terjadi kesalahan saat menambahkan anggota') };
     }
   }
 
@@ -137,14 +131,13 @@ export class ManagementUseCase implements IManagementUseCase {
       const res = await this.repository.update(this.mapToApi(data) as IApiUpdateMemberRequest);
       if (res.code !== 200 || !res.data) {
         return {
-          code: Number(res.code),
           message: res.message,
           error: new Error(res.message || 'Gagal memperbarui data anggota'),
         };
       }
-      return { code: Number(res.code), message: res.message, data: this.mapToDomain(res.data) };
+      return { message: res.message, data: this.mapToDomain(res.data) };
     } catch {
-      return { code: 500, error: new Error('Terjadi kesalahan saat memperbarui data anggota') };
+      return { error: new Error('Terjadi kesalahan saat memperbarui data anggota') };
     }
   }
 
@@ -153,14 +146,13 @@ export class ManagementUseCase implements IManagementUseCase {
       const res = await this.repository.delete(id);
       if (res.code !== 200) {
         return {
-          code: Number(res.code),
           message: res.message,
           error: new Error(res.message || 'Gagal menghapus anggota'),
         };
       }
-      return { code: Number(res.code), message: res.message, data: true };
+      return { message: res.message, data: true };
     } catch {
-      return { code: 500, error: new Error('Terjadi kesalahan saat menghapus anggota') };
+      return { error: new Error('Terjadi kesalahan saat menghapus anggota') };
     }
   }
 
@@ -174,7 +166,6 @@ export class ManagementUseCase implements IManagementUseCase {
       const res = await this.repository.processOcr(file, type);
       if (res.code !== 200 || !res.data?.ocr) {
         return {
-          code: Number(res.code),
           message: res.message,
           error: new Error(res.message || 'Gagal memproses OCR'),
         };
@@ -204,7 +195,6 @@ export class ManagementUseCase implements IManagementUseCase {
       }
 
       return {
-        code: 200,
         message: res.message,
         data: {
           ...mappedData,
@@ -213,7 +203,7 @@ export class ManagementUseCase implements IManagementUseCase {
         },
       };
     } catch {
-      return { code: 500, error: new Error('Terjadi kesalahan saat memproses OCR') };
+      return { error: new Error('Terjadi kesalahan saat memproses OCR') };
     }
   }
 

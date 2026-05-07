@@ -12,7 +12,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 import { INusukCompatibility, RELATIONS, TRelation } from '../../domain/member';
-import { DocumentUploadField } from '../components/document-upload-field';
+import { DocumentUploadField } from '@/components/organisms/pilgrim-management/document-upload-field';
 import { TManagementForm, useManagementController, useManagementForm } from '../controller';
 
 const FormSkeleton = () => (

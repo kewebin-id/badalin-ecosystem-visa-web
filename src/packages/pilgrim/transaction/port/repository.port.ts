@@ -11,7 +11,12 @@ export interface ITransactionRepository {
     limit?: number;
     search?: string;
   }): Promise<
-    ResponseREST<{ items: IApiTransaction[]; meta: { total: number; page: number; limit: number } }>
+    ResponseREST<{
+      items: IApiTransaction[];
+      totalItems: number;
+      currentPage: number;
+      totalPages: number;
+    }>
   >;
   findById(id: string): Promise<ResponseREST<IApiTransaction>>;
   create(data: ICreateTransactionRequest): Promise<ResponseREST<IApiTransaction>>;
