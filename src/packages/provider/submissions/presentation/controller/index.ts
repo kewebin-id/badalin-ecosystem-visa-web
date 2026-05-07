@@ -83,5 +83,6 @@ export const useProviderSubmissionsController = () => {
     useAddHotelManifest,
     useAddTransportManifest,
     useReviewSubmission,
+    usecase,
   };
 };

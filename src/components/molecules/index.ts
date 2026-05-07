@@ -1,3 +1,5 @@
+export * from './user-avatar';
+export * from './image-thumbnail-list';
 export * from './date-picker';
 export * from './dialog-drawer';
 export * from './dropdown-menu';

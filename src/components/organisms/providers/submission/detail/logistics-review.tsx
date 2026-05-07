@@ -1,9 +1,8 @@
 'use client';
 
 import { Card } from '@/components/atoms';
-import { InputTextarea } from '@/components/molecules';
+import { ImageThumbnailList, InputTextarea } from '@/components/molecules';
 import { ISubmissionListItem } from '@/packages/provider/submissions/domain/response';
-import { cn } from '@/shared/utils';
 import { Hotel, Plane, Truck, XCircle } from 'lucide-react';
 import moment from 'moment';
 import { useTranslations } from 'next-intl';
@@ -16,6 +15,7 @@ interface DetailLogisticsReviewProps {
   setLogisticsValid: (valid: boolean | null) => void;
   logisticsReason: string;
   setLogisticsReason: (reason: string) => void;
+  onPreview: (image: { src: string; alt: string }) => void;
 }
 
 export const DetailLogisticsReview = ({
@@ -25,6 +25,7 @@ export const DetailLogisticsReview = ({
   setLogisticsValid,
   logisticsReason,
   setLogisticsReason,
+  onPreview,
 }: DetailLogisticsReviewProps) => {
   const t = useTranslations('ProviderSubmissions.detail.logistics');
   const ts = useTranslations('ProviderSubmissions.detail.sections');
@@ -36,9 +37,7 @@ export const DetailLogisticsReview = ({
           <div className="p-2 bg-orange-50 rounded-xl">
             <Plane className="h-5 w-5 text-orange-500" />
           </div>
-          <h3 className="text-lg font-black text-gray-900 tracking-tight">
-            3. {ts('logistics')}
-          </h3>
+          <h3 className="text-lg font-black text-gray-900 tracking-tight">3. {ts('logistics')}</h3>
         </div>
       </div>
       <div className="p-6 space-y-6">
@@ -51,16 +50,18 @@ export const DetailLogisticsReview = ({
               </span>
             </div>
             {submission.flights?.map((flight, idx) => (
-              <div
-                key={idx}
-                className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-sm"
-              >
+              <div key={idx} className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-sm">
                 <p className="font-black text-gray-900">
                   {flight.carrier} ({flight.flightNo})
                 </p>
                 <p className="text-gray-500 font-medium">
                   {moment(flight.flightDate).format('DD MMM YYYY')} • {flight.type}
                 </p>
+                <ImageThumbnailList
+                  images={flight.imageUrls}
+                  onPreview={onPreview}
+                  altPrefix={`${flight.carrier} Ticket`}
+                />
               </div>
             ))}
 
@@ -71,10 +72,7 @@ export const DetailLogisticsReview = ({
               </span>
             </div>
             {submission.transportations?.map((trans, idx) => (
-              <div
-                key={idx}
-                className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-sm"
-              >
+              <div key={idx} className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-sm">
                 <p className="font-black text-gray-900">
                   {trans.company} ({trans.type})
                 </p>
@@ -84,15 +82,18 @@ export const DetailLogisticsReview = ({
                 <p className="text-gray-500 font-medium">
                   {moment(trans.date).format('DD MMM YYYY')} pukul {trans.time}
                 </p>
+                <ImageThumbnailList
+                  images={trans.imageUrls}
+                  onPreview={onPreview}
+                  altPrefix={`${trans.company} Transport`}
+                />
               </div>
             ))}
 
             {capacityWarning && (
               <div className="p-4 bg-red-50 rounded-2xl border border-red-100 flex items-start gap-3">
                 <XCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
-                <p className="text-sm font-bold text-red-800 leading-tight">
-                  {capacityWarning}
-                </p>
+                <p className="text-sm font-bold text-red-800 leading-tight">{capacityWarning}</p>
               </div>
             )}
           </div>
@@ -105,10 +106,7 @@ export const DetailLogisticsReview = ({
               </span>
             </div>
             {submission.hotels?.map((hotel, idx) => (
-              <div
-                key={idx}
-                className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-sm"
-              >
+              <div key={idx} className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-sm">
                 <p className="font-black text-gray-900">
                   {hotel.name} - {hotel.city}
                 </p>
@@ -119,6 +117,11 @@ export const DetailLogisticsReview = ({
                   In: {moment(hotel.checkIn).format('DD MMM')} • Out:{' '}
                   {moment(hotel.checkOut).format('DD MMM')}
                 </p>
+                <ImageThumbnailList
+                  images={hotel.imageUrls}
+                  onPreview={onPreview}
+                  altPrefix={`${hotel.name} Voucher`}
+                />
               </div>
             ))}
 

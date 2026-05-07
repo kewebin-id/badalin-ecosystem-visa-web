@@ -490,7 +490,7 @@
       "checking": "Checking",
       "completed": "Completed",
       "inReview": "In Review",
-      "verified": "Verified",
+      "verified": "Visa is being applied for",
       "rejected": "Rejected"
     },
     "manifest": {

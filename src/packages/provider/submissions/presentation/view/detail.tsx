@@ -184,6 +184,7 @@ export const SubmissionDetailView = () => {
             setLogisticsValid={setLogisticsValid}
             logisticsReason={logisticsReason}
             setLogisticsReason={setLogisticsReason}
+            onPreview={setPreviewImage}
           />
         </div>
 

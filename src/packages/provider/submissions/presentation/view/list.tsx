@@ -13,12 +13,15 @@ import {
 import { HeaderPageContent, PaymentStatusBadge, ReviewStatusBadge } from '@/components/molecules';
 import { EmptyState } from '@/components/templates';
 import { useScreenSize } from '@/shared/hooks';
-import { Eye, Inbox, Users } from 'lucide-react';
+import { Eye, FileSpreadsheet, Inbox, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import { ProviderSubmission } from '../../domain/entities';
 import { useProviderSubmissionsController } from '../controller';
 import { SubmissionsSkeleton } from './skeleton';
+import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
+import { exportManifestToExcel } from '@/shared/utils/manifest-export';
 
 export const SubmissionsMonitoring = () => {
   const t = useTranslations('ProviderSubmissions');
@@ -27,7 +30,8 @@ export const SubmissionsMonitoring = () => {
   const params = useParams();
   const slug = (params?.slug as string) || 'p';
 
-  const { useSubmissions } = useProviderSubmissionsController();
+  const { useSubmissions, useSubmissionDetail, usecase } = useProviderSubmissionsController();
+  const queryClient = useQueryClient();
   const { data: res, isPending } = useSubmissions({ page: 1, limit: 50 });
 
   const submissions: ProviderSubmission[] = (res?.data?.items || []).map((s) => ({
@@ -90,15 +94,45 @@ export const SubmissionsMonitoring = () => {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Button
-                          variant="transparent"
-                          size="sm"
-                          className="cursor-pointer"
-                          onClick={() => router.push(`/${slug}/submissions/${s.id}`)}
-                          title="Detail & Review"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
+                        {s.paymentStatus === 'COMPLETED' && s.reviewStatus === 'VERIFIED' ? (
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            className="cursor-pointer gap-2"
+                            onClick={async () => {
+                              const loadingToast = toast.loading('Fetching data and generating Excel...');
+                              try {
+                                const detail = await queryClient.fetchQuery({
+                                  queryKey: ['provider', 'submissions', s.id],
+                                  queryFn: () => usecase.getSubmissionDetail(s.id),
+                                });
+                                
+                                if (detail?.data) {
+                                  exportManifestToExcel(detail.data);
+                                  toast.success('Excel generated successfully', { id: loadingToast });
+                                } else {
+                                  toast.error('Failed to fetch submission details', { id: loadingToast });
+                                }
+                              } catch (error) {
+                                console.error('Export error:', error);
+                                toast.error('An error occurred during export', { id: loadingToast });
+                              }
+                            }}
+                          >
+                            <FileSpreadsheet className="h-4 w-4" />
+                            <span>Export</span>
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="transparent"
+                            size="sm"
+                            className="cursor-pointer"
+                            onClick={() => router.push(`/${slug}/submissions/${s.id}`)}
+                            title="Detail & Review"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -139,12 +173,40 @@ export const SubmissionsMonitoring = () => {
                         </div>
                       </div>
 
-                      <button
-                        onClick={() => router.push(`/${slug}/submissions/${s.id}`)}
-                        className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-gray-900 transition-all active:scale-90 cursor-pointer border border-gray-100"
-                      >
-                        <Eye className="h-6 w-6" />
-                      </button>
+                      {s.paymentStatus === 'COMPLETED' && s.reviewStatus === 'VERIFIED' ? (
+                        <button
+                          onClick={async () => {
+                            const loadingToast = toast.loading('Fetching data and generating Excel...');
+                            try {
+                              const detail = await queryClient.fetchQuery({
+                                queryKey: ['provider', 'submissions', s.id],
+                                queryFn: () => usecase.getSubmissionDetail(s.id),
+                              });
+                              
+                              if (detail?.data) {
+                                exportManifestToExcel(detail.data);
+                                toast.success('Excel generated successfully', { id: loadingToast });
+                              } else {
+                                toast.error('Failed to fetch submission details', { id: loadingToast });
+                              }
+                            } catch (error) {
+                              console.error('Export error:', error);
+                              toast.error('An error occurred during export', { id: loadingToast });
+                            }
+                          }}
+                          className="flex h-12 px-4 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all active:scale-90 cursor-pointer border border-emerald-100 gap-2 font-bold text-sm"
+                        >
+                          <FileSpreadsheet className="h-5 w-5" />
+                          <span>Export</span>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => router.push(`/${slug}/submissions/${s.id}`)}
+                          className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-gray-900 transition-all active:scale-90 cursor-pointer border border-gray-100"
+                        >
+                          <Eye className="h-6 w-6" />
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
