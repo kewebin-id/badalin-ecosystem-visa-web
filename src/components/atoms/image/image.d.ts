@@ -1,8 +1,8 @@
 export interface ImageCompProps {
   src: string | StaticImport;
   alt: string;
-  height: number;
-  width: number;
+  height?: number;
+  width?: number;
   placeholder?: string;
   onClick?: () => void;
   useBaseUrl?: boolean;

@@ -1,5 +1,4 @@
-'use client';
-
+import { Image, NotFoundComp } from '@/components/atoms';
 import { DialogDrawer, InputTextarea } from '@/components/molecules';
 import { ProviderSubmission } from '@/packages/provider/submissions/domain/entities';
 import { CheckCircle2, XCircle } from 'lucide-react';
@@ -16,6 +15,7 @@ interface ReviewDocumentDialogProps {
   onVerify: (id: string) => void;
   renderPaymentBadge: (status: ProviderSubmission['paymentStatus']) => React.ReactNode;
   renderReviewBadge: (status: ProviderSubmission['reviewStatus']) => React.ReactNode;
+  submitting?: boolean;
 }
 
 export const ReviewDocumentDialog: FC<ReviewDocumentDialogProps> = ({
@@ -28,8 +28,11 @@ export const ReviewDocumentDialog: FC<ReviewDocumentDialogProps> = ({
   onVerify,
   renderPaymentBadge,
   renderReviewBadge,
+  submitting,
 }) => {
   const t = useTranslations('ProviderSubmissions.dialogs.review');
+  const tp = useTranslations('ProviderSubmissions.dialogs.payment');
+
   if (!submission) return null;
 
   return (
@@ -48,7 +51,8 @@ export const ReviewDocumentDialog: FC<ReviewDocumentDialogProps> = ({
           {t('verify')}
         </>
       }
-      disabledSubmitButton={false}
+      disabledSubmitButton={submitting}
+      submitting={submitting}
       onCancel={() => onReject(submission.id)}
       cancelButton={
         <>
@@ -85,6 +89,19 @@ export const ReviewDocumentDialog: FC<ReviewDocumentDialogProps> = ({
             <p className="text-foreground/80">{submission.rejectionReason}</p>
           </div>
         )}
+
+        <div className="border rounded-xl overflow-hidden bg-muted/30 relative h-64">
+          {submission.paymentProofUrl ? (
+            <Image
+              src={submission.paymentProofUrl}
+              alt={tp('proofAlt')}
+              fill
+              className="object-contain"
+            />
+          ) : (
+            <NotFoundComp className="w-full h-full" label={tp('noProof')} message="" />
+          )}
+        </div>
 
         <div className="space-y-1.5">
           <InputTextarea

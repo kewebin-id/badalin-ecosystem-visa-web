@@ -11,20 +11,11 @@ import {
   TableRow,
 } from '@/components/atoms';
 import { HeaderPageContent, PaymentStatusBadge, ReviewStatusBadge } from '@/components/molecules';
-import {
-  ActionMenuDrawer,
-  ReviewDocumentDialog,
-  VerifyPaymentDialog,
-} from '@/components/organisms/providers/submission';
 import { EmptyState } from '@/components/templates';
-import { ROUTES } from '@/shared/constants/routes';
 import { useScreenSize } from '@/shared/hooks';
-import { currencyFormat } from '@/shared/utils/formattor';
-import { ClipboardCheck, Eye, Inbox, MapPin } from 'lucide-react';
+import { Eye, Inbox, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { toast } from 'sonner';
 import { ProviderSubmission } from '../../domain/entities';
 import { useProviderSubmissionsController } from '../controller';
 import { SubmissionsSkeleton } from './skeleton';
@@ -36,16 +27,8 @@ export const SubmissionsMonitoring = () => {
   const params = useParams();
   const slug = (params?.slug as string) || 'p';
 
-  const { useSubmissions, useVerifyPayment, useReviewSubmission } =
-    useProviderSubmissionsController();
+  const { useSubmissions } = useProviderSubmissionsController();
   const { data: res, isPending } = useSubmissions({ page: 1, limit: 50 });
-  const verifyPaymentMutation = useVerifyPayment();
-  const reviewMutation = useReviewSubmission();
-
-  const [paymentTarget, setPaymentTarget] = useState<ProviderSubmission | null>(null);
-  const [reviewTarget, setReviewTarget] = useState<ProviderSubmission | null>(null);
-  const [actionMenuTarget, setActionMenuTarget] = useState<ProviderSubmission | null>(null);
-  const [rejectReason, setRejectReason] = useState('');
 
   const submissions: ProviderSubmission[] = (res?.data?.data || []).map((s) => ({
     id: s.id,
@@ -57,50 +40,6 @@ export const SubmissionsMonitoring = () => {
     paymentProofUrl: s.proofOfPayment,
     rejectionReason: s.rejectionReason,
   }));
-
-  const handleMarkCompleted = async (id: string) => {
-    try {
-      await verifyPaymentMutation.mutateAsync(id);
-      setPaymentTarget(null);
-      toast.success(t('toasts.success'), {
-        description: t('manifest.saveSuccessDesc', { id }),
-      });
-    } catch {
-      toast.error(t('toasts.error'));
-    }
-  };
-
-  const handleVerify = async (id: string) => {
-    try {
-      await reviewMutation.mutateAsync({ id, payload: { status: 'VERIFIED' } });
-      setReviewTarget(null);
-      toast.success(t('toasts.verified'), { description: t('toasts.verifiedDesc', { id }) });
-    } catch {
-      toast.error(t('toasts.error'));
-    }
-  };
-
-  const handleReject = async (id: string) => {
-    if (!rejectReason.trim()) {
-      toast.error(t('toasts.reasonRequired'), {
-        description: t('toasts.reasonRequiredDesc'),
-      });
-      return;
-    }
-    try {
-      await reviewMutation.mutateAsync({
-        id,
-        payload: { status: 'REJECTED', rejectionReason: rejectReason.trim() },
-      });
-      setReviewTarget(null);
-      setRejectReason('');
-      toast.success(t('toasts.rejected'), {
-        description: t('toasts.rejectedDesc', { id }),
-      });
-    } catch {
-      toast.error(t('toasts.error'));
-    }
-  };
 
   if (isPending) return <SubmissionsSkeleton />;
 
@@ -155,28 +94,10 @@ export const SubmissionsMonitoring = () => {
                           variant="transparent"
                           size="sm"
                           className="cursor-pointer"
-                          onClick={() => setPaymentTarget(s)}
-                          title="Verifikasi Pembayaran"
+                          onClick={() => router.push(`/${slug}/submissions/${s.id}`)}
+                          title="Detail & Review"
                         >
                           <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="transparent"
-                          size="sm"
-                          className="cursor-pointer"
-                          onClick={() => setReviewTarget(s)}
-                          title="Review Dokumen"
-                        >
-                          <ClipboardCheck className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="transparent"
-                          size="sm"
-                          className="cursor-pointer"
-                          onClick={() => router.push(ROUTES.PROVIDER.MANIFEST(slug, s.id))}
-                          title="Logistik & Manifest"
-                        >
-                          <MapPin className="h-4 w-4" />
                         </Button>
                       </div>
                     </TableCell>
@@ -192,14 +113,13 @@ export const SubmissionsMonitoring = () => {
                   className="group relative overflow-hidden rounded-[2rem] border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-md"
                 >
                   <div className="relative space-y-5">
-                    {/* Header: ID (Top Left) and Statuses (Top Right) */}
                     <div className="flex items-start justify-between">
                       <div className="space-y-1">
                         <span className="text-[10px] font-bold tracking-widest text-gray-400 uppercase">
                           Submission ID
                         </span>
                         <h4 className="font-mono text-sm font-bold text-gray-900 tracking-tight bg-gray-50 px-2 py-0.5 rounded-lg border border-gray-100 w-fit">
-                          {s.id}
+                          {s.id.split('-')[0].toUpperCase()}
                         </h4>
                       </div>
                       <div className="flex flex-col items-end gap-1.5">
@@ -208,41 +128,22 @@ export const SubmissionsMonitoring = () => {
                       </div>
                     </div>
 
-                    {/* Main Content: Leader and Info */}
                     <div className="flex items-center justify-between gap-4 pt-2">
                       <div className="space-y-1">
                         <h4 className="text-xl font-extrabold tracking-tight text-gray-900">
                           {s.leaderName}
                         </h4>
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary-50">
-                            <Inbox className="h-3 w-3 text-primary-default" strokeWidth={3} />
-                          </div>
-                          <p className="text-sm font-semibold text-gray-500">
-                            {s.totalMembers}{' '}
-                            <span className="text-gray-400 font-medium">Participants</span>
-                          </p>
+                        <div className="flex items-center gap-2 text-xs font-semibold text-gray-400">
+                          <Users className="h-3.5 w-3.5" />
+                          <span>{s.totalMembers} Jamaah</span>
                         </div>
                       </div>
 
-                      {/* Action Menu Trigger (Three Dots) */}
                       <button
-                        onClick={() => setActionMenuTarget(s)}
+                        onClick={() => router.push(`/${slug}/submissions/${s.id}`)}
                         className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-gray-900 transition-all active:scale-90 cursor-pointer border border-gray-100"
                       >
-                        <svg
-                          className="h-6 w-6"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2.5}
-                            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                          />
-                        </svg>
+                        <Eye className="h-6 w-6" />
                       </button>
                     </div>
                   </div>
@@ -252,51 +153,6 @@ export const SubmissionsMonitoring = () => {
           )}
         </div>
       </Card>
-
-      <ActionMenuDrawer
-        isOpen={!!actionMenuTarget}
-        onOpenChange={(o) => !o && setActionMenuTarget(null)}
-        submission={actionMenuTarget}
-        onVerifyPayment={() => {
-          if (actionMenuTarget) {
-            setPaymentTarget(actionMenuTarget);
-            setActionMenuTarget(null);
-          }
-        }}
-        onReviewDocuments={() => {
-          if (actionMenuTarget) {
-            setReviewTarget(actionMenuTarget);
-            setActionMenuTarget(null);
-          }
-        }}
-        onManifest={() => {
-          if (actionMenuTarget) {
-            router.push(ROUTES.PROVIDER.MANIFEST(slug, actionMenuTarget.id));
-            setActionMenuTarget(null);
-          }
-        }}
-      />
-
-      <VerifyPaymentDialog
-        submission={paymentTarget}
-        isOpen={!!paymentTarget}
-        onOpenChange={(o) => !o && setPaymentTarget(null)}
-        onConfirm={handleMarkCompleted}
-        renderPaymentBadge={(status) => <PaymentStatusBadge status={status} />}
-        formatCurrency={currencyFormat}
-      />
-
-      <ReviewDocumentDialog
-        submission={reviewTarget}
-        isOpen={!!reviewTarget}
-        onOpenChange={(o) => !o && setReviewTarget(null)}
-        rejectReason={rejectReason}
-        setRejectReason={setRejectReason}
-        onReject={handleReject}
-        onVerify={handleVerify}
-        renderPaymentBadge={(status) => <PaymentStatusBadge status={status} />}
-        renderReviewBadge={(status) => <ReviewStatusBadge status={status} />}
-      />
     </div>
   );
 };

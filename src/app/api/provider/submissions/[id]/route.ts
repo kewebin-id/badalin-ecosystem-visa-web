@@ -4,11 +4,20 @@ import Logger from '@/shared/utils/logger';
 import { RestAPI } from '@/shared/utils/rest-api';
 import { response } from '@/shared/utils/rest-api/response';
 import { NextRequest } from 'next/server';
+import { JWT } from 'next-auth/jwt';
+import { IUser } from '@/packages/pilgrim/auth/domain/response';
 
 export const dynamic = 'force-dynamic';
 
-export const GET = async (req: NextRequest) => {
+interface ProviderToken extends JWT {
+  user?: IUser;
+  token?: string;
+  agencySlug?: string;
+}
+
+export const GET = async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   try {
+    const { id } = await params;
     const session = await getAuthTokenFromRequest(req);
     const agencySlug = req.cookies.get('agency_slug')?.value || session?.user?.agency?.slug;
     const apiKey = process.env.API_KEY;
@@ -16,13 +25,9 @@ export const GET = async (req: NextRequest) => {
     if (!session?.token) return response[401]({ message: 'Unauthorized' });
     if (!apiKey) return response[500]({ message: 'Internal server error' });
 
-    const searchParams = req.nextUrl.searchParams;
-    const query = Object.fromEntries(searchParams.entries());
-
     const restApi = new RestAPI(undefined, session.token as string);
     const res = await restApi.get({
-      endpoint: endpoints.provider.submissions.base(agencySlug || 'p'),
-      queryParam: query,
+      endpoint: endpoints.provider.submissions.detail(agencySlug || 'p', id),
       config: {
         headers: {
           'x-api-key': apiKey,
@@ -32,13 +37,13 @@ export const GET = async (req: NextRequest) => {
     });
 
     Logger.info(JSON.stringify(res), {
-      location: 'api/provider/submissions/route.ts - GET',
+      location: `api/provider/submissions/${id}/route.ts - GET`,
     });
 
     return response.handler(res);
   } catch (error: unknown) {
     Logger.error(error, {
-      location: 'api/provider/submissions/route.ts - GET',
+      location: 'api/provider/submissions/[id]/route.ts - GET',
     });
     return response[500]({ message: 'Internal server error' });
   }

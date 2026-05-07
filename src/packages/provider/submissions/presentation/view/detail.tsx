@@ -1,207 +1,207 @@
 'use client';
 
 import {
-  Badge,
-  Button,
-  Card,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/atoms';
-import { HeaderPageContent } from '@/components/molecules';
-import { Bed, CheckCircle, ChevronLeft, FileText, Plane, Truck, XCircle } from 'lucide-react';
+  HeaderPageContent,
+  ImagePreviewModal,
+  PaymentStatusBadge,
+  ReviewStatusBadge,
+} from '@/components/molecules';
 import moment from 'moment';
+import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
+
+import { NotFoundComp } from '@/components/atoms';
+import {
+  DetailLogisticsReview,
+  DetailMemberValidation,
+  DetailPaymentValidation,
+  DetailReviewSidebar,
+} from '@/components/organisms/providers/submission/detail';
+import { ROUTES } from '@/shared/constants/routes';
 import { useProviderSubmissionsController } from '../controller';
+import { SubmissionDetailSkeleton } from './skeleton';
+
+const VEHICLE_CAPACITIES: Record<string, number> = {
+  Bus: 50,
+  'Mini Bus': 15,
+  Sedan: 4,
+  MPV: 7,
+  TAXI: 4,
+  OTHER: 100,
+};
 
 export const SubmissionDetailView = () => {
+  const t = useTranslations('ProviderSubmissions');
   const router = useRouter();
   const { id, slug } = useParams();
   const { useSubmissionDetail, useVerifyPayment, useReviewSubmission } =
     useProviderSubmissionsController();
 
   const { data, isPending } = useSubmissionDetail(id as string);
-  const verifyPayment = useVerifyPayment();
-  const reviewSubmission = useReviewSubmission();
+  const verifyPaymentMutation = useVerifyPayment();
+  const reviewSubmissionMutation = useReviewSubmission();
 
   const submission = data?.data;
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'COMPLETED':
-      case 'VERIFIED':
-        return 'bg-green-100 text-green-800';
-      case 'REJECTED':
-        return 'bg-red-100 text-red-800';
-      case 'IN_REVIEW':
-      case 'CHECKING':
-        return 'bg-yellow-100 text-yellow-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
+  const [paymentAction, setPaymentAction] = useState<'APPROVE' | 'REJECT' | null>(null);
+  const [paymentReason, setPaymentReason] = useState('');
+  const [memberStatuses, setMemberStatuses] = useState<
+    Record<string, { valid: boolean; reason?: string }>
+  >({});
+  const [logisticsValid, setLogisticsValid] = useState<boolean | null>(null);
+  const [logisticsReason, setLogisticsReason] = useState('');
+  const [previewImage, setPreviewImage] = useState<{ src: string; alt: string } | null>(null);
+
+  const capacityWarning = useMemo(() => {
+    if (!submission?.transportations?.[0]) return null;
+    const vehicleType = submission.transportations[0].type;
+    const capacity = VEHICLE_CAPACITIES[vehicleType] || 0;
+    const totalMembers = submission.members?.length || 0;
+
+    if (totalMembers > capacity) {
+      return t('detail.logistics.capacityWarning', {
+        type: vehicleType,
+        capacity,
+        count: totalMembers,
+      });
+    }
+    return null;
+  }, [submission, t]);
+
+  const toggleMemberStatus = (memberId: string) => {
+    setMemberStatuses((prev) => ({
+      ...prev,
+      [memberId]: { valid: !prev[memberId]?.valid },
+    }));
+  };
+
+  const handleFinalSubmit = async () => {
+    if (!paymentAction) {
+      toast.error(t('toasts.paymentStatusRequired'));
+      return;
+    }
+
+    if (paymentAction === 'REJECT' && !paymentReason.trim()) {
+      toast.error(t('toasts.paymentReasonRequired'));
+      return;
+    }
+
+    const allMembersValid = submission?.members.every((m) => memberStatuses[m.id]?.valid);
+
+    try {
+      if (paymentAction === 'APPROVE' && submission?.paymentStatus !== 'COMPLETED') {
+        await verifyPaymentMutation.mutateAsync(submission!.id);
+      }
+
+      const status =
+        paymentAction === 'APPROVE' && allMembersValid && logisticsValid !== false
+          ? 'VERIFIED'
+          : 'REJECTED';
+      const reason =
+        paymentAction === 'REJECT'
+          ? paymentReason
+          : logisticsValid === false
+            ? logisticsReason
+            : t('toasts.invalidMemberDocs');
+
+      await reviewSubmissionMutation.mutateAsync({
+        id: submission!.id,
+        payload: {
+          status,
+          rejectionReason: reason,
+        },
+      });
+
+      toast.success(t('toasts.saveSuccess'));
+      router.push(ROUTES.PROVIDER.SUBMISSIONS(slug as string));
+    } catch (error) {
+      toast.error(t('toasts.saveError'));
     }
   };
 
   if (isPending) {
-    return <div className="p-8 text-center text-gray-500">Loading submission details...</div>;
+    return <SubmissionDetailSkeleton />;
   }
 
   if (!submission) {
-    return <div className="p-8 text-center text-red-500">Submission not found.</div>;
+    return (
+      <div className="flex items-center justify-center min-h-[60vh] animate-in fade-in duration-500">
+        <NotFoundComp
+          label={t('manifest.notFoundTitle')}
+          message={t('manifest.notFoundDesc')}
+          actionButton={t('detail.backToList')}
+          actionHref={ROUTES.PROVIDER.SUBMISSIONS(slug as string)}
+        />
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6 pb-20">
-      <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-        <button
-          onClick={() => router.push(`/${slug}/submissions`)}
-          className="hover:text-blue-600 flex items-center gap-1"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          Back to Submissions
-        </button>
-      </div>
-
+    <div className="space-y-8 pb-24 max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
       <HeaderPageContent
-        title={`Submission Detail: #${submission.id.split('-')[0].toUpperCase()}`}
-        subtitle={`Submitted on ${moment(submission.createdAt).format('DD MMM YYYY HH:mm')}`}
+        title={t('detail.title')}
+        subtitle={t('detail.subtitle', {
+          leader: submission.leader?.fullName,
+          date: moment(submission.createdAt).format('DD MMMM YYYY, HH:mm'),
+        })}
+        onBack={() => router.push(ROUTES.PROVIDER.SUBMISSIONS(slug as string))}
+        extra={
+          <div className="flex gap-2">
+            <PaymentStatusBadge status={submission.paymentStatus} />
+            <ReviewStatusBadge status={submission.verifyStatus} />
+          </div>
+        }
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          {/* Members Table */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <FileText className="h-5 w-5 text-blue-600" />
-              Jamaah List ({submission.members.length} pax)
-            </h3>
-            <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Full Name</TableHead>
-                    <TableHead>Passport</TableHead>
-                    <TableHead>NIK</TableHead>
-                    <TableHead>Relation</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {submission.members.map((member) => (
-                    <TableRow key={member.id}>
-                      <TableCell className="font-medium">{member.fullName}</TableCell>
-                      <TableCell>{member.passportNumber}</TableCell>
-                      <TableCell>{member.nik}</TableCell>
-                      <TableCell>{member.relation}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="lg:col-span-8 space-y-8">
+          <DetailPaymentValidation
+            submission={submission}
+            paymentAction={paymentAction}
+            setPaymentAction={setPaymentAction}
+            paymentReason={paymentReason}
+            setPaymentReason={setPaymentReason}
+            onPreview={setPreviewImage}
+          />
 
-          {/* Logistics Scaffolds */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="p-4 flex flex-col items-center justify-center border-dashed text-gray-400 hover:text-blue-600 hover:border-blue-300 cursor-pointer transition-colors h-32">
-              <Plane className="h-8 w-8 mb-2" />
-              <span className="text-sm font-medium">Add Flight Manifest</span>
-            </Card>
-            <Card className="p-4 flex flex-col items-center justify-center border-dashed text-gray-400 hover:text-blue-600 hover:border-blue-300 cursor-pointer transition-colors h-32">
-              <Bed className="h-8 w-8 mb-2" />
-              <span className="text-sm font-medium">Add Hotel Manifest</span>
-            </Card>
-            <Card className="p-4 flex flex-col items-center justify-center border-dashed text-gray-400 hover:text-blue-600 hover:border-blue-300 cursor-pointer transition-colors h-32">
-              <Truck className="h-8 w-8 mb-2" />
-              <span className="text-sm font-medium">Add Transport Manifest</span>
-            </Card>
-          </div>
+          <DetailMemberValidation
+            members={submission.members || []}
+            memberStatuses={memberStatuses}
+            onToggleStatus={toggleMemberStatus}
+            onPreview={setPreviewImage}
+          />
+
+          <DetailLogisticsReview
+            submission={submission}
+            capacityWarning={capacityWarning}
+            logisticsValid={logisticsValid}
+            setLogisticsValid={setLogisticsValid}
+            logisticsReason={logisticsReason}
+            setLogisticsReason={setLogisticsReason}
+          />
         </div>
 
-        <div className="space-y-6">
-          {/* Leader Info */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Leader Information</h3>
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs text-gray-400 uppercase font-bold">Full Name</label>
-                <p className="font-medium text-gray-900">{submission.leader.fullName}</p>
-              </div>
-              <div>
-                <label className="text-xs text-gray-400 uppercase font-bold">Phone Number</label>
-                <p className="font-medium text-gray-900">{submission.leader.phoneNumber}</p>
-              </div>
-              <div>
-                <label className="text-xs text-gray-400 uppercase font-bold">Email Address</label>
-                <p className="font-medium text-gray-900">{submission.leader.email}</p>
-              </div>
-            </div>
-          </Card>
-
-          {/* Status & Actions */}
-          <Card className="p-6 bg-gray-50 border-gray-200">
-            <h3 className="text-lg font-semibold mb-4">Status & Actions</h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-white rounded-lg border border-gray-100 shadow-sm">
-                <span className="text-sm text-gray-600">Payment Status</span>
-                <Badge className={getStatusColor(submission.paymentStatus)}>
-                  {submission.paymentStatus}
-                </Badge>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-white rounded-lg border border-gray-100 shadow-sm">
-                <span className="text-sm text-gray-600">Verification</span>
-                <Badge className={getStatusColor(submission.verifyStatus)}>
-                  {submission.verifyStatus}
-                </Badge>
-              </div>
-
-              <div className="pt-4 space-y-2">
-                {submission.paymentStatus === 'PENDING' && (
-                  <Button
-                    className="w-full bg-green-600 hover:bg-green-700"
-                    onClick={() => verifyPayment.mutate(submission.id)}
-                    disabled={verifyPayment.isPending}
-                  >
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Verify Payment
-                  </Button>
-                )}
-                {submission.verifyStatus === 'IN_REVIEW' && (
-                  <div className="flex gap-2">
-                    <Button
-                      variant="dangerOutline"
-                      className="flex-1 text-red-600 border-red-200 hover:bg-red-50"
-                      onClick={() =>
-                        reviewSubmission.mutate({
-                          id: submission.id,
-                          payload: { status: 'REJECTED', rejectionReason: 'Document incomplete' },
-                        })
-                      }
-                      disabled={reviewSubmission.isPending}
-                    >
-                      <XCircle className="h-4 w-4 mr-2" />
-                      Reject
-                    </Button>
-                    <Button
-                      className="flex-1 bg-blue-600 hover:bg-blue-700"
-                      onClick={() =>
-                        reviewSubmission.mutate({
-                          id: submission.id,
-                          payload: { status: 'VERIFIED' },
-                        })
-                      }
-                      disabled={reviewSubmission.isPending}
-                    >
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      Approve
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </Card>
+        <div className="lg:col-span-4">
+          <DetailReviewSidebar
+            submission={submission}
+            paymentAction={paymentAction}
+            memberStatuses={memberStatuses}
+            logisticsValid={logisticsValid}
+            onFinalSubmit={handleFinalSubmit}
+            onCancel={() => router.push(ROUTES.PROVIDER.SUBMISSIONS(slug as string))}
+            isSubmitting={reviewSubmissionMutation.isPending || verifyPaymentMutation.isPending}
+          />
         </div>
       </div>
+
+      <ImagePreviewModal
+        open={!!previewImage}
+        onOpenChange={(o) => !o && setPreviewImage(null)}
+        imageSrc={previewImage?.src || ''}
+        imageAlt={previewImage?.alt || 'Preview'}
+      />
     </div>
   );
 };

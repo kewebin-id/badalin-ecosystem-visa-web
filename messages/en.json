@@ -568,7 +568,63 @@
       "rejected": "Document Rejected",
       "rejectedDesc": "Submission {id} has been rejected with recorded reason.",
       "reasonRequired": "Reason Required",
-      "reasonRequiredDesc": "Please provide a reason for rejection."
+      "reasonRequiredDesc": "Please provide a reason for rejection.",
+      "paymentStatusRequired": "Please specify payment status",
+      "paymentReasonRequired": "Rejection reason for payment is required",
+      "invalidMemberDocs": "Some member documents are invalid",
+      "saveSuccess": "Submission review saved successfully",
+      "saveError": "Failed to save review"
+    },
+    "detail": {
+      "title": "Review Submission",
+      "subtitle": "Submitted by {leader} on {date}",
+      "backToList": "Back to List",
+      "sections": {
+        "payment": "Payment Validation",
+        "member": "Member Validation ({count} Pilgrims)",
+        "logistics": "Logistics & Transport Review",
+        "allIn": "All-In Review"
+      },
+      "payment": {
+        "ocrResult": "System OCR Result",
+        "nominal": "Amount",
+        "ocrStatus": "OCR Status",
+        "successRead": "Read Successfully",
+        "approve": "Approve Payment",
+        "reject": "Reject Payment",
+        "reasonLabel": "Note / Rejection Reason",
+        "reasonPlaceholder": "Fill in the reason if you reject this payment...",
+        "noProof": "Proof of payment not available"
+      },
+      "member": {
+        "table": {
+          "data": "Pilgrim Data",
+          "docs": "Review Documents",
+          "verify": "Verification"
+        },
+        "docs": {
+          "passport": "View Passport",
+          "ktp": "View KTP",
+          "photo": "View Photo"
+        }
+      },
+      "logistics": {
+        "flight": "Flight Ticket",
+        "transport": "Transportation",
+        "hotel": "Hotel Accommodation",
+        "capacityWarning": "Vehicle capacity ({type}: max {capacity}) is not sufficient for {count} pilgrims.",
+        "match": "Logistics Matches",
+        "anomaly": "Logistics Anomaly",
+        "noteLabel": "Logistics Note",
+        "notePlaceholder": "Fill in the note if there is a logistics anomaly..."
+      },
+      "actions": {
+        "submit": "Confirm & Save Review",
+        "cancel": "Cancel",
+        "warning": "Make sure all data has been validated correctly. This action will send a notification to the pilgrim/agency regarding their submission status."
+      },
+      "notFound": "Submission not found.",
+      "loading": "Loading submission detail..."
     }
   },
   "ProviderSidebar": {

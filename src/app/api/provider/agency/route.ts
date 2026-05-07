@@ -10,6 +10,7 @@ export const dynamic = 'force-dynamic';
 export const PATCH = async (req: NextRequest) => {
   try {
     const session = await getAuthTokenFromRequest(req);
+    const agencySlug = req.cookies.get('agency_slug')?.value || session?.user?.agency?.slug;
     const apiKey = process.env.API_KEY;
     const body = await req.json();
 
@@ -23,19 +24,14 @@ export const PATCH = async (req: NextRequest) => {
       config: {
         headers: {
           'x-api-key': apiKey,
+          Cookie: `agency_slug=${agencySlug}`,
         },
       },
     });
 
-    Logger.info(`PATCH ${endpoints.provider.agency.base} - Response: ${JSON.stringify(res)}`, {
+    Logger.info(JSON.stringify(res), {
       location: 'api/provider/agency/route.ts - PATCH',
     });
-
-    if (res?.code !== 200) {
-      return response[res.code as keyof typeof response]({
-        message: res.message,
-      });
-    }
 
     return response.handler(res);
   } catch (error: unknown) {

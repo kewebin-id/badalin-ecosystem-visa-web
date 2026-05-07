@@ -53,6 +53,7 @@ export const endpoints = {
     },
     submissions: {
       base: (slug: string = 'p') => `/api/v1/${slug}/submissions`,
+      detail: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}`,
       verifyPayment: (slug: string, id: string) =>
         `/api/v1/${slug}/submissions/${id}/verify-payment`,
       review: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/review`,
@@ -88,6 +89,7 @@ export const endpoints = {
       },
       submissions: {
         base: '/api/provider/submissions',
+        detail: (id: string) => `/api/provider/submissions/${id}`,
         verifyPayment: (id: string) => `/api/provider/submissions/${id}/verify-payment`,
         review: (id: string) => `/api/provider/submissions/${id}/review`,
         flightManifest: (id: string) => `/api/provider/submissions/${id}/manifest/flight`,

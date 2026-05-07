@@ -4,21 +4,14 @@ import Logger from '@/shared/utils/logger';
 import { RestAPI } from '@/shared/utils/rest-api';
 import { response } from '@/shared/utils/rest-api/response';
 import { NextRequest } from 'next/server';
-import { JWT } from 'next-auth/jwt';
-import { IUser } from '@/packages/pilgrim/auth/domain/response';
 
 export const dynamic = 'force-dynamic';
 
-interface ProviderToken extends JWT {
-  user?: IUser;
-  token?: string;
-  agencySlug?: string;
-}
-
 export const PATCH = async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
   try {
-    const { id } = await params;
-    const session = (await getAuthTokenFromRequest(req)) as ProviderToken | null;
+    const session = await getAuthTokenFromRequest(req);
+    const agencySlug = req.cookies.get('agency_slug')?.value || session?.user?.agency?.slug;
     const apiKey = process.env.API_KEY;
 
     if (!session?.token) return response[401]({ message: 'Unauthorized' });
@@ -26,30 +19,25 @@ export const PATCH = async (req: NextRequest, { params }: { params: Promise<{ id
 
     const body = await req.json();
 
-    const user = session?.user;
-    const userSlug = user?.agency?.slug || user?.agencySlug || session?.agencySlug || 'p';
-
     const restApi = new RestAPI(undefined, session.token as string);
     const res = await restApi.patch({
-      endpoint: endpoints.provider.submissions.review(userSlug, id),
+      endpoint: endpoints.provider.submissions.review(agencySlug || 'p', id),
       body,
       config: {
         headers: {
           'x-api-key': apiKey,
+          Cookie: `agency_slug=${agencySlug}`,
         },
       },
     });
 
-    Logger.info(
-      `PATCH ${endpoints.provider.submissions.review(userSlug, id)} - Response Status: ${res?.code}`,
-      {
-        location: 'api/provider/submissions/[id]/review/route.ts - PATCH',
-      },
-    );
+    Logger.info(JSON.stringify(res), {
+      location: `api/provider/submissions/${id}/review/route.ts - PATCH`,
+    });
 
     return response.handler(res);
   } catch (error: unknown) {
-    Logger.error(error, { location: 'api/provider/submissions/[id]/review/route.ts - PATCH' });
+    Logger.error(error, { location: `api/provider/submissions/${id}/review/route.ts - PATCH` });
     return response[500]({ message: 'Internal server error' });
   }
 };

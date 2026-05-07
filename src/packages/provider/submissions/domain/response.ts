@@ -1,3 +1,5 @@
+import { IFlight, IHotel, ITransportation } from '@/packages/pilgrim/transaction/domain/transaction';
+
 export interface ILeader {
   id: string;
   fullName: string;
@@ -11,6 +13,9 @@ export interface IMember {
   passportNumber: string;
   nik: string;
   relation: string;
+  photoUrl?: string;
+  ktpUrl?: string;
+  passportUrl?: string;
 }
 
 export interface ISubmissionListItem {
@@ -24,6 +29,9 @@ export interface ISubmissionListItem {
   members: IMember[];
   proofOfPayment?: string;
   rejectionReason?: string;
+  flights?: IFlight[];
+  hotels?: IHotel[];
+  transportations?: ITransportation[];
 }
 
 export interface ISubmissionListResponse {

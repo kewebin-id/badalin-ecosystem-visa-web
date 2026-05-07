@@ -1,3 +1,5 @@
+import { IFlight, IHotel, ITransportation } from '@/packages/pilgrim/transaction/domain/transaction';
+
 export interface Pilgrim {
   id: string;
   name: string;
@@ -5,6 +7,7 @@ export interface Pilgrim {
   nik: string;
   passportUrl: string;
   ktpUrl: string;
+  photoUrl: string;
 }
 
 export interface ProviderSubmission {
@@ -17,4 +20,7 @@ export interface ProviderSubmission {
   rejectionReason?: string;
   amount: number;
   pilgrims?: Pilgrim[];
+  flights?: IFlight[];
+  hotels?: IHotel[];
+  transportations?: ITransportation[];
 }

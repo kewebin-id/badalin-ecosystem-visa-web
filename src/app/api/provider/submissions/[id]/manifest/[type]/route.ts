@@ -4,16 +4,8 @@ import Logger from '@/shared/utils/logger';
 import { RestAPI } from '@/shared/utils/rest-api';
 import { response } from '@/shared/utils/rest-api/response';
 import { NextRequest } from 'next/server';
-import { JWT } from 'next-auth/jwt';
-import { IUser } from '@/packages/pilgrim/auth/domain/response';
 
 export const dynamic = 'force-dynamic';
-
-interface ProviderToken extends JWT {
-  user?: IUser;
-  token?: string;
-  agencySlug?: string;
-}
 
 export const POST = async (
   req: NextRequest,
@@ -21,7 +13,8 @@ export const POST = async (
 ) => {
   try {
     const { id, type } = await params;
-    const session = (await getAuthTokenFromRequest(req)) as ProviderToken | null;
+    const session = await getAuthTokenFromRequest(req);
+    const agencySlug = req.cookies.get('agency_slug')?.value || session?.user?.agency?.slug;
     const apiKey = process.env.API_KEY;
 
     if (!session?.token) return response[401]({ message: 'Unauthorized' });
@@ -29,19 +22,16 @@ export const POST = async (
 
     const body = await req.json();
 
-    const user = session?.user;
-    const userSlug = user?.agency?.slug || user?.agencySlug || session?.agencySlug || 'p';
-
     let endpoint = '';
     switch (type) {
       case 'flight':
-        endpoint = endpoints.provider.submissions.flightManifest(userSlug, id);
+        endpoint = endpoints.provider.submissions.flightManifest(agencySlug || 'p', id);
         break;
       case 'hotel':
-        endpoint = endpoints.provider.submissions.hotelManifest(userSlug, id);
+        endpoint = endpoints.provider.submissions.hotelManifest(agencySlug || 'p', id);
         break;
       case 'transport':
-        endpoint = endpoints.provider.submissions.transportManifest(userSlug, id);
+        endpoint = endpoints.provider.submissions.transportManifest(agencySlug || 'p', id);
         break;
       default:
         return response[400]({ message: 'Invalid manifest type' });
@@ -54,20 +44,18 @@ export const POST = async (
       config: {
         headers: {
           'x-api-key': apiKey,
+          Cookie: `agency_slug=${agencySlug}`,
         },
       },
     });
 
-    Logger.info(
-      `POST ${endpoint} - Response Status: ${res?.code}`,
-      {
-        location: `api/provider/submissions/[id]/manifest/[type]/route.ts - POST (${type})`,
-      }
-    );
+    Logger.info(JSON.stringify(res), {
+      location: `api/provider/submissions/${id}/manifest/${type}/route.ts - POST`,
+    });
 
     return response.handler(res);
   } catch (error: unknown) {
-    Logger.error(error, { location: 'api/provider/submissions/[id]/manifest/[type]/route.ts - POST' });
+    Logger.error(error, { location: `api/provider/submissions/[id]/manifest/[type]/route.ts - POST` });
     return response[500]({ message: 'Internal server error' });
   }
 };

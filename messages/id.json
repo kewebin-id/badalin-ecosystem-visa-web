@@ -568,7 +568,63 @@
       "rejected": "Dokumen Ditolak",
       "rejectedDesc": "Submission {id} ditolak dengan alasan tercatat.",
       "reasonRequired": "Alasan Diperlukan",
-      "reasonRequiredDesc": "Mohon isi alasan penolakan."
+      "reasonRequiredDesc": "Mohon isi alasan penolakan.",
+      "paymentStatusRequired": "Silakan tentukan status pembayaran",
+      "paymentReasonRequired": "Alasan penolakan pembayaran wajib diisi",
+      "invalidMemberDocs": "Beberapa dokumen anggota tidak valid",
+      "saveSuccess": "Review submission berhasil disimpan",
+      "saveError": "Gagal menyimpan review"
+    },
+    "detail": {
+      "title": "Review Submission",
+      "subtitle": "Diajukan oleh {leader} pada {date}",
+      "backToList": "Kembali ke Daftar",
+      "sections": {
+        "payment": "Validasi Pembayaran",
+        "member": "Validasi Anggota ({count} Jamaah)",
+        "logistics": "Review Akomodasi & Transport",
+        "allIn": "Review All-In"
+      },
+      "payment": {
+        "ocrResult": "Hasil OCR Sistem",
+        "nominal": "Nominal",
+        "ocrStatus": "Status OCR",
+        "successRead": "Berhasil Terbaca",
+        "approve": "Approve Payment",
+        "reject": "Reject Payment",
+        "reasonLabel": "Catatan / Alasan Penolakan",
+        "reasonPlaceholder": "Isi alasan jika Anda menolak pembayaran ini...",
+        "noProof": "Bukti transfer tidak tersedia"
+      },
+      "member": {
+        "table": {
+          "data": "Data Jamaah",
+          "docs": "Review Dokumen",
+          "verify": "Verifikasi"
+        },
+        "docs": {
+          "passport": "Lihat Paspor",
+          "ktp": "Lihat KTP",
+          "photo": "Lihat Foto"
+        }
+      },
+      "logistics": {
+        "flight": "Tiket Pesawat",
+        "transport": "Transportasi",
+        "hotel": "Akomodasi Hotel",
+        "capacityWarning": "Kapasitas kendaraan ({type}: max {capacity}) tidak mencukupi untuk {count} jamaah.",
+        "match": "Logistik Sesuai",
+        "anomaly": "Logistik Anomali",
+        "noteLabel": "Keterangan Logistik",
+        "notePlaceholder": "Isi keterangan jika ada anomali logistik..."
+      },
+      "actions": {
+        "submit": "Konfirmasi & Simpan Review",
+        "cancel": "Batal",
+        "warning": "Pastikan semua data telah divalidasi dengan benar. Tindakan ini akan mengirimkan notifikasi kepada jamaah/agen terkait status pengajuan mereka."
+      },
+      "notFound": "Pengajuan tidak ditemukan.",
+      "loading": "Memuat detail pengajuan..."
     }
   },
   "ProviderSidebar": {

@@ -2,7 +2,6 @@
 
 import { DialogDrawer } from '@/components/molecules';
 import { SidebarProvider } from '@/components/organisms';
-import { useProviderAuthController } from '@/packages/provider/auth/presentation/controller';
 import { SetupSlugDialog } from '@/packages/provider/auth/presentation/view/setup-slug-dialog';
 import { useAuth } from '@/shared/hooks';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -16,13 +15,10 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const t = useTranslations();
   const { signOut, user } = useAuth();
   const params = useParams();
-  const { validateSessionMutation } = useProviderAuthController();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-  const hasValidated = useRef(false);
-  const isValidating = useRef(false);
 
-  // 1. Handle Slug Synchronization (Redirect if typo or missing)
+  // 1. Handle Slug Synchronization (Client-side redirect if mismatch)
   useEffect(() => {
     if (user?.role === 'PROVIDER') {
       const currentSlug = params?.slug as string;
@@ -46,39 +42,6 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
       }
     }
   }, [params?.slug, user?.role, user?.agencySlug, user?.agency?.slug]);
-
-  // 2. Handle Session Validation (Run only once after mount/refresh/login)
-  useEffect(() => {
-    const checkSession = async () => {
-      if (user?.role === 'PROVIDER' && !hasValidated.current && !isValidating.current) {
-        const currentSlug = params?.slug as string;
-        const userSlug = user?.agencySlug || user?.agency?.slug;
-
-        // ONLY validate if the slug is correct or if we are at 'p' (and don't have a slug yet)
-        // This prevents 403/401 from backend due to slug mismatch
-        const isCorrectSlug = currentSlug === userSlug;
-        const isDefaultState = currentSlug === 'p' && (!userSlug || userSlug === 'p');
-
-        if (isCorrectSlug || isDefaultState) {
-          try {
-            isValidating.current = true;
-            hasValidated.current = true;
-            const res = await validateSessionMutation.mutateAsync(currentSlug);
-            if (res && !res.valid) {
-              await signOut();
-            }
-          } catch (error) {
-            console.error('Session validation failed:', error);
-            // Don't force signout on network errors, only on explicit invalid session
-          } finally {
-            isValidating.current = false;
-          }
-        }
-      }
-    };
-
-    checkSession();
-  }, [user?.role, params?.slug, user?.agencySlug, user?.agency?.slug, validateSessionMutation, signOut]);
 
   const isProvider = user?.role === 'PROVIDER';
   const isSlugSetup = user?.agency?.isSlugSetup;

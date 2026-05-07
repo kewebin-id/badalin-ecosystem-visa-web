@@ -14,6 +14,7 @@ interface VerifyPaymentDialogProps {
   onConfirm: (id: string) => void;
   renderPaymentBadge: (status: ProviderSubmission['paymentStatus']) => React.ReactNode;
   formatCurrency: (amount: number) => string;
+  submitting?: boolean;
 }
 
 export const VerifyPaymentDialog: FC<VerifyPaymentDialogProps> = ({
@@ -23,6 +24,7 @@ export const VerifyPaymentDialog: FC<VerifyPaymentDialogProps> = ({
   onConfirm,
   renderPaymentBadge,
   formatCurrency,
+  submitting,
 }) => {
   const t = useTranslations('ProviderSubmissions.dialogs.payment');
   if (!submission) return null;
@@ -42,7 +44,8 @@ export const VerifyPaymentDialog: FC<VerifyPaymentDialogProps> = ({
           {t('markAsCompleted')}
         </>
       }
-      disabledSubmitButton={false}
+      disabledSubmitButton={submitting}
+      submitting={submitting}
       onCancel={() => onOpenChange(false)}
     >
       <div className="space-y-4">
