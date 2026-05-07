@@ -118,7 +118,7 @@ export const response = {
   },
   handler: <T extends Partial<object> | undefined | void>(payload: ResponseREST<T>) => {
     const code = Number(payload?.code || payload?.statusCode || payload?.status);
-    
+
     if (code && !isNaN(code)) {
       switch (code) {
         case HttpStatusCode.Ok:
@@ -146,9 +146,8 @@ export const response = {
     }
 
     return response[HttpStatusCode.Ok]({
+      ...payload,
       code: HttpStatusCode.Ok,
-      message: 'Success!',
-      data: payload as T,
     });
   },
 };
