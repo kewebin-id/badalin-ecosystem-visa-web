@@ -585,6 +585,14 @@
         "logistics": "Review Akomodasi & Transport",
         "allIn": "Review All-In"
       },
+      "table": {
+        "payment": "Validasi Pembayaran",
+        "members": "Validasi Anggota",
+        "logistics": "Review Logistik"
+      },
+      "manifest": {
+        "title": "Data Manifest & Tiket"
+      },
       "payment": {
         "ocrResult": "Hasil OCR Sistem",
         "nominal": "Nominal",

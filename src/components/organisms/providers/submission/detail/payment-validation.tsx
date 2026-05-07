@@ -6,6 +6,7 @@ import { ISubmissionListItem } from '@/packages/provider/submissions/domain/resp
 import { cn, currencyFormat } from '@/shared/utils';
 import { CheckCircle2, Info, ZoomIn } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { ValidationToggle } from './validation-toggle';
 
 interface DetailPaymentValidationProps {
   submission: ISubmissionListItem;
@@ -90,30 +91,14 @@ export const DetailPaymentValidation = ({
           </div>
         </div>
         <div className="space-y-4">
-          <div className="flex gap-2 p-1 bg-gray-100 rounded-xl">
-            <button
-              onClick={() => setPaymentAction('APPROVE')}
-              className={cn(
-                'flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-all',
-                paymentAction === 'APPROVE'
-                  ? 'bg-white text-green-600 shadow-sm scale-[1.02]'
-                  : 'text-gray-400 hover:text-gray-600',
-              )}
-            >
-              {t('approve')}
-            </button>
-            <button
-              onClick={() => setPaymentAction('REJECT')}
-              className={cn(
-                'flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-all',
-                paymentAction === 'REJECT'
-                  ? 'bg-white text-red-600 shadow-sm scale-[1.02]'
-                  : 'text-gray-400 hover:text-gray-600',
-              )}
-            >
-              {t('reject')}
-            </button>
-          </div>
+          <ValidationToggle
+            isValid={paymentAction === 'APPROVE' ? true : paymentAction === 'REJECT' ? false : null}
+            onToggle={(valid) => setPaymentAction(valid ? 'APPROVE' : 'REJECT')}
+            labels={{
+              valid: t('approve'),
+              invalid: t('reject'),
+            }}
+          />
           <InputTextarea
             useLabelInside
             label={t('reasonLabel')}

@@ -1,5 +1,3 @@
-'use client';
-
 import {
   Card,
   Table,
@@ -9,17 +7,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/atoms';
-import { ActionButton } from '@/components/molecules';
+import { ActionButton, DialogDrawer, InputTextarea } from '@/components/molecules';
 import { IMember } from '@/packages/provider/submissions/domain/response';
-import { cn } from '@/shared/utils';
 import { useScreenSize } from '@/shared/hooks';
-import { Check, FileText, Users } from 'lucide-react';
+import { cn } from '@/shared/utils';
+import { Book, Check, CreditCard, Users, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 interface DetailMemberValidationProps {
   members: IMember[];
   memberStatuses: Record<string, { valid: boolean; reason?: string }>;
-  onToggleStatus: (memberId: string) => void;
+  onToggleStatus: (memberId: string, reason?: string) => void;
   onPreview: (image: { src: string; alt: string } | null) => void;
 }
 
@@ -31,7 +30,19 @@ export const DetailMemberValidation = ({
 }: DetailMemberValidationProps) => {
   const t = useTranslations('ProviderSubmissions.detail.member');
   const ts = useTranslations('ProviderSubmissions.detail.sections');
+  const td = useTranslations('ProviderSubmissions.dialogs.review');
   const { isMobile } = useScreenSize();
+
+  const [rejectingMemberId, setRejectingMemberId] = useState<string | null>(null);
+  const [rejectionReasonInput, setRejectionReasonInput] = useState('');
+
+  const handleRejectSubmit = () => {
+    if (rejectingMemberId) {
+      onToggleStatus(rejectingMemberId, rejectionReasonInput);
+      setRejectingMemberId(null);
+      setRejectionReasonInput('');
+    }
+  };
 
   return (
     <Card className="overflow-hidden border-2 border-gray-100 shadow-sm transition-all hover:shadow-md">
@@ -67,9 +78,8 @@ export const DetailMemberValidation = ({
                   key={member.id}
                   className={cn(
                     'transition-colors',
-                    memberStatuses[member.id]?.valid
-                      ? 'bg-green-50/30 hover:bg-green-50/50'
-                      : '',
+                    memberStatuses[member.id]?.valid ? 'bg-green-50/30 hover:bg-green-50/50' : 
+                    memberStatuses[member.id]?.reason ? 'bg-red-50/30 hover:bg-red-50/50' : '',
                   )}
                 >
                   <TableCell className="pl-6 py-5">
@@ -81,12 +91,17 @@ export const DetailMemberValidation = ({
                       <p className="text-xs text-gray-500 font-medium">
                         {member.relation} • {member.nik}
                       </p>
+                      {memberStatuses[member.id]?.reason && (
+                        <p className="text-[10px] text-gray-500 italic font-medium mt-2">
+                          Note: {memberStatuses[member.id]?.reason}
+                        </p>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell className="py-5">
                     <div className="flex gap-2">
                       <ActionButton
-                        icon={FileText}
+                        image={member.passportUrl}
                         title={t('docs.passport')}
                         onClick={() =>
                           onPreview({
@@ -96,7 +111,7 @@ export const DetailMemberValidation = ({
                         }
                       />
                       <ActionButton
-                        icon={FileText}
+                        image={member.ktpUrl}
                         title={t('docs.ktp')}
                         onClick={() =>
                           onPreview({
@@ -106,7 +121,7 @@ export const DetailMemberValidation = ({
                         }
                       />
                       <ActionButton
-                        icon={FileText}
+                        image={member.photoUrl}
                         title={t('docs.photo')}
                         onClick={() =>
                           onPreview({
@@ -118,17 +133,33 @@ export const DetailMemberValidation = ({
                     </div>
                   </TableCell>
                   <TableCell className="pr-6 py-5 text-right">
-                    <button
-                      onClick={() => onToggleStatus(member.id)}
-                      className={cn(
-                        'inline-flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all active:scale-90 cursor-pointer',
-                        memberStatuses[member.id]?.valid
-                          ? 'bg-green-500 border-green-500 text-white shadow-lg shadow-green-100'
-                          : 'bg-white border-gray-200 text-gray-300 hover:border-gray-300',
-                      )}
-                    >
-                      <Check className="h-6 w-6 stroke-[3px]" />
-                    </button>
+                    <div className="flex justify-end gap-2">
+                      <button
+                        onClick={() => {
+                          setRejectingMemberId(member.id);
+                          setRejectionReasonInput(memberStatuses[member.id]?.reason || '');
+                        }}
+                        className={cn(
+                          'inline-flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all active:scale-90 cursor-pointer',
+                          memberStatuses[member.id]?.reason
+                            ? 'bg-red-500 border-red-500 text-white shadow-lg shadow-red-100'
+                            : 'bg-white border-gray-200 text-gray-300 hover:border-red-200 hover:text-red-400',
+                        )}
+                      >
+                        <X className="h-5 w-5 stroke-[3px]" />
+                      </button>
+                      <button
+                        onClick={() => onToggleStatus(member.id)}
+                        className={cn(
+                          'inline-flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all active:scale-90 cursor-pointer',
+                          memberStatuses[member.id]?.valid
+                            ? 'bg-green-500 border-green-500 text-white shadow-lg shadow-green-100'
+                            : 'bg-white border-gray-200 text-gray-300 hover:border-green-200 hover:text-green-400',
+                        )}
+                      >
+                        <Check className="h-6 w-6 stroke-[3px]" />
+                      </button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -143,7 +174,9 @@ export const DetailMemberValidation = ({
                   'p-5 rounded-[1.5rem] border transition-all',
                   memberStatuses[member.id]?.valid
                     ? 'bg-green-50 border-green-200 shadow-sm'
-                    : 'bg-white border-gray-100',
+                    : memberStatuses[member.id]?.reason
+                      ? 'bg-red-50 border-red-200 shadow-sm'
+                      : 'bg-white border-gray-100',
                 )}
               >
                 <div className="flex justify-between items-start mb-4">
@@ -157,23 +190,44 @@ export const DetailMemberValidation = ({
                     <p className="text-xs text-gray-500 font-bold bg-gray-100 px-2 py-0.5 rounded w-fit mt-1">
                       {member.relation.toUpperCase()}
                     </p>
-                  </div>
-                  <button
-                    onClick={() => onToggleStatus(member.id)}
-                    className={cn(
-                      'flex h-12 w-12 items-center justify-center rounded-2xl border-2 transition-all active:scale-90 cursor-pointer',
-                      memberStatuses[member.id]?.valid
-                        ? 'bg-green-500 border-green-500 text-white shadow-lg shadow-green-200'
-                        : 'bg-white border-gray-100 text-gray-200',
+                    {memberStatuses[member.id]?.reason && (
+                      <p className="text-[10px] text-red-500 italic font-medium mt-2">
+                        Note: {memberStatuses[member.id]?.reason}
+                      </p>
                     )}
-                  >
-                    <Check className="h-7 w-7 stroke-[3px]" />
-                  </button>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <button
+                      onClick={() => onToggleStatus(member.id)}
+                      className={cn(
+                        'flex h-12 w-12 items-center justify-center rounded-2xl border-2 transition-all active:scale-90 cursor-pointer',
+                        memberStatuses[member.id]?.valid
+                          ? 'bg-green-500 border-green-500 text-white shadow-lg shadow-green-200'
+                          : 'bg-white border-gray-100 text-gray-200',
+                      )}
+                    >
+                      <Check className="h-7 w-7 stroke-[3px]" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setRejectingMemberId(member.id);
+                        setRejectionReasonInput(memberStatuses[member.id]?.reason || '');
+                      }}
+                      className={cn(
+                        'flex h-12 w-12 items-center justify-center rounded-2xl border-2 transition-all active:scale-90 cursor-pointer',
+                        memberStatuses[member.id]?.reason
+                          ? 'bg-red-500 border-red-500 text-white shadow-lg shadow-red-200'
+                          : 'bg-white border-gray-100 text-gray-200',
+                      )}
+                    >
+                      <X className="h-7 w-7 stroke-[3px]" />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-3 gap-3">
                   <ActionButton
-                    icon={FileText}
+                    icon={Book}
                     label="PASPOR"
                     onClick={() =>
                       onPreview({
@@ -183,7 +237,7 @@ export const DetailMemberValidation = ({
                     }
                   />
                   <ActionButton
-                    icon={FileText}
+                    icon={CreditCard}
                     label="KTP"
                     onClick={() =>
                       onPreview({
@@ -193,7 +247,7 @@ export const DetailMemberValidation = ({
                     }
                   />
                   <ActionButton
-                    icon={FileText}
+                    image={member.photoUrl}
                     label="FOTO"
                     onClick={() =>
                       onPreview({
@@ -208,6 +262,28 @@ export const DetailMemberValidation = ({
           </div>
         )}
       </div>
+
+      <DialogDrawer
+        open={!!rejectingMemberId}
+        setOpen={(o) => !o && setRejectingMemberId(null)}
+        title={td('title', { id: rejectingMemberId?.slice(0, 8) || '' })}
+        description={td('description')}
+        submitButton={td('reject')}
+        onSubmit={handleRejectSubmit}
+        onCancel={() => setRejectingMemberId(null)}
+        disabledSubmitButton={!rejectionReasonInput.trim()}
+      >
+        <div className="py-4">
+          <InputTextarea
+            useLabelInside
+            label={td('rejectionReasonLabel')}
+            placeholder={td('rejectionReasonPlaceholder')}
+            value={rejectionReasonInput}
+            setValue={setRejectionReasonInput}
+            className="min-h-[120px]"
+          />
+        </div>
+      </DialogDrawer>
     </Card>
   );
 };

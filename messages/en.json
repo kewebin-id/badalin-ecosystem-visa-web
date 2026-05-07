@@ -585,6 +585,14 @@
         "logistics": "Logistics & Transport Review",
         "allIn": "All-In Review"
       },
+      "table": {
+        "payment": "Payment Validation",
+        "members": "Member Validation",
+        "logistics": "Logistics Review"
+      },
+      "manifest": {
+        "title": "Manifest & Ticket Data"
+      },
       "payment": {
         "ocrResult": "System OCR Result",
         "nominal": "Amount",

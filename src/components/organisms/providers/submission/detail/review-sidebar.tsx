@@ -32,7 +32,7 @@ export const DetailReviewSidebar = ({
   const totalMembers = submission.members?.length || 0;
 
   return (
-    <Card className="p-6 sticky top-24 border-2 border-gray-900 shadow-xl shadow-gray-100">
+    <Card className="p-6 sticky top-6 border-2 border-gray-900 shadow-xl shadow-gray-100 h-fit">
       <h3 className="text-xl font-black text-gray-900 mb-6 tracking-tight">
         {t('sections.allIn')}
       </h3>
@@ -41,11 +41,17 @@ export const DetailReviewSidebar = ({
         <div className="flex items-center justify-between py-2 border-b border-gray-50">
           <span className="text-sm font-medium text-gray-500">{t('table.payment')}</span>
           {paymentAction === 'APPROVE' ? (
-            <Badge className="bg-green-500 text-white border-none">{ts('verified').toUpperCase()}</Badge>
+            <Badge className="bg-green-500 text-white border-none">
+              {ts('verified').toUpperCase()}
+            </Badge>
           ) : paymentAction === 'REJECT' ? (
-            <Badge className="bg-red-500 text-white border-none">{ts('rejected').toUpperCase()}</Badge>
+            <Badge className="bg-red-500 text-white border-none">
+              {ts('rejected').toUpperCase()}
+            </Badge>
           ) : (
-            <Badge className="bg-gray-100 text-gray-400 border-none">{ts('pending').toUpperCase()}</Badge>
+            <Badge className="bg-gray-100 text-gray-400 border-none">
+              {ts('pending').toUpperCase()}
+            </Badge>
           )}
         </div>
         <div className="flex items-center justify-between py-2 border-b border-gray-50">
@@ -65,24 +71,18 @@ export const DetailReviewSidebar = ({
           ) : logisticsValid === false ? (
             <Badge className="bg-red-500 text-white border-none">ANOMALI</Badge>
           ) : (
-            <Badge className="bg-gray-100 text-gray-400 border-none">{ts('pending').toUpperCase()}</Badge>
+            <Badge className="bg-gray-100 text-gray-400 border-none">
+              {ts('pending').toUpperCase()}
+            </Badge>
           )}
         </div>
       </div>
 
       <div className="space-y-3">
-        <Button
-          onClick={onFinalSubmit}
-          disabled={isSubmitting}
-          className="w-full h-14 bg-gray-900 text-white rounded-2xl font-black text-base shadow-lg shadow-gray-200 transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
-        >
+        <Button onClick={onFinalSubmit} disabled={isSubmitting}>
           {ta('submit')}
         </Button>
-        <Button
-          variant="transparent"
-          onClick={onCancel}
-          className="w-full h-12 text-gray-400 font-bold hover:text-gray-600 cursor-pointer"
-        >
+        <Button variant="transparent" onClick={onCancel}>
           {ta('cancel')}
         </Button>
       </div>
@@ -90,9 +90,7 @@ export const DetailReviewSidebar = ({
       <div className="mt-6 p-4 bg-gray-50 rounded-2xl border border-gray-100">
         <div className="flex gap-2">
           <Info className="h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5" />
-          <p className="text-[10px] leading-relaxed text-gray-400 font-medium">
-            {ta('warning')}
-          </p>
+          <p className="text-[10px] leading-relaxed text-gray-400 font-medium">{ta('warning')}</p>
         </div>
       </div>
     </Card>

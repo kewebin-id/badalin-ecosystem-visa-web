@@ -70,10 +70,13 @@ export const SubmissionDetailView = () => {
     return null;
   }, [submission, t]);
 
-  const toggleMemberStatus = (memberId: string) => {
+  const toggleMemberStatus = (memberId: string, reason?: string) => {
     setMemberStatuses((prev) => ({
       ...prev,
-      [memberId]: { valid: !prev[memberId]?.valid },
+      [memberId]: { 
+        valid: reason ? false : !prev[memberId]?.valid,
+        reason: reason || undefined
+      },
     }));
   };
 
@@ -155,7 +158,7 @@ export const SubmissionDetailView = () => {
         }
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8 space-y-8">
           <DetailPaymentValidation
             submission={submission}

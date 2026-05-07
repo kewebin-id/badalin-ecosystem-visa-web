@@ -3,12 +3,12 @@
 import { Button, Card, NotFoundComp } from '@/components/atoms';
 import { DatePicker, HeaderPageContent, InputSelect, InputText } from '@/components/molecules';
 import { ROUTES } from '@/shared/constants/routes';
-import { ArrowLeft, Bus, Download, FileText, Hotel, Lock, Plane, Users } from 'lucide-react';
+import { ArrowLeft, Book, Bus, CreditCard, Download, FileText, Hotel, Lock, Plane, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { useProviderSubmissionsController } from '../controller';
 import { SubmissionDetailSkeleton } from './skeleton';
-import { toast } from 'sonner';
 
 export const SubmissionManifest = () => {
   const t = useTranslations('ProviderSubmissions.manifest');
@@ -85,10 +85,18 @@ export const SubmissionManifest = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left border-b border-gray-100">
-                <th className="pb-4 font-bold text-gray-400 uppercase text-[10px] tracking-widest">Nama</th>
-                <th className="pb-4 font-bold text-gray-400 uppercase text-[10px] tracking-widest">Paspor</th>
-                <th className="pb-4 font-bold text-gray-400 uppercase text-[10px] tracking-widest">NIK</th>
-                <th className="pb-4 font-bold text-gray-400 uppercase text-[10px] tracking-widest text-right">Dokumen</th>
+                <th className="pb-4 font-bold text-gray-400 uppercase text-[10px] tracking-widest">
+                  Nama
+                </th>
+                <th className="pb-4 font-bold text-gray-400 uppercase text-[10px] tracking-widest">
+                  Paspor
+                </th>
+                <th className="pb-4 font-bold text-gray-400 uppercase text-[10px] tracking-widest">
+                  NIK
+                </th>
+                <th className="pb-4 font-bold text-gray-400 uppercase text-[10px] tracking-widest text-right">
+                  Dokumen
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -106,7 +114,7 @@ export const SubmissionManifest = () => {
                         onClick={() => p.passportUrl && window.open(p.passportUrl, '_blank')}
                         disabled={!p.passportUrl}
                       >
-                        <FileText className="h-3.5 w-3.5" /> Paspor
+                        <Book className="h-3.5 w-3.5" /> Paspor
                       </Button>
                       <Button
                         variant="primaryOutline"
@@ -115,7 +123,7 @@ export const SubmissionManifest = () => {
                         onClick={() => p.ktpUrl && window.open(p.ktpUrl, '_blank')}
                         disabled={!p.ktpUrl}
                       >
-                        <FileText className="h-3.5 w-3.5" /> KTP
+                        <CreditCard className="h-3.5 w-3.5" /> KTP
                       </Button>
                       <Button
                         variant="primaryOutline"
@@ -134,7 +142,9 @@ export const SubmissionManifest = () => {
                   <td colSpan={4} className="py-12 text-center">
                     <div className="flex flex-col items-center gap-2">
                       <Users className="h-8 w-8 text-gray-200" />
-                      <p className="text-sm text-gray-400 font-medium italic">Data jamaah tidak tersedia</p>
+                      <p className="text-sm text-gray-400 font-medium italic">
+                        Data jamaah tidak tersedia
+                      </p>
                     </div>
                   </td>
                 </tr>
@@ -156,7 +166,9 @@ export const SubmissionManifest = () => {
                 <h3 className="text-lg font-black text-gray-900 tracking-tight">
                   {t('flight.title')}
                 </h3>
-                <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">{t('flight.subtitle')}</p>
+                <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">
+                  {t('flight.subtitle')}
+                </p>
               </div>
             </div>
           </div>
@@ -209,8 +221,12 @@ export const SubmissionManifest = () => {
                 <Hotel className="h-5 w-5 text-purple-500" strokeWidth={2} />
               </div>
               <div>
-                <h3 className="text-lg font-black text-gray-900 tracking-tight">{t('hotel.title')}</h3>
-                <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">{t('hotel.subtitle')}</p>
+                <h3 className="text-lg font-black text-gray-900 tracking-tight">
+                  {t('hotel.title')}
+                </h3>
+                <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">
+                  {t('hotel.subtitle')}
+                </p>
               </div>
             </div>
           </div>
@@ -274,7 +290,9 @@ export const SubmissionManifest = () => {
                 <h3 className="text-lg font-black text-gray-900 tracking-tight">
                   {t('transport.title')}
                 </h3>
-                <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">{t('transport.subtitle')}</p>
+                <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">
+                  {t('transport.subtitle')}
+                </p>
               </div>
             </div>
           </div>

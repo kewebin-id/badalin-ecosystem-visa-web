@@ -7,6 +7,7 @@ import { cn } from '@/shared/utils';
 import { Hotel, Plane, Truck, XCircle } from 'lucide-react';
 import moment from 'moment';
 import { useTranslations } from 'next-intl';
+import { ValidationToggle } from './validation-toggle';
 
 interface DetailLogisticsReviewProps {
   submission: ISubmissionListItem;
@@ -122,30 +123,14 @@ export const DetailLogisticsReview = ({
             ))}
 
             <div className="pt-4 space-y-4">
-              <div className="flex gap-2 p-1 bg-gray-100 rounded-xl">
-                <button
-                  onClick={() => setLogisticsValid(true)}
-                  className={cn(
-                    'flex-1 py-2 px-3 rounded-lg font-bold text-xs transition-all cursor-pointer',
-                    logisticsValid === true
-                      ? 'bg-white text-green-600 shadow-sm'
-                      : 'text-gray-400 hover:text-gray-600',
-                  )}
-                >
-                  {t('match')}
-                </button>
-                <button
-                  onClick={() => setLogisticsValid(false)}
-                  className={cn(
-                    'flex-1 py-2 px-3 rounded-lg font-bold text-xs transition-all cursor-pointer',
-                    logisticsValid === false
-                      ? 'bg-white text-red-600 shadow-sm'
-                      : 'text-gray-400 hover:text-gray-600',
-                  )}
-                >
-                  {t('anomaly')}
-                </button>
-              </div>
+              <ValidationToggle
+                isValid={logisticsValid}
+                onToggle={setLogisticsValid}
+                labels={{
+                  valid: t('match'),
+                  invalid: t('anomaly'),
+                }}
+              />
               <InputTextarea
                 useLabelInside
                 label={t('noteLabel')}
