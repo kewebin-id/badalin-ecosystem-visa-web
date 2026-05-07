@@ -10,29 +10,67 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/atoms';
-import { HeaderPageContent, PaymentStatusBadge, ReviewStatusBadge } from '@/components/molecules';
+import {
+  DialogDrawer,
+  HeaderPageContent,
+  ImagePreviewModal,
+  PaymentStatusBadge,
+  ReviewStatusBadge,
+} from '@/components/molecules';
+import { SubmissionQuickReview } from '@/components/organisms/providers/submission/quick-review';
 import { EmptyState } from '@/components/templates';
 import { useScreenSize } from '@/shared/hooks';
-import { Eye, FileSpreadsheet, Inbox, Users } from 'lucide-react';
+import { exportManifestToExcel } from '@/shared/utils/manifest-export';
+import { useQueryClient } from '@tanstack/react-query';
+import { Eye, FileSpreadsheet, Inbox, Loader2, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
 import { ProviderSubmission } from '../../domain/entities';
+import { ISubmissionListItem } from '../../domain/response';
 import { useProviderSubmissionsController } from '../controller';
 import { SubmissionsSkeleton } from './skeleton';
-import { toast } from 'sonner';
-import { useQueryClient } from '@tanstack/react-query';
-import { exportManifestToExcel } from '@/shared/utils/manifest-export';
 
 export const SubmissionsMonitoring = () => {
   const t = useTranslations('ProviderSubmissions');
   const { isMobile } = useScreenSize();
-  const router = useRouter();
-  const params = useParams();
-  const slug = (params?.slug as string) || 'p';
 
-  const { useSubmissions, useSubmissionDetail, usecase } = useProviderSubmissionsController();
+  const { useSubmissions, usecase } = useProviderSubmissionsController();
   const queryClient = useQueryClient();
   const { data: res, isPending } = useSubmissions({ page: 1, limit: 50 });
+
+  const [reviewData, setReviewData] = useState<ISubmissionListItem | null>(null);
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState<{ src: string; alt: string } | null>(null);
+  const [isFetchingDetail, setIsFetchingDetail] = useState<string | null>(null);
+
+  const handleOpenReview = async (id: string) => {
+    setIsFetchingDetail(id);
+    try {
+      const detail = await queryClient.fetchQuery({
+        queryKey: ['provider', 'submissions', id],
+        queryFn: () => usecase.getSubmissionDetail(id),
+      });
+
+      if (detail?.data) {
+        setReviewData(detail.data);
+        setIsReviewOpen(true);
+      } else {
+        toast.error('Failed to fetch submission details');
+      }
+    } catch (error) {
+      console.error('Fetch detail error:', error);
+      toast.error('An error occurred while fetching details');
+    } finally {
+      setIsFetchingDetail(null);
+    }
+  };
+
+  const handlePreview = (image: { src: string; alt: string }) => {
+    setPreviewImage(image);
+    setIsPreviewOpen(true);
+  };
 
   const submissions: ProviderSubmission[] = (res?.data?.items || []).map((s) => ({
     id: s.id,
@@ -94,43 +132,55 @@ export const SubmissionsMonitoring = () => {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        {s.paymentStatus === 'COMPLETED' && s.reviewStatus === 'VERIFIED' ? (
+                        <Button
+                          variant="transparent"
+                          size="sm"
+                          className="cursor-pointer"
+                          onClick={() => handleOpenReview(s.id)}
+                          title="Quick Review"
+                          disabled={!!isFetchingDetail}
+                        >
+                          {isFetchingDetail === s.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </Button>
+                        {s.paymentStatus === 'COMPLETED' && s.reviewStatus === 'VERIFIED' && (
                           <Button
                             variant="primary"
                             size="sm"
                             className="cursor-pointer gap-2"
                             onClick={async () => {
-                              const loadingToast = toast.loading('Fetching data and generating Excel...');
+                              const loadingToast = toast.loading(
+                                'Fetching data and generating Excel...',
+                              );
                               try {
                                 const detail = await queryClient.fetchQuery({
                                   queryKey: ['provider', 'submissions', s.id],
                                   queryFn: () => usecase.getSubmissionDetail(s.id),
                                 });
-                                
+
                                 if (detail?.data) {
                                   exportManifestToExcel(detail.data);
-                                  toast.success('Excel generated successfully', { id: loadingToast });
+                                  toast.success('Excel generated successfully', {
+                                    id: loadingToast,
+                                  });
                                 } else {
-                                  toast.error('Failed to fetch submission details', { id: loadingToast });
+                                  toast.error('Failed to fetch submission details', {
+                                    id: loadingToast,
+                                  });
                                 }
                               } catch (error) {
                                 console.error('Export error:', error);
-                                toast.error('An error occurred during export', { id: loadingToast });
+                                toast.error('An error occurred during export', {
+                                  id: loadingToast,
+                                });
                               }
                             }}
                           >
                             <FileSpreadsheet className="h-4 w-4" />
                             <span>Export</span>
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="transparent"
-                            size="sm"
-                            className="cursor-pointer"
-                            onClick={() => router.push(`/${slug}/submissions/${s.id}`)}
-                            title="Detail & Review"
-                          >
-                            <Eye className="h-4 w-4" />
                           </Button>
                         )}
                       </div>
@@ -173,40 +223,55 @@ export const SubmissionsMonitoring = () => {
                         </div>
                       </div>
 
-                      {s.paymentStatus === 'COMPLETED' && s.reviewStatus === 'VERIFIED' ? (
+                      <div className="flex items-center gap-2">
                         <button
-                          onClick={async () => {
-                            const loadingToast = toast.loading('Fetching data and generating Excel...');
-                            try {
-                              const detail = await queryClient.fetchQuery({
-                                queryKey: ['provider', 'submissions', s.id],
-                                queryFn: () => usecase.getSubmissionDetail(s.id),
-                              });
-                              
-                              if (detail?.data) {
-                                exportManifestToExcel(detail.data);
-                                toast.success('Excel generated successfully', { id: loadingToast });
-                              } else {
-                                toast.error('Failed to fetch submission details', { id: loadingToast });
-                              }
-                            } catch (error) {
-                              console.error('Export error:', error);
-                              toast.error('An error occurred during export', { id: loadingToast });
-                            }
-                          }}
-                          className="flex h-12 px-4 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all active:scale-90 cursor-pointer border border-emerald-100 gap-2 font-bold text-sm"
-                        >
-                          <FileSpreadsheet className="h-5 w-5" />
-                          <span>Export</span>
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => router.push(`/${slug}/submissions/${s.id}`)}
+                          onClick={() => handleOpenReview(s.id)}
+                          disabled={!!isFetchingDetail}
                           className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-gray-900 transition-all active:scale-90 cursor-pointer border border-gray-100"
                         >
-                          <Eye className="h-6 w-6" />
+                          {isFetchingDetail === s.id ? (
+                            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                          ) : (
+                            <Eye className="h-6 w-6" />
+                          )}
                         </button>
-                      )}
+
+                        {s.paymentStatus === 'COMPLETED' && s.reviewStatus === 'VERIFIED' && (
+                          <button
+                            onClick={async () => {
+                              const loadingToast = toast.loading(
+                                'Fetching data and generating Excel...',
+                              );
+                              try {
+                                const detail = await queryClient.fetchQuery({
+                                  queryKey: ['provider', 'submissions', s.id],
+                                  queryFn: () => usecase.getSubmissionDetail(s.id),
+                                });
+
+                                if (detail?.data) {
+                                  exportManifestToExcel(detail.data);
+                                  toast.success('Excel generated successfully', {
+                                    id: loadingToast,
+                                  });
+                                } else {
+                                  toast.error('Failed to fetch submission details', {
+                                    id: loadingToast,
+                                  });
+                                }
+                              } catch (error) {
+                                console.error('Export error:', error);
+                                toast.error('An error occurred during export', {
+                                  id: loadingToast,
+                                });
+                              }
+                            }}
+                            className="flex-1 flex h-12 px-4 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all active:scale-90 cursor-pointer border border-emerald-100 gap-2 font-bold text-sm"
+                          >
+                            <FileSpreadsheet className="h-5 w-5" />
+                            <span>Export</span>
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -215,6 +280,24 @@ export const SubmissionsMonitoring = () => {
           )}
         </div>
       </Card>
+      <DialogDrawer
+        open={isReviewOpen}
+        setOpen={setIsReviewOpen}
+        title={t('quickReview.title')}
+        description={t('quickReview.subtitle', {
+          id: reviewData?.id.split('-')?.[0]?.toUpperCase() || '',
+        })}
+        className="max-w-4xl"
+      >
+        {reviewData && <SubmissionQuickReview submission={reviewData} onPreview={handlePreview} />}
+      </DialogDrawer>
+
+      <ImagePreviewModal
+        open={isPreviewOpen}
+        onOpenChange={setIsPreviewOpen}
+        imageSrc={previewImage?.src || ''}
+        imageAlt={previewImage?.alt || 'Preview'}
+      />
     </div>
   );
 };

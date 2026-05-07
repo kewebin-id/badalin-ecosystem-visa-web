@@ -633,6 +633,13 @@
       },
       "notFound": "Submission not found.",
       "loading": "Loading submission detail..."
+    },
+    "quickReview": {
+      "title": "Global Review",
+      "subtitle": "Submission {id} · Quick overview of manifest data and documents",
+      "totalJamaah": "Total Pilgrims",
+      "contact": "Leader Contact",
+      "visaStatus": "Visa Status"
     }
   },
   "ProviderSidebar": {

@@ -633,6 +633,13 @@
       },
       "notFound": "Pengajuan tidak ditemukan.",
       "loading": "Memuat detail pengajuan..."
+    },
+    "quickReview": {
+      "title": "Review Keseluruhan",
+      "subtitle": "Submission {id} · Tinjauan cepat data manifest dan dokumen",
+      "totalJamaah": "Total Jamaah",
+      "contact": "Kontak Leader",
+      "visaStatus": "Status Visa"
     }
   },
   "ProviderSidebar": {
