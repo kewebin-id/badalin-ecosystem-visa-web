@@ -19,6 +19,7 @@ export const ROUTES = {
   PROVIDER: {
     DASHBOARD: (slug: string = 'p') => `/${slug}/dashboard`,
     SUBMISSIONS: (slug: string = 'p') => `/${slug}/submissions`,
+    DETAIL: (slug: string = 'p', id: string) => `/${slug}/submissions/${id}`,
     PAYMENT_VERIFICATION: (slug: string = 'p') => `/${slug}/payment-verification`,
     MANIFEST: (slug: string = 'p', id: string) => `/${slug}/submissions/${id}/manifest`,
     SETTINGS: (slug: string = 'p') => `/${slug}/settings`,

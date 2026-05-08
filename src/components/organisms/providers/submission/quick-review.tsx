@@ -1,9 +1,11 @@
-import { Card } from '@/components/atoms';
+import { Button, Card } from '@/components/atoms';
 import { ImageThumbnailList } from '@/components/molecules';
+import { ROUTES } from '@/shared/constants/routes';
 import { ISubmissionListItem } from '@/packages/provider/submissions/domain/response';
-import { FileText, Plane, Smartphone, Users } from 'lucide-react';
+import { ExternalLink, FileText, Plane, Users } from 'lucide-react';
 import moment from 'moment';
 import { useTranslations } from 'next-intl';
+import { useParams, useRouter } from 'next/navigation';
 
 interface SubmissionQuickReviewProps {
   submission: ISubmissionListItem;
@@ -12,6 +14,9 @@ interface SubmissionQuickReviewProps {
 
 export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuickReviewProps) => {
   const t = useTranslations('ProviderSubmissions.quickReview');
+  const router = useRouter();
+  const params = useParams();
+  const slug = (params?.slug as string) || 'p';
 
   const membersToShow = (submission.members || []).filter((m) => {
     const status = submission.resultSnapshot?.memberStatuses?.[m.id];
@@ -24,8 +29,7 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
 
   return (
     <div className="space-y-6 py-4">
-      {/* Summary Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="p-4 bg-blue-50 border-blue-100">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
@@ -36,21 +40,6 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
                 {t('totalJamaah')}
               </p>
               <p className="text-lg font-black text-blue-900">{membersToShow.length}</p>
-            </div>
-          </div>
-        </Card>
-        <Card className="p-4 bg-purple-50 border-purple-100">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-purple-100 rounded-lg text-purple-600">
-              <Smartphone className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-purple-400 uppercase tracking-wider">
-                {t('contact')}
-              </p>
-              <p className="text-sm font-black text-purple-900">
-                {submission.leader?.phoneNumber || '-'}
-              </p>
             </div>
           </div>
         </Card>
@@ -68,6 +57,26 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
           </div>
         </Card>
       </div>
+
+      {/* Visa Upload CTA */}
+      <Card className="p-4 bg-green-50 border-green-100 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-green-100 rounded-lg text-green-600">
+            <FileText className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-sm font-black text-green-900">{t('uploadVisaAction')}</p>
+            <p className="text-xs text-green-600 font-medium">{t('uploadVisaDesc')}</p>
+          </div>
+        </div>
+        <Button 
+          size="sm" 
+          className="bg-green-600 hover:bg-green-700 text-white rounded-xl gap-2 w-full md:w-auto font-bold"
+          onClick={() => router.push(ROUTES.PROVIDER.DETAIL(slug, submission.id))}
+        >
+          {t('uploadVisaAction')} <ExternalLink className="h-4 w-4" />
+        </Button>
+      </Card>
 
       {/* Logistics Section */}
       <div className="space-y-6">
@@ -104,10 +113,12 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
                     {f.from || '-'} to {f.to || '-'} •{' '}
                     {f.flightDate ? moment(f.flightDate).format('DD MMM YYYY') : '-'}
                   </p>
-                  <div className="p-2 bg-gray-50 rounded-lg border border-dashed border-gray-200 mb-3">
+                  <div className="p-2 bg-gray-50 rounded-lg border border-dashed border-gray-200 mb-3 space-y-0.5">
                     <p className="text-[10px] text-gray-400 uppercase font-bold">
-                      ETD: {moment(f.etd).format('DD MMM YYYY, HH:mm')} • ETA:{' '}
-                      {moment(f.eta).format('DD MMM YYYY, HH:mm')}
+                      ETD: {moment(f.etd).format('DD MMM YYYY, HH:mm')}
+                    </p>
+                    <p className="text-[10px] text-gray-400 uppercase font-bold">
+                      ETA: {moment(f.eta).format('DD MMM YYYY, HH:mm')}
                     </p>
                   </div>
                   <ImageThumbnailList
@@ -151,10 +162,12 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
                     {f.from || '-'} to {f.to || '-'} •{' '}
                     {f.flightDate ? moment(f.flightDate).format('DD MMM YYYY') : '-'}
                   </p>
-                  <div className="p-2 bg-gray-50 rounded-lg border border-dashed border-gray-200 mb-3">
+                  <div className="p-2 bg-gray-50 rounded-lg border border-dashed border-gray-200 mb-3 space-y-0.5">
                     <p className="text-[10px] text-gray-400 uppercase font-bold">
-                      ETD: {moment(f.etd).format('DD MMM YYYY, HH:mm')} • ETA:{' '}
-                      {moment(f.eta).format('DD MMM YYYY, HH:mm')}
+                      ETD: {moment(f.etd).format('DD MMM YYYY, HH:mm')}
+                    </p>
+                    <p className="text-[10px] text-gray-400 uppercase font-bold">
+                      ETA: {moment(f.eta).format('DD MMM YYYY, HH:mm')}
                     </p>
                   </div>
                   <ImageThumbnailList

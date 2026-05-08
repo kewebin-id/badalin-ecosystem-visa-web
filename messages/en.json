@@ -653,7 +653,9 @@
       "members": "Pilgrim List",
       "fullName": "Full Name",
       "passport": "Passport",
-      "documents": "Documents"
+      "documents": "Documents",
+      "uploadVisaAction": "Manage Visa & Upload Documents",
+      "uploadVisaDesc": "Perform collective visa upload on the detail page."
     }
   },
   "ProviderSidebar": {
