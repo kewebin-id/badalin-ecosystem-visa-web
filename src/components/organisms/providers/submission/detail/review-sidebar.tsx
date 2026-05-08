@@ -1,11 +1,10 @@
-'use client';
-
 import { Badge, Button, Card } from '@/components/atoms';
 import { DialogDrawer } from '@/components/molecules';
 import { UploadFile } from '@/components/molecules/input/file';
 import { ISubmissionListItem } from '@/packages/provider/submissions/domain/response';
+import { formatRupiah } from '@/shared/utils';
 import { cn } from '@/shared/utils';
-import { Info, Users } from 'lucide-react';
+import { AlertCircle, Info, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -36,19 +35,23 @@ export const DetailReviewSidebar = ({
   const ta = useTranslations('ProviderSubmissions.detail.actions');
   const ts = useTranslations('ProviderSubmissions.status');
   const tq = useTranslations('ProviderSubmissions.quickReview');
+  const tr = useTranslations('ProviderSubmissions.quickReview.refund');
 
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const validMembersCount = Object.values(memberStatuses).filter((s) => s.valid).length;
   const totalMembers = submission.members?.length || 0;
+  const validMembersCount = Object.values(memberStatuses).filter((s) => s.valid).length;
+  const rejectedCount = totalMembers - validMembersCount;
   const isAllMembersProcessed = Object.keys(memberStatuses).length === totalMembers;
 
   const uploadedMembersCount = Object.keys(visaFiles).length;
-  const isAllVisasUploaded = uploadedMembersCount === totalMembers;
+  const isAllVisasUploaded = uploadedMembersCount === validMembersCount;
 
   const isComplete = isVisaPhase
     ? isAllVisasUploaded
     : paymentAction !== null && logisticsValid !== null && isAllMembersProcessed;
+
+  const refundAmount = (submission.totalAmount / totalMembers) * rejectedCount;
 
   return (
     <>
@@ -93,7 +96,7 @@ export const DetailReviewSidebar = ({
           <div className="flex items-center justify-between py-2 border-b border-gray-50">
             <span className="text-sm font-medium text-gray-500">
               {t('table.members')} (
-              {isVisaPhase ? uploadedMembersCount : validMembersCount}/{totalMembers})
+              {isVisaPhase ? uploadedMembersCount : validMembersCount}/{isVisaPhase ? validMembersCount : totalMembers})
             </span>
             {isVisaPhase ? (
               <Badge
@@ -119,10 +122,46 @@ export const DetailReviewSidebar = ({
           </div>
         </div>
 
+        {submission.agency?.status === 'RESTRICTED' && (
+          <div className="mb-6 p-4 bg-orange-50 rounded-2xl border-2 border-orange-200 animate-in fade-in zoom-in duration-500">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertCircle className="h-5 w-5 text-orange-600" />
+              <h4 className="text-sm font-black text-orange-900 uppercase tracking-tight">
+                {tr('restriction.title')}
+              </h4>
+            </div>
+            <p className="text-[10px] leading-relaxed text-orange-800 font-bold">
+              {tr('restriction.desc')}
+            </p>
+            <p className="mt-2 text-[9px] text-orange-600 font-black italic">
+              {tr('restriction.action')}
+            </p>
+          </div>
+        )}
+
+        {rejectedCount > 0 && (
+          <div className="mb-8 p-4 bg-red-50 rounded-2xl border border-red-100 space-y-3">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-4 w-4 text-red-500" />
+              <h4 className="text-xs font-black text-red-900 tracking-tight uppercase">
+                {tr('title')}
+              </h4>
+            </div>
+            <p className="text-[10px] leading-relaxed text-red-700 font-bold">
+              {tr('desc', { count: rejectedCount, amount: formatRupiah(refundAmount) })}
+            </p>
+            <div className="pt-2 border-t border-red-100">
+              <p className="text-[9px] text-red-400 font-medium italic">
+                * {tr('penaltyWarning')}
+              </p>
+            </div>
+          </div>
+        )}
+
         <div className="space-y-3">
           <Button
             onClick={() => (isVisaPhase ? setShowConfirm(true) : onFinalSubmit())}
-            disabled={isSubmitting || !isComplete}
+            disabled={isSubmitting || !isComplete || submission.agency?.status === 'RESTRICTED'}
           >
             {isVisaPhase ? tq('submitVisa') : ta('submit')}
           </Button>
@@ -158,7 +197,7 @@ export const DetailReviewSidebar = ({
               List Jamaah & File
             </span>
           </div>
-          {submission.members?.map((m) => (
+          {(submission.members || []).filter(m => memberStatuses[m.id]?.valid).map((m) => (
             <div key={m.id} className="p-3 bg-gray-50 rounded-xl border border-gray-100">
               <p className="text-sm font-black text-gray-900">{m.fullName}</p>
               <div className="mt-2 space-y-1">

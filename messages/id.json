@@ -658,7 +658,18 @@
       "uploadVisaDesc": "Lakukan pengunggahan visa secara kolektif di halaman detail.",
       "confirmVisaTitle": "Konfirmasi Pengajuan Visa",
       "confirmVisaDesc": "Pastikan jumlah visa yang diunggah sesuai dengan jumlah jamaah.",
-      "submitVisa": "Kirim Visa"
+      "submitVisa": "Kirim Visa",
+      "refund": {
+        "title": "Estimasi Refund",
+        "desc": "Ada {count} jamaah yang ditolak. Provider wajib mengembalikan dana sebesar {amount} ke jamaah.",
+        "penaltyWarning": "Pinalti akan terus berjalan jika refund belum diselesaikan.",
+        "totalRefund": "Total Refund",
+        "restriction": {
+          "title": "Akun Dibatasi",
+          "desc": "Fungsi persetujuan dan verifikasi dimatikan karena adanya refund yang melewati batas waktu 24 jam.",
+          "action": "Selesaikan refund untuk memulihkan akses."
+        }
+      }
     }
   },
   "ProviderSidebar": {

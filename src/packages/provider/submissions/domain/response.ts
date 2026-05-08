@@ -29,6 +29,12 @@ export interface ISubmissionListItem {
   members: IMember[];
   proofOfPayment?: string;
   rejectionReason?: string;
+  refundAmount?: number;
+  refundStatus?: string;
+  refundDeadline?: string;
+  agency?: {
+    status: 'ACTIVE' | 'RESTRICTED' | 'INACTIVE';
+  };
   flights?: IFlight[];
   hotels?: IHotel[];
   transportations?: ITransportation[];

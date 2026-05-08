@@ -658,7 +658,18 @@
       "uploadVisaDesc": "Perform collective visa upload on the detail page.",
       "confirmVisaTitle": "Confirm Visa Submission",
       "confirmVisaDesc": "Please ensure the number of uploaded visas matches the number of pilgrims.",
-      "submitVisa": "Submit Visa"
+      "submitVisa": "Submit Visa",
+      "refund": {
+        "title": "Refund Estimation",
+        "desc": "There are {count} rejected pilgrims. Provider is required to refund {amount} to the pilgrims.",
+        "penaltyWarning": "Penalties will continue to accrue until the refund is settled.",
+        "totalRefund": "Total Refund",
+        "restriction": {
+          "title": "Account Restricted",
+          "desc": "Approval and verification functions are disabled due to a refund that has exceeded the 24-hour time limit.",
+          "action": "Complete the refund to restore access."
+        }
+      }
     }
   },
   "ProviderSidebar": {

@@ -134,12 +134,19 @@ export const SubmissionDetailView = () => {
             ? logisticsReason
             : t('toasts.invalidMemberDocs');
 
+      const members = (submission?.members || []).map((m) => ({
+        id: m.id,
+        isEligible: memberStatuses[m.id]?.valid ?? true,
+        rejectionReason: memberStatuses[m.id]?.reason || undefined,
+      }));
+
       await reviewSubmissionMutation.mutateAsync({
         id: submission!.id,
         payload: {
           status,
           rejectionReason: reason,
           resultSnapshot: { memberStatuses },
+          members,
         },
       });
 
@@ -201,7 +208,11 @@ export const SubmissionDetailView = () => {
           )}
 
           <DetailMemberValidation
-            members={submission.members || []}
+            members={
+              isVisaPhase
+                ? (submission.members || []).filter((m) => memberStatuses[m.id]?.valid)
+                : submission.members || []
+            }
             memberStatuses={memberStatuses}
             onToggleStatus={toggleMemberStatus}
             onPreview={setPreviewImage}

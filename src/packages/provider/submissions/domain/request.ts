@@ -35,8 +35,15 @@ export interface ITransportManifestPayload {
   imageUrls: string[];
 }
 
+export interface IMemberReview {
+  id: string;
+  isEligible: boolean;
+  rejectionReason?: string;
+}
+
 export interface IReviewSubmissionPayload {
   status: 'VERIFIED' | 'REJECTED';
   rejectionReason?: string;
   resultSnapshot?: any;
+  members?: IMemberReview[];
 }
