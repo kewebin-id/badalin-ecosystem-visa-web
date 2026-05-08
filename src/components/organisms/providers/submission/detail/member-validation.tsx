@@ -62,7 +62,8 @@ export const DetailMemberValidation = ({
             <Users className="h-5 w-5 text-blue-500" />
           </div>
           <h3 className="text-lg font-black text-gray-900 tracking-tight">
-            2. {ts('member', { count: members.length })}
+            {!isVisaPhase ? '2. ' : ''}
+            {ts('member', { count: members.length })}
           </h3>
         </div>
       </div>

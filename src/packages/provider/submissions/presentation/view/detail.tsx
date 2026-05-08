@@ -210,18 +210,16 @@ export const SubmissionDetailView = () => {
             onVisaChange={handleVisaChange}
           />
 
-          {!isVisaPhase && (
-            <DetailLogisticsReview
-              submission={submission}
-              capacityWarning={capacityWarning}
-              logisticsValid={logisticsValid}
-              setLogisticsValid={setLogisticsValid}
-              logisticsReason={logisticsReason}
-              setLogisticsReason={setLogisticsReason}
-              onPreview={setPreviewImage}
-              readOnly={isVisaPhase}
-            />
-          )}
+          <DetailLogisticsReview
+            submission={submission}
+            capacityWarning={capacityWarning}
+            logisticsValid={logisticsValid}
+            setLogisticsValid={setLogisticsValid}
+            logisticsReason={logisticsReason}
+            setLogisticsReason={setLogisticsReason}
+            onPreview={setPreviewImage}
+            readOnly={isVisaPhase}
+          />
         </div>
 
         <div className="lg:col-span-4">
