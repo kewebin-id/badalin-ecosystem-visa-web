@@ -655,7 +655,10 @@
       "passport": "Passport",
       "documents": "Documents",
       "uploadVisaAction": "Manage Visa & Upload Documents",
-      "uploadVisaDesc": "Perform collective visa upload on the detail page."
+      "uploadVisaDesc": "Perform collective visa upload on the detail page.",
+      "confirmVisaTitle": "Confirm Visa Submission",
+      "confirmVisaDesc": "Please ensure the number of uploaded visas matches the number of pilgrims.",
+      "submitVisa": "Submit Visa"
     }
   },
   "ProviderSidebar": {

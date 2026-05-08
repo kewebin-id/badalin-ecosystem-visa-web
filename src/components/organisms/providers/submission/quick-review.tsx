@@ -1,11 +1,11 @@
 import { Button, Card } from '@/components/atoms';
 import { ImageThumbnailList } from '@/components/molecules';
-import { ROUTES } from '@/shared/constants/routes';
 import { ISubmissionListItem } from '@/packages/provider/submissions/domain/response';
+import { ROUTES } from '@/shared/constants/routes';
 import { ExternalLink, FileText, Plane, Users } from 'lucide-react';
 import moment from 'moment';
 import { useTranslations } from 'next-intl';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 interface SubmissionQuickReviewProps {
   submission: ISubmissionListItem;
@@ -14,7 +14,6 @@ interface SubmissionQuickReviewProps {
 
 export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuickReviewProps) => {
   const t = useTranslations('ProviderSubmissions.quickReview');
-  const router = useRouter();
   const params = useParams();
   const slug = (params?.slug as string) || 'p';
 
@@ -28,7 +27,7 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
   const returnFlights = (submission.flights || []).filter((f) => f.type === 'RETURN');
 
   return (
-    <div className="space-y-6 py-4">
+    <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="p-4 bg-blue-50 border-blue-100">
           <div className="flex items-center gap-3">
@@ -39,7 +38,7 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
               <p className="text-xs font-bold text-blue-400 uppercase tracking-wider">
                 {t('totalJamaah')}
               </p>
-              <p className="text-lg font-black text-blue-900">{membersToShow.length}</p>
+              <p className="text-sm font-black text-blue-900">{membersToShow.length || '-'}</p>
             </div>
           </div>
         </Card>
@@ -69,11 +68,7 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
             <p className="text-xs text-green-600 font-medium">{t('uploadVisaDesc')}</p>
           </div>
         </div>
-        <Button 
-          size="sm" 
-          className="bg-green-600 hover:bg-green-700 text-white rounded-xl gap-2 w-full md:w-auto font-bold"
-          onClick={() => router.push(ROUTES.PROVIDER.DETAIL(slug, submission.id))}
-        >
+        <Button size="lg" href={ROUTES.PROVIDER.DETAIL(slug, submission.id)}>
           {t('uploadVisaAction')} <ExternalLink className="h-4 w-4" />
         </Button>
       </Card>

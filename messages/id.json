@@ -655,7 +655,10 @@
       "passport": "Passport",
       "documents": "Dokumen",
       "uploadVisaAction": "Kelola Visa & Unggah Dokumen",
-      "uploadVisaDesc": "Lakukan pengunggahan visa secara kolektif di halaman detail."
+      "uploadVisaDesc": "Lakukan pengunggahan visa secara kolektif di halaman detail.",
+      "confirmVisaTitle": "Konfirmasi Pengajuan Visa",
+      "confirmVisaDesc": "Pastikan jumlah visa yang diunggah sesuai dengan jumlah jamaah.",
+      "submitVisa": "Kirim Visa"
     }
   },
   "ProviderSidebar": {

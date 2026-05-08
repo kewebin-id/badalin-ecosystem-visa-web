@@ -45,20 +45,23 @@ export const SubmissionDetailView = () => {
 
   const submission = data?.data;
 
+  const isVisaPhase = submission?.verifyStatus === 'VERIFIED';
+
   const [paymentAction, setPaymentAction] = useState<'APPROVE' | 'REJECT' | null>(null);
   const [paymentReason, setPaymentReason] = useState('');
   const [memberStatuses, setMemberStatuses] = useState<
     Record<string, { valid: boolean; reason?: string }>
   >(submission?.resultSnapshot?.memberStatuses || {});
   const [logisticsValid, setLogisticsValid] = useState<boolean | null>(null);
+  const [logisticsReason, setLogisticsReason] = useState('');
+  const [visaFiles, setVisaFiles] = useState<Record<string, File[]>>({});
+  const [previewImage, setPreviewImage] = useState<{ src: string; alt: string } | null>(null);
 
   useEffect(() => {
     if (submission?.resultSnapshot?.memberStatuses) {
       setMemberStatuses(submission.resultSnapshot.memberStatuses);
     }
   }, [submission]);
-  const [logisticsReason, setLogisticsReason] = useState('');
-  const [previewImage, setPreviewImage] = useState<{ src: string; alt: string } | null>(null);
 
   const capacityWarning = useMemo(() => {
     if (!submission?.transportations?.[0]) return null;
@@ -77,16 +80,32 @@ export const SubmissionDetailView = () => {
   }, [submission, t]);
 
   const toggleMemberStatus = (memberId: string, reason?: string) => {
+    if (isVisaPhase) return;
     setMemberStatuses((prev) => ({
       ...prev,
-      [memberId]: { 
+      [memberId]: {
         valid: reason ? false : !prev[memberId]?.valid,
-        reason: reason || undefined
+        reason: reason || undefined,
       },
     }));
   };
 
+  const handleVisaUpload = (memberId: string, files: FileList | null) => {
+    if (!files) return;
+    setVisaFiles((prev) => ({
+      ...prev,
+      [memberId]: Array.from(files),
+    }));
+  };
+
   const handleFinalSubmit = async () => {
+    if (isVisaPhase) {
+      // Handle Visa Final Submission Logic
+      toast.success('Visa submitted successfully');
+      router.push(ROUTES.PROVIDER.SUBMISSIONS(slug as string));
+      return;
+    }
+
     if (!paymentAction) {
       toast.error(t('toasts.paymentStatusRequired'));
       return;
@@ -168,20 +187,24 @@ export const SubmissionDetailView = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8 space-y-8">
-          <DetailPaymentValidation
-            submission={submission}
-            paymentAction={paymentAction}
-            setPaymentAction={setPaymentAction}
-            paymentReason={paymentReason}
-            setPaymentReason={setPaymentReason}
-            onPreview={setPreviewImage}
-          />
+          {!isVisaPhase && (
+            <DetailPaymentValidation
+              submission={submission}
+              paymentAction={paymentAction}
+              setPaymentAction={setPaymentAction}
+              paymentReason={paymentReason}
+              setPaymentReason={setPaymentReason}
+              onPreview={setPreviewImage}
+            />
+          )}
 
           <DetailMemberValidation
             members={submission.members || []}
             memberStatuses={memberStatuses}
             onToggleStatus={toggleMemberStatus}
             onPreview={setPreviewImage}
+            isVisaPhase={isVisaPhase}
+            onVisaUpload={handleVisaUpload}
           />
 
           <DetailLogisticsReview
@@ -192,6 +215,7 @@ export const SubmissionDetailView = () => {
             logisticsReason={logisticsReason}
             setLogisticsReason={setLogisticsReason}
             onPreview={setPreviewImage}
+            readOnly={isVisaPhase}
           />
         </div>
 
@@ -204,6 +228,8 @@ export const SubmissionDetailView = () => {
             onFinalSubmit={handleFinalSubmit}
             onCancel={() => router.push(ROUTES.PROVIDER.SUBMISSIONS(slug as string))}
             isSubmitting={reviewSubmissionMutation.isPending || verifyPaymentMutation.isPending}
+            isVisaPhase={isVisaPhase}
+            visaFiles={visaFiles}
           />
         </div>
       </div>

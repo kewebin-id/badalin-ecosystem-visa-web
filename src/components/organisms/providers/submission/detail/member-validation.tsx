@@ -11,7 +11,7 @@ import { ActionButton, DialogDrawer, InputTextarea } from '@/components/molecule
 import { IMember } from '@/packages/provider/submissions/domain/response';
 import { useScreenSize } from '@/shared/hooks';
 import { cn } from '@/shared/utils';
-import { Book, Check, CreditCard, Users, X } from 'lucide-react';
+import { Book, Check, CreditCard, FileUp, Users, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -20,6 +20,8 @@ interface DetailMemberValidationProps {
   memberStatuses: Record<string, { valid: boolean; reason?: string }>;
   onToggleStatus: (memberId: string, reason?: string) => void;
   onPreview: (image: { src: string; alt: string } | null) => void;
+  isVisaPhase?: boolean;
+  onVisaUpload?: (memberId: string, files: FileList | null) => void;
 }
 
 export const DetailMemberValidation = ({
@@ -27,10 +29,13 @@ export const DetailMemberValidation = ({
   memberStatuses,
   onToggleStatus,
   onPreview,
+  isVisaPhase,
+  onVisaUpload,
 }: DetailMemberValidationProps) => {
   const t = useTranslations('ProviderSubmissions.detail.member');
   const ts = useTranslations('ProviderSubmissions.detail.sections');
   const td = useTranslations('ProviderSubmissions.dialogs.review');
+  const tq = useTranslations('ProviderSubmissions.quickReview');
   const { isMobile } = useScreenSize();
 
   const [rejectingMemberId, setRejectingMemberId] = useState<string | null>(null);
@@ -68,7 +73,7 @@ export const DetailMemberValidation = ({
                   {t('table.docs')}
                 </TableHead>
                 <TableHead className="pr-6 text-right font-bold uppercase text-[10px] tracking-widest text-gray-400">
-                  {t('table.verify')}
+                  {isVisaPhase ? tq('documents') : t('table.verify')}
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -78,8 +83,11 @@ export const DetailMemberValidation = ({
                   key={member.id}
                   className={cn(
                     'transition-colors',
-                    memberStatuses[member.id]?.valid ? 'bg-green-50/30 hover:bg-green-50/50' : 
-                    memberStatuses[member.id]?.reason ? 'bg-red-50/30 hover:bg-red-50/50' : '',
+                    !isVisaPhase && memberStatuses[member.id]?.valid
+                      ? 'bg-green-50/30 hover:bg-green-50/50'
+                      : !isVisaPhase && memberStatuses[member.id]?.reason
+                        ? 'bg-red-50/30 hover:bg-red-50/50'
+                        : '',
                   )}
                 >
                   <TableCell className="pl-6 py-5">
@@ -133,33 +141,50 @@ export const DetailMemberValidation = ({
                     </div>
                   </TableCell>
                   <TableCell className="pr-6 py-5 text-right">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        onClick={() => {
-                          setRejectingMemberId(member.id);
-                          setRejectionReasonInput(memberStatuses[member.id]?.reason || '');
-                        }}
-                        className={cn(
-                          'inline-flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all active:scale-90 cursor-pointer',
-                          memberStatuses[member.id]?.reason
-                            ? 'bg-red-500 border-red-500 text-white shadow-lg shadow-red-100'
-                            : 'bg-white border-gray-200 text-gray-300 hover:border-red-200 hover:text-red-400',
-                        )}
-                      >
-                        <X className="h-5 w-5 stroke-[3px]" />
-                      </button>
-                      <button
-                        onClick={() => onToggleStatus(member.id)}
-                        className={cn(
-                          'inline-flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all active:scale-90 cursor-pointer',
-                          memberStatuses[member.id]?.valid
-                            ? 'bg-green-500 border-green-500 text-white shadow-lg shadow-green-100'
-                            : 'bg-white border-gray-200 text-gray-300 hover:border-green-200 hover:text-green-400',
-                        )}
-                      >
-                        <Check className="h-6 w-6 stroke-[3px]" />
-                      </button>
-                    </div>
+                    {isVisaPhase ? (
+                      <div className="flex justify-end gap-2">
+                        <label className="cursor-pointer">
+                          <input
+                            type="file"
+                            className="hidden"
+                            multiple
+                            onChange={(e) => onVisaUpload?.(member.id, e.target.files)}
+                          />
+                          <div className="inline-flex h-10 px-4 items-center gap-2 rounded-xl bg-green-500 text-white font-bold text-xs shadow-lg shadow-green-100 hover:bg-green-600 transition-all active:scale-95">
+                            <FileUp className="h-4 w-4" />
+                            UPLOAD VISA
+                          </div>
+                        </label>
+                      </div>
+                    ) : (
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => {
+                            setRejectingMemberId(member.id);
+                            setRejectionReasonInput(memberStatuses[member.id]?.reason || '');
+                          }}
+                          className={cn(
+                            'inline-flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all active:scale-90 cursor-pointer',
+                            memberStatuses[member.id]?.reason
+                              ? 'bg-red-500 border-red-500 text-white shadow-lg shadow-red-100'
+                              : 'bg-white border-gray-200 text-gray-300 hover:border-red-200 hover:text-red-400',
+                          )}
+                        >
+                          <X className="h-5 w-5 stroke-[3px]" />
+                        </button>
+                        <button
+                          onClick={() => onToggleStatus(member.id)}
+                          className={cn(
+                            'inline-flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all active:scale-90 cursor-pointer',
+                            memberStatuses[member.id]?.valid
+                              ? 'bg-green-500 border-green-500 text-white shadow-lg shadow-green-100'
+                              : 'bg-white border-gray-200 text-gray-300 hover:border-green-200 hover:text-green-400',
+                          )}
+                        >
+                          <Check className="h-6 w-6 stroke-[3px]" />
+                        </button>
+                      </div>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
@@ -172,9 +197,9 @@ export const DetailMemberValidation = ({
                 key={member.id}
                 className={cn(
                   'p-5 rounded-[1.5rem] border transition-all',
-                  memberStatuses[member.id]?.valid
+                  !isVisaPhase && memberStatuses[member.id]?.valid
                     ? 'bg-green-50 border-green-200 shadow-sm'
-                    : memberStatuses[member.id]?.reason
+                    : !isVisaPhase && memberStatuses[member.id]?.reason
                       ? 'bg-red-50 border-red-200 shadow-sm'
                       : 'bg-white border-gray-100',
                 )}
@@ -196,33 +221,47 @@ export const DetailMemberValidation = ({
                       </p>
                     )}
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <button
-                      onClick={() => onToggleStatus(member.id)}
-                      className={cn(
-                        'flex h-12 w-12 items-center justify-center rounded-2xl border-2 transition-all active:scale-90 cursor-pointer',
-                        memberStatuses[member.id]?.valid
-                          ? 'bg-green-500 border-green-500 text-white shadow-lg shadow-green-200'
-                          : 'bg-white border-gray-100 text-gray-200',
-                      )}
-                    >
-                      <Check className="h-7 w-7 stroke-[3px]" />
-                    </button>
-                    <button
-                      onClick={() => {
-                        setRejectingMemberId(member.id);
-                        setRejectionReasonInput(memberStatuses[member.id]?.reason || '');
-                      }}
-                      className={cn(
-                        'flex h-12 w-12 items-center justify-center rounded-2xl border-2 transition-all active:scale-90 cursor-pointer',
-                        memberStatuses[member.id]?.reason
-                          ? 'bg-red-500 border-red-500 text-white shadow-lg shadow-red-200'
-                          : 'bg-white border-gray-100 text-gray-200',
-                      )}
-                    >
-                      <X className="h-7 w-7 stroke-[3px]" />
-                    </button>
-                  </div>
+                  {isVisaPhase ? (
+                    <label className="cursor-pointer">
+                      <input
+                        type="file"
+                        className="hidden"
+                        multiple
+                        onChange={(e) => onVisaUpload?.(member.id, e.target.files)}
+                      />
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-500 text-white shadow-lg shadow-green-200 active:scale-90 transition-all">
+                        <FileUp className="h-6 w-6" />
+                      </div>
+                    </label>
+                  ) : (
+                    <div className="flex flex-col gap-2">
+                      <button
+                        onClick={() => onToggleStatus(member.id)}
+                        className={cn(
+                          'flex h-12 w-12 items-center justify-center rounded-2xl border-2 transition-all active:scale-90 cursor-pointer',
+                          memberStatuses[member.id]?.valid
+                            ? 'bg-green-500 border-green-500 text-white shadow-lg shadow-green-200'
+                            : 'bg-white border-gray-100 text-gray-200',
+                        )}
+                      >
+                        <Check className="h-7 w-7 stroke-[3px]" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          setRejectingMemberId(member.id);
+                          setRejectionReasonInput(memberStatuses[member.id]?.reason || '');
+                        }}
+                        className={cn(
+                          'flex h-12 w-12 items-center justify-center rounded-2xl border-2 transition-all active:scale-90 cursor-pointer',
+                          memberStatuses[member.id]?.reason
+                            ? 'bg-red-500 border-red-500 text-white shadow-lg shadow-red-200'
+                            : 'bg-white border-gray-100 text-gray-200',
+                        )}
+                      >
+                        <X className="h-7 w-7 stroke-[3px]" />
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-3 gap-3">
@@ -273,16 +312,14 @@ export const DetailMemberValidation = ({
         onCancel={() => setRejectingMemberId(null)}
         disabledSubmitButton={!rejectionReasonInput.trim()}
       >
-        <div className="py-4">
-          <InputTextarea
-            useLabelInside
-            label={td('rejectionReasonLabel')}
-            placeholder={td('rejectionReasonPlaceholder')}
-            value={rejectionReasonInput}
-            setValue={setRejectionReasonInput}
-            className="min-h-[120px]"
-          />
-        </div>
+        <InputTextarea
+          useLabelInside
+          label={td('rejectionReasonLabel')}
+          placeholder={td('rejectionReasonPlaceholder')}
+          value={rejectionReasonInput}
+          setValue={setRejectionReasonInput}
+          className="min-h-[120px]"
+        />
       </DialogDrawer>
     </Card>
   );

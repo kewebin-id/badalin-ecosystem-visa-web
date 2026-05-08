@@ -1,5 +1,3 @@
-'use client';
-
 import { Card } from '@/components/atoms';
 import { ImageThumbnailList, InputTextarea } from '@/components/molecules';
 import { ISubmissionListItem } from '@/packages/provider/submissions/domain/response';
@@ -16,6 +14,7 @@ interface DetailLogisticsReviewProps {
   logisticsReason: string;
   setLogisticsReason: (reason: string) => void;
   onPreview: (image: { src: string; alt: string }) => void;
+  readOnly?: boolean;
 }
 
 export const DetailLogisticsReview = ({
@@ -26,9 +25,14 @@ export const DetailLogisticsReview = ({
   logisticsReason,
   setLogisticsReason,
   onPreview,
+  readOnly,
 }: DetailLogisticsReviewProps) => {
   const t = useTranslations('ProviderSubmissions.detail.logistics');
+  const tq = useTranslations('ProviderSubmissions.quickReview');
   const ts = useTranslations('ProviderSubmissions.detail.sections');
+
+  const departureFlights = (submission.flights || []).filter((f) => f.type === 'DEPARTURE');
+  const returnFlights = (submission.flights || []).filter((f) => f.type === 'RETURN');
 
   return (
     <Card className="overflow-hidden border-2 border-gray-100 shadow-sm transition-all hover:shadow-md">
@@ -37,119 +41,164 @@ export const DetailLogisticsReview = ({
           <div className="p-2 bg-orange-50 rounded-xl">
             <Plane className="h-5 w-5 text-orange-500" />
           </div>
-          <h3 className="text-lg font-black text-gray-900 tracking-tight">3. {ts('logistics')}</h3>
+          <h3 className="text-lg font-black text-gray-900 tracking-tight">{ts('logistics')}</h3>
         </div>
       </div>
-      <div className="p-6 space-y-6">
+      <div className="p-6 space-y-8">
+        {/* Flights Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Plane className="h-4 w-4 text-gray-400" />
-              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                {t('flight')}
-              </span>
+          {/* Departure */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="h-px flex-1 bg-gray-100" />
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+                {tq('departure')}
+              </p>
+              <div className="h-px flex-1 bg-gray-100" />
             </div>
-            {submission.flights?.map((flight, idx) => (
-              <div key={idx} className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-sm">
-                <p className="font-black text-gray-900">
-                  {flight.carrier} ({flight.flightNo})
+            {departureFlights.map((f, i) => (
+              <div key={i} className="p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
+                <div className="flex justify-between items-start mb-2">
+                  <p className="text-sm font-black text-gray-900">
+                    {f.carrier} ({f.flightNo})
+                  </p>
+                  <span className="px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded-full border border-blue-100">
+                    FLIGHT
+                  </span>
+                </div>
+                <p className="text-xs font-medium text-gray-500 mb-2">
+                  {f.from || '-'} to {f.to || '-'} •{' '}
+                  {f.flightDate ? moment(f.flightDate).format('DD MMM YYYY') : '-'}
                 </p>
-                <p className="text-gray-500 font-medium">
-                  Dari {flight.from || '-'} ke {flight.to || '-'}
-                </p>
-                <p className="text-gray-500 font-medium">
-                  {moment(flight.flightDate).format('DD MMM YYYY')} • {flight.type}
-                </p>
-                <p className="text-xs text-gray-400 font-bold uppercase mt-1">
-                  ETA: {flight.eta} • ETD: {flight.etd}
-                </p>
-                <ImageThumbnailList
-                  images={flight.imageUrls}
-                  onPreview={onPreview}
-                  altPrefix={`${flight.carrier} Ticket`}
-                />
+                <div className="p-2 bg-white rounded-lg border border-dashed border-gray-200 mb-3 space-y-0.5">
+                  <p className="text-[10px] text-gray-400 uppercase font-bold">
+                    ETD: {moment(f.etd).format('DD MMM YYYY, HH:mm')}
+                  </p>
+                  <p className="text-[10px] text-gray-400 uppercase font-bold">
+                    ETA: {moment(f.eta).format('DD MMM YYYY, HH:mm')}
+                  </p>
+                </div>
+                <ImageThumbnailList images={f.imageUrls} onPreview={onPreview} altPrefix="Tiket" />
               </div>
             ))}
+          </div>
 
-            <div className="flex items-center gap-2 mt-6 mb-2">
-              <Truck className="h-4 w-4 text-gray-400" />
-              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                {t('transport')}
-              </span>
+          {/* Return */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="h-px flex-1 bg-gray-100" />
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+                {tq('return')}
+              </p>
+              <div className="h-px flex-1 bg-gray-100" />
             </div>
-            {submission.transportations?.map((trans, idx) => (
-              <div key={idx} className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-sm">
-                <p className="font-black text-gray-900">
+            {returnFlights.map((f, i) => (
+              <div key={i} className="p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
+                <div className="flex justify-between items-start mb-2">
+                  <p className="text-sm font-black text-gray-900">
+                    {f.carrier} ({f.flightNo})
+                  </p>
+                  <span className="px-2 py-0.5 bg-purple-50 text-purple-600 text-[10px] font-bold rounded-full border border-purple-100">
+                    FLIGHT
+                  </span>
+                </div>
+                <p className="text-xs font-medium text-gray-500 mb-2">
+                  {f.from || '-'} to {f.to || '-'} •{' '}
+                  {f.flightDate ? moment(f.flightDate).format('DD MMM YYYY') : '-'}
+                </p>
+                <div className="p-2 bg-white rounded-lg border border-dashed border-gray-200 mb-3 space-y-0.5">
+                  <p className="text-[10px] text-gray-400 uppercase font-bold">
+                    ETD: {moment(f.etd).format('DD MMM YYYY, HH:mm')}
+                  </p>
+                  <p className="text-[10px] text-gray-400 uppercase font-bold">
+                    ETA: {moment(f.eta).format('DD MMM YYYY, HH:mm')}
+                  </p>
+                </div>
+                <ImageThumbnailList images={f.imageUrls} onPreview={onPreview} altPrefix="Tiket" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Hotels Row */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <div className="h-px flex-1 bg-gray-100" />
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+              {tq('hotel')}
+            </p>
+            <div className="h-px flex-1 bg-gray-100" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {submission.hotels?.map((h, i) => (
+              <div key={i} className="p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
+                <p className="text-sm font-black text-gray-900 mb-1">
+                  {h.name} - {h.city}
+                </p>
+                <p className="text-xs text-gray-500 mb-3 font-medium">
+                  In: {h.checkIn ? moment(h.checkIn).format('DD MMM') : '-'} • Out:{' '}
+                  {h.checkOut ? moment(h.checkOut).format('DD MMM') : '-'}
+                </p>
+                <ImageThumbnailList images={h.imageUrls} onPreview={onPreview} altPrefix="Voucher" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Transport Row */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <div className="h-px flex-1 bg-gray-100" />
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+              {tq('transport')}
+            </p>
+            <div className="h-px flex-1 bg-gray-100" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {submission.transportations?.map((trans, i) => (
+              <div key={i} className="p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
+                <p className="text-sm font-black text-gray-900 mb-1">
                   {trans.company} ({trans.type})
                 </p>
-                <p className="text-gray-500 font-medium">
-                  Dari {trans.from} ke {trans.to}
-                </p>
-                <p className="text-gray-500 font-medium">
-                  {moment(trans.date).format('DD MMM YYYY')} pukul {trans.time}
+                <p className="text-xs text-gray-500 mb-3 font-medium">
+                  {trans.date ? moment(trans.date).format('DD MMM YYYY') : '-'} • {trans.from} -{' '}
+                  {trans.to}
                 </p>
                 <ImageThumbnailList
                   images={trans.imageUrls}
                   onPreview={onPreview}
-                  altPrefix={`${trans.company} Transport`}
+                  altPrefix="Transport"
                 />
               </div>
             ))}
-
-            {capacityWarning && (
-              <div className="p-4 bg-red-50 rounded-2xl border border-red-100 flex items-start gap-3">
-                <XCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
-                <p className="text-sm font-bold text-red-800 leading-tight">{capacityWarning}</p>
-              </div>
-            )}
           </div>
+        </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Hotel className="h-4 w-4 text-gray-400" />
-              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                {t('hotel')}
-              </span>
-            </div>
-            {submission.hotels?.map((hotel, idx) => (
-              <div key={idx} className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-sm">
-                <p className="font-black text-gray-900">
-                  {hotel.name} - {hotel.city}
-                </p>
-                <p className="text-gray-500 font-medium">
-                  {hotel.roomType} • RSV: {hotel.resvNo}
-                </p>
-                <p className="text-gray-500 font-medium">
-                  In: {moment(hotel.checkIn).format('DD MMM')} • Out:{' '}
-                  {moment(hotel.checkOut).format('DD MMM')}
-                </p>
-                <ImageThumbnailList
-                  images={hotel.imageUrls}
-                  onPreview={onPreview}
-                  altPrefix={`${hotel.name} Voucher`}
-                />
-              </div>
-            ))}
-
-            <div className="pt-4 space-y-4">
-              <ValidationToggle
-                isValid={logisticsValid}
-                onToggle={setLogisticsValid}
-                labels={{
-                  valid: t('match'),
-                  invalid: t('anomaly'),
-                }}
-              />
-              <InputTextarea
-                useLabelInside
-                label={t('noteLabel')}
-                placeholder={t('notePlaceholder')}
-                value={logisticsReason}
-                setValue={setLogisticsReason}
-                disabled={logisticsValid === true}
-              />
-            </div>
+        {capacityWarning && (
+          <div className="p-4 bg-red-50 rounded-2xl border border-red-100 flex items-start gap-3">
+            <XCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+            <p className="text-sm font-bold text-red-800 leading-tight">{capacityWarning}</p>
           </div>
+        )}
+
+        <div className="pt-4 space-y-6">
+          <ValidationToggle
+            isValid={logisticsValid}
+            onToggle={setLogisticsValid}
+            labels={{
+              valid: t('match'),
+              invalid: t('anomaly'),
+            }}
+            readOnly={readOnly}
+          />
+          <InputTextarea
+            useLabelInside
+            label={t('noteLabel')}
+            placeholder={t('notePlaceholder')}
+            value={logisticsReason}
+            setValue={setLogisticsReason}
+            disabled={readOnly || logisticsValid === true}
+          />
         </div>
       </div>
     </Card>
