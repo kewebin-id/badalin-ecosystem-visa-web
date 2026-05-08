@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Card,
   Table,
@@ -8,10 +10,11 @@ import {
   TableRow,
 } from '@/components/atoms';
 import { ActionButton, DialogDrawer, InputTextarea } from '@/components/molecules';
+import { InputFile, UploadFile } from '@/components/molecules/input/file';
 import { IMember } from '@/packages/provider/submissions/domain/response';
 import { useScreenSize } from '@/shared/hooks';
 import { cn } from '@/shared/utils';
-import { Book, Check, CreditCard, FileUp, Users, X } from 'lucide-react';
+import { Book, Check, CreditCard, Users, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -21,7 +24,8 @@ interface DetailMemberValidationProps {
   onToggleStatus: (memberId: string, reason?: string) => void;
   onPreview: (image: { src: string; alt: string } | null) => void;
   isVisaPhase?: boolean;
-  onVisaUpload?: (memberId: string, files: FileList | null) => void;
+  visaFiles?: Record<string, UploadFile[]>;
+  onVisaChange?: (memberId: string, files: UploadFile[]) => void;
 }
 
 export const DetailMemberValidation = ({
@@ -30,7 +34,8 @@ export const DetailMemberValidation = ({
   onToggleStatus,
   onPreview,
   isVisaPhase,
-  onVisaUpload,
+  visaFiles = {},
+  onVisaChange,
 }: DetailMemberValidationProps) => {
   const t = useTranslations('ProviderSubmissions.detail.member');
   const ts = useTranslations('ProviderSubmissions.detail.sections');
@@ -142,19 +147,13 @@ export const DetailMemberValidation = ({
                   </TableCell>
                   <TableCell className="pr-6 py-5 text-right">
                     {isVisaPhase ? (
-                      <div className="flex justify-end gap-2">
-                        <label className="cursor-pointer">
-                          <input
-                            type="file"
-                            className="hidden"
-                            multiple
-                            onChange={(e) => onVisaUpload?.(member.id, e.target.files)}
-                          />
-                          <div className="inline-flex h-10 px-4 items-center gap-2 rounded-xl bg-green-500 text-white font-bold text-xs shadow-lg shadow-green-100 hover:bg-green-600 transition-all active:scale-95">
-                            <FileUp className="h-4 w-4" />
-                            UPLOAD VISA
-                          </div>
-                        </label>
+                      <div className="flex justify-end min-w-[220px]">
+                        <InputFile
+                          maxFiles={5}
+                          value={visaFiles[member.id] || []}
+                          onChange={(files) => onVisaChange?.(member.id, files)}
+                          className="!w-fit"
+                        />
                       </div>
                     ) : (
                       <div className="flex justify-end gap-2">
@@ -221,19 +220,7 @@ export const DetailMemberValidation = ({
                       </p>
                     )}
                   </div>
-                  {isVisaPhase ? (
-                    <label className="cursor-pointer">
-                      <input
-                        type="file"
-                        className="hidden"
-                        multiple
-                        onChange={(e) => onVisaUpload?.(member.id, e.target.files)}
-                      />
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-500 text-white shadow-lg shadow-green-200 active:scale-90 transition-all">
-                        <FileUp className="h-6 w-6" />
-                      </div>
-                    </label>
-                  ) : (
+                  {!isVisaPhase && (
                     <div className="flex flex-col gap-2">
                       <button
                         onClick={() => onToggleStatus(member.id)}
@@ -263,6 +250,16 @@ export const DetailMemberValidation = ({
                     </div>
                   )}
                 </div>
+
+                {isVisaPhase && (
+                  <div className="mb-4">
+                    <InputFile
+                      maxFiles={5}
+                      value={visaFiles[member.id] || []}
+                      onChange={(files) => onVisaChange?.(member.id, files)}
+                    />
+                  </div>
+                )}
 
                 <div className="grid grid-cols-3 gap-3">
                   <ActionButton

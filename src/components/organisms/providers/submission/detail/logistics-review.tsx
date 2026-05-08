@@ -1,7 +1,7 @@
 import { Card } from '@/components/atoms';
 import { ImageThumbnailList, InputTextarea } from '@/components/molecules';
 import { ISubmissionListItem } from '@/packages/provider/submissions/domain/response';
-import { Hotel, Plane, Truck, XCircle } from 'lucide-react';
+import { Plane, XCircle } from 'lucide-react';
 import moment from 'moment';
 import { useTranslations } from 'next-intl';
 import { ValidationToggle } from './validation-toggle';
@@ -139,7 +139,11 @@ export const DetailLogisticsReview = ({
                   In: {h.checkIn ? moment(h.checkIn).format('DD MMM') : '-'} • Out:{' '}
                   {h.checkOut ? moment(h.checkOut).format('DD MMM') : '-'}
                 </p>
-                <ImageThumbnailList images={h.imageUrls} onPreview={onPreview} altPrefix="Voucher" />
+                <ImageThumbnailList
+                  images={h.imageUrls}
+                  onPreview={onPreview}
+                  altPrefix="Voucher"
+                />
               </div>
             ))}
           </div>
@@ -181,25 +185,26 @@ export const DetailLogisticsReview = ({
           </div>
         )}
 
-        <div className="pt-4 space-y-6">
-          <ValidationToggle
-            isValid={logisticsValid}
-            onToggle={setLogisticsValid}
-            labels={{
-              valid: t('match'),
-              invalid: t('anomaly'),
-            }}
-            readOnly={readOnly}
-          />
-          <InputTextarea
-            useLabelInside
-            label={t('noteLabel')}
-            placeholder={t('notePlaceholder')}
-            value={logisticsReason}
-            setValue={setLogisticsReason}
-            disabled={readOnly || logisticsValid === true}
-          />
-        </div>
+        {!readOnly && (
+          <div className="pt-4 space-y-6">
+            <ValidationToggle
+              isValid={logisticsValid}
+              onToggle={setLogisticsValid}
+              labels={{
+                valid: t('match'),
+                invalid: t('anomaly'),
+              }}
+            />
+            <InputTextarea
+              useLabelInside
+              label={t('noteLabel')}
+              placeholder={t('notePlaceholder')}
+              value={logisticsReason}
+              setValue={setLogisticsReason}
+              disabled={logisticsValid === true}
+            />
+          </div>
+        )}
       </div>
     </Card>
   );

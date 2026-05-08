@@ -6,6 +6,7 @@ import {
   PaymentStatusBadge,
   ReviewStatusBadge,
 } from '@/components/molecules';
+import { UploadFile } from '@/components/molecules/input/file';
 import moment from 'moment';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
@@ -54,7 +55,7 @@ export const SubmissionDetailView = () => {
   >(submission?.resultSnapshot?.memberStatuses || {});
   const [logisticsValid, setLogisticsValid] = useState<boolean | null>(null);
   const [logisticsReason, setLogisticsReason] = useState('');
-  const [visaFiles, setVisaFiles] = useState<Record<string, File[]>>({});
+  const [visaFiles, setVisaFiles] = useState<Record<string, UploadFile[]>>({});
   const [previewImage, setPreviewImage] = useState<{ src: string; alt: string } | null>(null);
 
   useEffect(() => {
@@ -90,11 +91,10 @@ export const SubmissionDetailView = () => {
     }));
   };
 
-  const handleVisaUpload = (memberId: string, files: FileList | null) => {
-    if (!files) return;
+  const handleVisaChange = (memberId: string, files: UploadFile[]) => {
     setVisaFiles((prev) => ({
       ...prev,
-      [memberId]: Array.from(files),
+      [memberId]: files,
     }));
   };
 
@@ -188,14 +188,16 @@ export const SubmissionDetailView = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8 space-y-8">
           {!isVisaPhase && (
-            <DetailPaymentValidation
-              submission={submission}
-              paymentAction={paymentAction}
-              setPaymentAction={setPaymentAction}
-              paymentReason={paymentReason}
-              setPaymentReason={setPaymentReason}
-              onPreview={setPreviewImage}
-            />
+            <>
+              <DetailPaymentValidation
+                submission={submission}
+                paymentAction={paymentAction}
+                setPaymentAction={setPaymentAction}
+                paymentReason={paymentReason}
+                setPaymentReason={setPaymentReason}
+                onPreview={setPreviewImage}
+              />
+            </>
           )}
 
           <DetailMemberValidation
@@ -204,19 +206,22 @@ export const SubmissionDetailView = () => {
             onToggleStatus={toggleMemberStatus}
             onPreview={setPreviewImage}
             isVisaPhase={isVisaPhase}
-            onVisaUpload={handleVisaUpload}
+            visaFiles={visaFiles}
+            onVisaChange={handleVisaChange}
           />
 
-          <DetailLogisticsReview
-            submission={submission}
-            capacityWarning={capacityWarning}
-            logisticsValid={logisticsValid}
-            setLogisticsValid={setLogisticsValid}
-            logisticsReason={logisticsReason}
-            setLogisticsReason={setLogisticsReason}
-            onPreview={setPreviewImage}
-            readOnly={isVisaPhase}
-          />
+          {!isVisaPhase && (
+            <DetailLogisticsReview
+              submission={submission}
+              capacityWarning={capacityWarning}
+              logisticsValid={logisticsValid}
+              setLogisticsValid={setLogisticsValid}
+              logisticsReason={logisticsReason}
+              setLogisticsReason={setLogisticsReason}
+              onPreview={setPreviewImage}
+              readOnly={isVisaPhase}
+            />
+          )}
         </div>
 
         <div className="lg:col-span-4">
