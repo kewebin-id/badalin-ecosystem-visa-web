@@ -1,14 +1,15 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { exportSubmissionToZip } from '@/shared/utils/manifest-export';
 import { RestAPI } from '@/shared/utils/rest-api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  IFlightManifestPayload,
+  IGetSubmissionsQuery,
+  IHotelManifestPayload,
+  IReviewSubmissionPayload,
+  ITransportManifestPayload,
+} from '../../domain/request';
 import { ProviderSubmissionsRepository } from '../../repository';
 import { ProviderSubmissionsUseCase } from '../../usecase';
-import {
-  IGetSubmissionsQuery,
-  IFlightManifestPayload,
-  IHotelManifestPayload,
-  ITransportManifestPayload,
-  IReviewSubmissionPayload,
-} from '../../domain/request';
 
 export const useProviderSubmissionsController = () => {
   const queryClient = useQueryClient();
@@ -75,6 +76,28 @@ export const useProviderSubmissionsController = () => {
       },
     });
 
+  const useExportSubmission = () =>
+    useMutation({
+      mutationFn: async (id: string) => {
+        const detail = await queryClient.fetchQuery({
+          queryKey: ['provider', 'submissions', id],
+          queryFn: () => usecase.getSubmissionDetail(id),
+        });
+
+        if (detail?.data) {
+          await exportSubmissionToZip(detail.data);
+        } else {
+          throw new Error('Failed to fetch submission details');
+        }
+      },
+    });
+
+  const fetchSubmissionDetail = (id: string) =>
+    queryClient.fetchQuery({
+      queryKey: ['provider', 'submissions', id],
+      queryFn: () => usecase.getSubmissionDetail(id),
+    });
+
   return {
     useSubmissions,
     useSubmissionDetail,
@@ -83,6 +106,7 @@ export const useProviderSubmissionsController = () => {
     useAddHotelManifest,
     useAddTransportManifest,
     useReviewSubmission,
-    usecase,
+    useExportSubmission,
+    fetchSubmissionDetail,
   };
 };

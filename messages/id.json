@@ -643,7 +643,17 @@
       "subtitle": "Submission {id} · Tinjauan cepat data manifest dan dokumen",
       "totalJamaah": "Total Jamaah",
       "contact": "Kontak Leader",
-      "visaStatus": "Status Visa"
+      "visaStatus": "Status Visa",
+      "logistics": "Logistik & Akomodasi",
+      "flight": "Penerbangan",
+      "departure": "Keberangkatan",
+      "return": "Kepulangan",
+      "hotel": "Hotel",
+      "transport": "Transportasi",
+      "members": "Daftar Jamaah",
+      "fullName": "Nama Lengkap",
+      "passport": "Passport",
+      "documents": "Dokumen"
     }
   },
   "ProviderSidebar": {

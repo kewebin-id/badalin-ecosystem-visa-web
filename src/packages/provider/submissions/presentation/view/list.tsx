@@ -21,8 +21,6 @@ import {
 import { SubmissionQuickReview } from '@/components/organisms/providers/submission/quick-review';
 import { EmptyState } from '@/components/templates';
 import { useScreenSize } from '@/shared/hooks';
-import { exportSubmissionToZip } from '@/shared/utils/manifest-export';
-import { useQueryClient } from '@tanstack/react-query';
 import { Eye, FileSpreadsheet, Inbox, Loader2, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -36,24 +34,21 @@ export const SubmissionsMonitoring = () => {
   const t = useTranslations('ProviderSubmissions');
   const { isMobile } = useScreenSize();
 
-  const { useSubmissions, usecase } = useProviderSubmissionsController();
-  const queryClient = useQueryClient();
+  const { useSubmissions, useExportSubmission, fetchSubmissionDetail } =
+    useProviderSubmissionsController();
   const { data: res, isPending } = useSubmissions({ page: 1, limit: 50 });
+  const { mutateAsync: exportSubmission, isPending: isExporting } = useExportSubmission();
 
   const [reviewData, setReviewData] = useState<ISubmissionListItem | null>(null);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState<{ src: string; alt: string } | null>(null);
   const [isFetchingDetail, setIsFetchingDetail] = useState<string | null>(null);
-  const [isExporting, setIsExporting] = useState(false);
 
   const handleOpenReview = async (id: string) => {
     setIsFetchingDetail(id);
     try {
-      const detail = await queryClient.fetchQuery({
-        queryKey: ['provider', 'submissions', id],
-        queryFn: () => usecase.getSubmissionDetail(id),
-      });
+      const detail = await fetchSubmissionDetail(id);
 
       if (detail?.data) {
         setReviewData(detail.data);
@@ -70,31 +65,11 @@ export const SubmissionsMonitoring = () => {
   };
 
   const handleExport = async (id: string) => {
-    setIsExporting(true);
-    const loadingToast = toast.loading('Fetching data and generating Archive (ZIP)...');
     try {
-      const detail = await queryClient.fetchQuery({
-        queryKey: ['provider', 'submissions', id],
-        queryFn: () => usecase.getSubmissionDetail(id),
-      });
-
-      if (detail?.data) {
-        await exportSubmissionToZip(detail.data);
-        toast.success('Archive generated successfully', {
-          id: loadingToast,
-        });
-      } else {
-        toast.error('Failed to fetch submission details', {
-          id: loadingToast,
-        });
-      }
+      await exportSubmission(id);
     } catch (error) {
       console.error('Export error:', error);
-      toast.error('An error occurred during export', {
-        id: loadingToast,
-      });
-    } finally {
-      setIsExporting(false);
+      toast.error('Gagal melakukan export data');
     }
   };
 

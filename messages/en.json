@@ -643,7 +643,17 @@
       "subtitle": "Submission {id} · Quick overview of manifest data and documents",
       "totalJamaah": "Total Pilgrims",
       "contact": "Leader Contact",
-      "visaStatus": "Visa Status"
+      "visaStatus": "Visa Status",
+      "logistics": "Logistics & Accommodation",
+      "flight": "Flight",
+      "departure": "Departure",
+      "return": "Return",
+      "hotel": "Hotel",
+      "transport": "Transportation",
+      "members": "Pilgrim List",
+      "fullName": "Full Name",
+      "passport": "Passport",
+      "documents": "Documents"
     }
   },
   "ProviderSidebar": {
