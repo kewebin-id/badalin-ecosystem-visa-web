@@ -398,7 +398,9 @@
       "Process": "Diproses",
       "Issued": "Diterbitkan",
       "Expired": "Kedaluwarsa",
-      "IN_REVIEW": "Dalam Tinjauan"
+      "IN_REVIEW": "Dalam Tinjauan",
+      "VERIFIED": "Diproses",
+      "REJECTED": "Ditolak"
     },
     "payment": {
       "PENDING": "Menunggu",
@@ -437,7 +439,10 @@
       "SUBMIT": "Diajukan",
       "PROCESS": "Diproses",
       "ISSUED": "Selesai",
-      "EXPIRED": "Kadaluarsa"
+      "EXPIRED": "Kadaluarsa",
+      "IN_REVIEW": "Dalam Tinjauan",
+      "VERIFIED": "Diproses",
+      "REJECTED": "Ditolak"
     }
   },
   "VisaWizard": {

@@ -398,7 +398,9 @@
       "Process": "In Process",
       "Issued": "Issued",
       "Expired": "Expired",
-      "IN_REVIEW": "In Review"
+      "IN_REVIEW": "In Review",
+      "VERIFIED": "Processing",
+      "REJECTED": "Rejected"
     },
     "payment": {
       "PENDING": "Pending",
@@ -437,7 +439,10 @@
       "SUBMIT": "Submitted",
       "PROCESS": "Processing",
       "ISSUED": "Issued",
-      "EXPIRED": "Expired"
+      "EXPIRED": "Expired",
+      "IN_REVIEW": "In Review",
+      "VERIFIED": "Processing",
+      "REJECTED": "Rejected"
     }
   },
   "VisaWizard": {

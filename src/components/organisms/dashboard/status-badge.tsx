@@ -17,19 +17,26 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
           label: t('SUBMIT'),
         };
       case 'PROCESS':
+      case 'IN_REVIEW':
         return {
           variant: 'warning' as const,
-          label: t('PROCESS'),
+          label: t('IN_REVIEW'),
+        };
+      case 'VERIFIED':
+        return {
+          variant: 'ocean' as const,
+          label: t('VERIFIED'),
         };
       case 'ISSUED':
         return {
-          variant: 'ocean' as const,
+          variant: 'success' as const,
           label: t('ISSUED'),
         };
       case 'EXPIRED':
+      case 'REJECTED':
         return {
           variant: 'destructive' as const,
-          label: t('EXPIRED'),
+          label: t('REJECTED'),
         };
       default:
         return {
