@@ -582,8 +582,8 @@
       "paymentStatusRequired": "Silakan tentukan status pembayaran",
       "paymentReasonRequired": "Alasan penolakan pembayaran wajib diisi",
       "invalidMemberDocs": "Beberapa dokumen anggota tidak valid",
-      "saveSuccess": "Review submission berhasil disimpan",
-      "saveError": "Gagal menyimpan review"
+      "saveSuccess": "Berhasil menyimpan perubahan dan memperbarui status pengajuan",
+      "saveError": "Gagal memproses pembaruan status. Terjadi kendala teknis saat menyimpan data Anda"
     },
     "detail": {
       "title": "Review Submission",
@@ -642,7 +642,7 @@
         "warning": "Pastikan semua data telah divalidasi dengan benar. Tindakan ini akan mengirimkan notifikasi kepada jamaah/agen terkait status pengajuan mereka."
       },
       "notFound": "Pengajuan tidak ditemukan.",
-      "loading": "Memuat detail pengajuan...",
+      "loading": "Sedang mengunggah & memproses visa...",
       "processPaymentFirst": "Proses dulu paymentnya"
     },
     "quickReview": {

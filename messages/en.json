@@ -582,8 +582,8 @@
       "paymentStatusRequired": "Please specify payment status",
       "paymentReasonRequired": "Rejection reason for payment is required",
       "invalidMemberDocs": "Some member documents are invalid",
-      "saveSuccess": "Submission review saved successfully",
-      "saveError": "Failed to save review"
+      "saveSuccess": "Successfully saved changes and updated submission status",
+      "saveError": "Failed to process status update. A technical issue occurred while saving your data"
     },
     "detail": {
       "title": "Review Submission",
@@ -642,7 +642,7 @@
         "warning": "Make sure all data has been validated correctly. This action will send a notification to the pilgrim/agency regarding their submission status."
       },
       "notFound": "Submission not found.",
-      "loading": "Loading submission detail...",
+      "loading": "Uploading & processing visas...",
       "processPaymentFirst": "Process the payment first"
     },
     "quickReview": {

@@ -10,7 +10,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { FC, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const LoginContent: FC<{ providerSlug?: string }> = () => {
@@ -19,10 +20,27 @@ export const LoginContent: FC<{ providerSlug?: string }> = () => {
   const tr = useTranslations('Register');
   const tc = useTranslations('Common');
 
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams?.get('callbackUrl');
+
   const [step, setStep] = useState<TStep>('input');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (callbackUrl) {
+      const segments = callbackUrl.split('/').filter(Boolean);
+      const reservedPaths = ['console', 'auth', 'public', 'api', 'transactions', 'family', 'pilgrim', 'profile', 'dashboard'];
+      
+      if (segments.length > 0 && !reservedPaths.includes(segments[0])) {
+        const agencySlug = segments[0] === 'p' ? segments[1] : segments[0];
+        if (agencySlug) {
+          document.cookie = `agency_id=${agencySlug}; path=/; max-age=${30 * 24 * 60 * 60}`;
+        }
+      }
+    }
+  }, [callbackUrl]);
 
   const { checkIdentifierMutation, registerMutation, loginMutation } = useAuthController();
 
