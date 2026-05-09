@@ -43,9 +43,17 @@ export const useAgencySettingsController = () => {
       mutationFn: (slug: string) => usecase.checkSlugAvailability(slug),
     });
 
+  const useValidateSlug = (slug: string) =>
+    useQuery({
+      queryKey: ['provider', 'agency-validate', slug],
+      queryFn: () => usecase.validateSlug(slug),
+      enabled: !!slug,
+    });
+
   return {
     useAgencyData,
     useUpdateAgency,
     useCheckSlug,
+    useValidateSlug,
   };
 };

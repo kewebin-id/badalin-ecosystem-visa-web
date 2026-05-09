@@ -6,4 +6,5 @@ export interface IAgencySettingsRepository {
   getAgencyData(): Promise<ResponseREST<IAgency>>;
   updateAgencyData(data: IUpdateAgencyRequest): Promise<ResponseREST<IAgency>>;
   checkSlugAvailability(slug: string): Promise<ResponseREST<{ available: boolean }>>;
+  validate(slug: string): Promise<ResponseREST<{ name: string }>>;
 }

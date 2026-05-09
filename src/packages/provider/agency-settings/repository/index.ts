@@ -29,4 +29,12 @@ export class AgencySettingsRepository implements IAgencySettingsRepository {
       isNextApi: true,
     });
   }
+
+  async validate(slug: string): Promise<ResponseREST<{ name: string }>> {
+    return this.api.get<{ name: string }>({
+      endpoint: endpoints.nextApi.provider.agency.validateSession,
+      queryParam: { slug },
+      isNextApi: true,
+    });
+  }
 }

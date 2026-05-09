@@ -55,4 +55,20 @@ export class AgencySettingsUseCase implements IAgencySettingsUseCase {
       return { error: error as Error, message: 'Internal server error' };
     }
   }
+
+  async validateSlug(slug: string): Promise<IUsecaseResponse<{ name: string }>> {
+    try {
+      const res = await this.repo.validate(slug);
+      if (res.data) {
+        return { data: res.data, message: res.message };
+      }
+      return {
+        error: new Error(res.message || 'Failed to validate slug'),
+        message: res.message,
+      };
+    } catch (error) {
+      Logger.error(error, { location: 'AgencySettingsUseCase.validateSlug' });
+      return { error: error as Error, message: 'Internal server error' };
+    }
+  }
 }

@@ -2,16 +2,16 @@
 
 import { Button, Card, Checkbox, Image } from '@/components/atoms';
 import { InputText } from '@/components/molecules';
+import { useAgencySettingsController } from '@/packages/provider/agency-settings/presentation/controller';
+import { ROUTES } from '@/shared/constants/routes';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Building2, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { FC, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { loginSchema, TProviderLoginForm } from '../../dto/form.dto';
 import { useProviderAuthController } from '../controller';
-
-import { ROUTES } from '@/shared/constants/routes';
-import { useParams } from 'next/navigation';
 
 export const ProviderLoginView: FC = () => {
   const params = useParams();
@@ -20,6 +20,10 @@ export const ProviderLoginView: FC = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const { loginMutation } = useProviderAuthController();
+  const { useValidateSlug } = useAgencySettingsController();
+
+  const { data: validateRes, isLoading: isValidating } = useValidateSlug(slug);
+  const agencyName = validateRes?.data?.name || slug;
 
   const form = useForm<TProviderLoginForm>({
     mode: 'onChange',
@@ -65,19 +69,33 @@ export const ProviderLoginView: FC = () => {
             <div className="flex items-center gap-2 bg-primary-default/10 text-primary-default px-3 py-1.5 rounded-full">
               <Building2 className="h-3.5 w-3.5" />
               <span className="text-[10px] font-bold tracking-[0.1em] uppercase">
-                {isDefaultSlug ? 'Provider Portal' : `Portal ${slug}`}
+                {isValidating
+                  ? 'Validating...'
+                  : isDefaultSlug
+                    ? 'Provider Portal'
+                    : `Portal ${agencyName}`}
               </span>
             </div>
           </div>
 
           <div className="text-center mb-8 space-y-2">
             <h1 className="text-2xl font-bold text-dark-900 font-heading">
-              {isDefaultSlug ? 'Masuk ke Portal Agensi' : `Masuk ke ${slug}`}
+              {isValidating ? (
+                <div className="h-8 w-48 bg-gray-100 animate-pulse rounded-lg mx-auto" />
+              ) : isDefaultSlug ? (
+                'Masuk ke Portal Agensi'
+              ) : (
+                `Masuk ke ${agencyName}`
+              )}
             </h1>
             <p className="text-sm text-gray-500">
-              {isDefaultSlug
-                ? 'Kelola pengajuan visa dan verifikasi pembayaran jamaah Anda.'
-                : `Masuk untuk mengelola data operasional agensi ${slug}.`}
+              {isValidating ? (
+                <div className="h-4 w-64 bg-gray-50 animate-pulse rounded-md mx-auto" />
+              ) : isDefaultSlug ? (
+                'Kelola pengajuan visa dan verifikasi pembayaran jamaah Anda.'
+              ) : (
+                `Masuk untuk mengelola data operasional agensi ${agencyName}.`
+              )}
             </p>
           </div>
 
