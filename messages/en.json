@@ -636,7 +636,8 @@
         "warning": "Make sure all data has been validated correctly. This action will send a notification to the pilgrim/agency regarding their submission status."
       },
       "notFound": "Submission not found.",
-      "loading": "Loading submission detail..."
+      "loading": "Loading submission detail...",
+      "processPaymentFirst": "Process the payment first"
     },
     "quickReview": {
       "title": "Global Review",

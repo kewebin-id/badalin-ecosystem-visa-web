@@ -3,6 +3,7 @@
 import {
   HeaderPageContent,
   ImagePreviewModal,
+  LoadingOverlay,
   PaymentStatusBadge,
   ReviewStatusBadge,
 } from '@/components/molecules';
@@ -64,6 +65,21 @@ export const SubmissionDetailView = () => {
     }
   }, [submission]);
 
+  useEffect(() => {
+    if (paymentAction === 'REJECT') {
+      const updatedStatuses: Record<string, { valid: boolean; reason?: string }> = {};
+      submission?.members.forEach((m) => {
+        updatedStatuses[m.id] = {
+          valid: false,
+          reason: paymentReason || 'Payment Rejected',
+        };
+      });
+      setMemberStatuses(updatedStatuses);
+      setLogisticsValid(false);
+      setLogisticsReason(paymentReason || 'Payment Rejected');
+    }
+  }, [paymentAction, submission?.members, paymentReason]);
+
   const capacityWarning = useMemo(() => {
     if (!submission?.transportations?.[0]) return null;
     const vehicleType = submission.transportations[0].type;
@@ -119,26 +135,26 @@ export const SubmissionDetailView = () => {
     const allMembersValid = submission?.members.every((m) => memberStatuses[m.id]?.valid);
 
     try {
-      if (paymentAction === 'APPROVE' && submission?.paymentStatus !== 'COMPLETED') {
-        await verifyPaymentMutation.mutateAsync(submission!.id);
-      }
+      const status = paymentAction === 'APPROVE' && logisticsValid === true ? 'VERIFIED' : 'REJECTED';
 
-      const status =
-        paymentAction === 'APPROVE' && allMembersValid && logisticsValid !== false
-          ? 'VERIFIED'
-          : 'REJECTED';
       const reason =
         paymentAction === 'REJECT'
           ? paymentReason
           : logisticsValid === false
             ? logisticsReason
-            : t('toasts.invalidMemberDocs');
+            : !allMembersValid
+              ? t('toasts.invalidMemberDocs')
+              : '';
 
       const members = (submission?.members || []).map((m) => ({
         id: m.id,
         isEligible: memberStatuses[m.id]?.valid ?? true,
         rejectionReason: memberStatuses[m.id]?.reason || undefined,
       }));
+
+      if (paymentAction === 'APPROVE' && submission?.paymentStatus !== 'COMPLETED') {
+        await verifyPaymentMutation.mutateAsync(submission!.id);
+      }
 
       await reviewSubmissionMutation.mutateAsync({
         id: submission!.id,
@@ -156,6 +172,10 @@ export const SubmissionDetailView = () => {
       toast.error(t('toasts.saveError'));
     }
   };
+
+  const isSubmissionRejected = submission?.verifyStatus === 'REJECTED';
+  const isPaymentApproved = paymentAction === 'APPROVE';
+  const showProcessGuard = !isPaymentApproved && !isVisaPhase && !isSubmissionRejected;
 
   if (isPending) {
     return <SubmissionDetailSkeleton />;
@@ -176,6 +196,11 @@ export const SubmissionDetailView = () => {
 
   return (
     <div className="space-y-8 pb-24 max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <LoadingOverlay
+        isLoading={reviewSubmissionMutation.isPending || verifyPaymentMutation.isPending}
+        message={t('detail.loading')}
+      />
+
       <HeaderPageContent
         title={t('detail.title')}
         subtitle={t('detail.subtitle', {
@@ -194,7 +219,7 @@ export const SubmissionDetailView = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8 space-y-8">
-          {!isVisaPhase && (
+          {!isVisaPhase && !isSubmissionRejected && (
             <>
               <DetailPaymentValidation
                 submission={submission}
@@ -207,45 +232,65 @@ export const SubmissionDetailView = () => {
             </>
           )}
 
-          <DetailMemberValidation
-            members={
-              isVisaPhase
-                ? (submission.members || []).filter((m) => memberStatuses[m.id]?.valid)
-                : submission.members || []
-            }
-            memberStatuses={memberStatuses}
-            onToggleStatus={toggleMemberStatus}
-            onPreview={setPreviewImage}
-            isVisaPhase={isVisaPhase}
-            visaFiles={visaFiles}
-            onVisaChange={handleVisaChange}
-          />
+          <div className="relative group">
+            {showProcessGuard && (
+              <div className="absolute inset-0 z-10 bg-white/50 backdrop-blur-[1px] rounded-[2rem] flex items-center justify-center cursor-not-allowed opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="bg-gray-900 text-white px-4 py-2 rounded-xl text-xs font-black shadow-2xl">
+                  {t('detail.processPaymentFirst')}
+                </div>
+              </div>
+            )}
+            <DetailMemberValidation
+              members={
+                isVisaPhase
+                  ? (submission.members || []).filter((m) => memberStatuses[m.id]?.valid)
+                  : submission.members || []
+              }
+              memberStatuses={memberStatuses}
+              onToggleStatus={toggleMemberStatus}
+              onPreview={setPreviewImage}
+              isVisaPhase={isVisaPhase}
+              visaFiles={visaFiles}
+              onVisaChange={handleVisaChange}
+            />
+          </div>
 
-          <DetailLogisticsReview
-            submission={submission}
-            capacityWarning={capacityWarning}
-            logisticsValid={logisticsValid}
-            setLogisticsValid={setLogisticsValid}
-            logisticsReason={logisticsReason}
-            setLogisticsReason={setLogisticsReason}
-            onPreview={setPreviewImage}
-            readOnly={isVisaPhase}
-          />
+          <div className="relative group">
+            {showProcessGuard && (
+              <div className="absolute inset-0 z-10 bg-white/50 backdrop-blur-[1px] rounded-[2rem] flex items-center justify-center cursor-not-allowed opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="bg-gray-900 text-white px-4 py-2 rounded-xl text-xs font-black shadow-2xl">
+                  {t('detail.processPaymentFirst')}
+                </div>
+              </div>
+            )}
+            <DetailLogisticsReview
+              submission={submission}
+              capacityWarning={capacityWarning}
+              logisticsValid={logisticsValid}
+              setLogisticsValid={setLogisticsValid}
+              logisticsReason={logisticsReason}
+              setLogisticsReason={setLogisticsReason}
+              onPreview={setPreviewImage}
+              readOnly={isVisaPhase || isSubmissionRejected}
+            />
+          </div>
         </div>
 
-        <div className="lg:col-span-4">
-          <DetailReviewSidebar
-            submission={submission}
-            paymentAction={paymentAction}
-            memberStatuses={memberStatuses}
-            logisticsValid={logisticsValid}
-            onFinalSubmit={handleFinalSubmit}
-            onCancel={() => router.push(ROUTES.PROVIDER.SUBMISSIONS(slug as string))}
-            isSubmitting={reviewSubmissionMutation.isPending || verifyPaymentMutation.isPending}
-            isVisaPhase={isVisaPhase}
-            visaFiles={visaFiles}
-          />
-        </div>
+        {!isSubmissionRejected && (
+          <div className="lg:col-span-4">
+            <DetailReviewSidebar
+              submission={submission}
+              paymentAction={paymentAction}
+              memberStatuses={memberStatuses}
+              logisticsValid={logisticsValid}
+              onFinalSubmit={handleFinalSubmit}
+              onCancel={() => router.push(ROUTES.PROVIDER.SUBMISSIONS(slug as string))}
+              isSubmitting={reviewSubmissionMutation.isPending || verifyPaymentMutation.isPending}
+              isVisaPhase={isVisaPhase}
+              visaFiles={visaFiles}
+            />
+          </div>
+        )}
       </div>
 
       <ImagePreviewModal

@@ -26,6 +26,7 @@ interface DetailMemberValidationProps {
   isVisaPhase?: boolean;
   visaFiles?: Record<string, UploadFile[]>;
   onVisaChange?: (memberId: string, files: UploadFile[]) => void;
+  readOnly?: boolean;
 }
 
 export const DetailMemberValidation = ({
@@ -36,6 +37,7 @@ export const DetailMemberValidation = ({
   isVisaPhase,
   visaFiles = {},
   onVisaChange,
+  readOnly,
 }: DetailMemberValidationProps) => {
   const t = useTranslations('ProviderSubmissions.detail.member');
   const ts = useTranslations('ProviderSubmissions.detail.sections');
@@ -147,7 +149,11 @@ export const DetailMemberValidation = ({
                     </div>
                   </TableCell>
                   <TableCell className="pr-6 py-5 text-right">
-                    {isVisaPhase ? (
+                    {readOnly ? (
+                      <div className="text-xs font-black text-gray-300 uppercase tracking-widest italic">
+                        View Only
+                      </div>
+                    ) : isVisaPhase ? (
                       <div className="flex justify-end min-w-[220px]">
                         <InputFile
                           maxFiles={5}
@@ -221,7 +227,7 @@ export const DetailMemberValidation = ({
                       </p>
                     )}
                   </div>
-                  {!isVisaPhase && (
+                  {!readOnly && !isVisaPhase && (
                     <div className="flex flex-col gap-2">
                       <button
                         onClick={() => onToggleStatus(member.id)}
@@ -252,7 +258,7 @@ export const DetailMemberValidation = ({
                   )}
                 </div>
 
-                {isVisaPhase && (
+                {!readOnly && isVisaPhase && (
                   <div className="mb-4">
                     <InputFile
                       maxFiles={5}

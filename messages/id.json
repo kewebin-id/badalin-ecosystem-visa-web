@@ -636,7 +636,8 @@
         "warning": "Pastikan semua data telah divalidasi dengan benar. Tindakan ini akan mengirimkan notifikasi kepada jamaah/agen terkait status pengajuan mereka."
       },
       "notFound": "Pengajuan tidak ditemukan.",
-      "loading": "Memuat detail pengajuan..."
+      "loading": "Memuat detail pengajuan...",
+      "processPaymentFirst": "Proses dulu paymentnya"
     },
     "quickReview": {
       "title": "Review Keseluruhan",
