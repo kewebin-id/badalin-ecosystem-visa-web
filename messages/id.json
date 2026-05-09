@@ -665,6 +665,8 @@
       "confirmVisaTitle": "Konfirmasi Pengajuan Visa",
       "confirmVisaDesc": "Pastikan jumlah visa yang diunggah sesuai dengan jumlah jamaah.",
       "submitVisa": "Kirim Visa",
+      "listMembers": "List Jamaah & File",
+      "noVisaFile": "Belum ada file visa",
       "refund": {
         "title": "Estimasi Refund",
         "desc": "Ada {count} jamaah yang ditolak. Provider wajib mengembalikan dana sebesar {amount} ke jamaah.",
@@ -703,5 +705,14 @@
     "settingUp": "Sedang mengatur...",
     "terms": "Dengan melanjutkan, Anda menyetujui ketentuan layanan dan panduan identitas kami.",
     "success": "Setup agensi berhasil diselesaikan!"
+  },
+  "UnderConstruction": {
+    "title": "Fitur Sedang Dikembangkan",
+    "description": "Kami sedang bekerja keras untuk menghadirkan fitur ini. Nantikan pembaruan selanjutnya!",
+    "goBack": "Kembali",
+    "comingSoon": "Segera Hadir"
+  },
+  "ManifestsPage": {
+    "description": "Modul data manifest dan logistik kolektif sedang dalam tahap pengembangan. Segera hadir untuk memudahkan manajemen keberangkatan Anda."
   }
 }

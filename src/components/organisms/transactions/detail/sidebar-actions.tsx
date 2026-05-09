@@ -45,7 +45,8 @@ export const DetailSidebarActions = ({
         </div>
       </div>
 
-      {(transaction.paymentStatus === 'PENDING' || transaction.paymentStatus === 'COMPLETED') && (
+      {(transaction.paymentStatus === 'PENDING' ||
+        (transaction.paymentStatus === 'COMPLETED' && transaction.status === 'Issued')) && (
         <div className="pt-6 border-t border-gray-50 flex flex-col gap-4">
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-60">
             {transaction.paymentStatus === 'COMPLETED'

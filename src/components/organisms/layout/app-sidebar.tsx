@@ -20,14 +20,14 @@ import { useAuth } from '@/shared/hooks';
 import { cn } from '@/shared/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
+  FileText,
+  Inbox,
   LayoutDashboard,
   LogOut,
   PanelLeftClose,
   Plane,
-  Users,
-  Inbox,
-  FileText,
   Settings,
+  Users,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
@@ -59,47 +59,47 @@ export const AppSidebar = ({
   const menuItems = isLoadingAuth
     ? []
     : isProvider
-    ? [
-        {
-          title: 'ProviderSidebar.dashboard',
-          url: ROUTES.PROVIDER.DASHBOARD(slug),
-          icon: LayoutDashboard,
-          exact: true,
-        },
-        {
-          title: 'ProviderSidebar.submissions',
-          url: ROUTES.PROVIDER.SUBMISSIONS(slug),
-          icon: Inbox,
-        },
-        {
-          title: 'ProviderSidebar.manifestData',
-          url: ROUTES.PROVIDER.SUBMISSIONS(slug),
-          icon: FileText,
-        },
-        {
-          title: 'ProviderSidebar.settings',
-          url: ROUTES.PROVIDER.SETTINGS(slug),
-          icon: Settings,
-        },
-      ]
-    : [
-        {
-          title: 'Dashboard.title',
-          url: ROUTES.PILGRIM.DASHBOARD,
-          icon: LayoutDashboard,
-          exact: true,
-        },
-        {
-          title: 'Dashboard.familyGroup',
-          url: ROUTES.PILGRIM.FAMILY.INDEX,
-          icon: Users,
-        },
-        {
-          title: 'Dashboard.transactions',
-          url: ROUTES.PILGRIM.TRANSACTION.INDEX,
-          icon: Plane,
-        },
-      ];
+      ? [
+          {
+            title: 'ProviderSidebar.dashboard',
+            url: ROUTES.PROVIDER.DASHBOARD(slug),
+            icon: LayoutDashboard,
+            exact: true,
+          },
+          {
+            title: 'ProviderSidebar.submissions',
+            url: ROUTES.PROVIDER.SUBMISSIONS(slug),
+            icon: Inbox,
+          },
+          {
+            title: 'ProviderSidebar.manifestData',
+            url: ROUTES.PROVIDER.MANIFEST_LIST(slug),
+            icon: FileText,
+          },
+          {
+            title: 'ProviderSidebar.settings',
+            url: ROUTES.PROVIDER.SETTINGS(slug),
+            icon: Settings,
+          },
+        ]
+      : [
+          {
+            title: 'Dashboard.title',
+            url: ROUTES.PILGRIM.DASHBOARD,
+            icon: LayoutDashboard,
+            exact: true,
+          },
+          {
+            title: 'Dashboard.familyGroup',
+            url: ROUTES.PILGRIM.FAMILY.INDEX,
+            icon: Users,
+          },
+          {
+            title: 'Dashboard.transactions',
+            url: ROUTES.PILGRIM.TRANSACTION.INDEX,
+            icon: Plane,
+          },
+        ];
 
   return (
     <Sidebar
@@ -193,7 +193,9 @@ export const AppSidebar = ({
                     <SidebarMenuButton asChild tooltip={!isLoading ? t(item.title) : ''}>
                       <NavLink
                         href={item.url}
-                        onClick={onMenuClose}
+                        onClick={() => {
+                          onMenuClose?.();
+                        }}
                         className={cn(
                           'group flex items-center px-4 py-3 rounded-2xl transition-all duration-200 w-full relative overflow-hidden cursor-pointer',
                           isActive

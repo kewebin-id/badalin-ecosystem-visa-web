@@ -665,6 +665,8 @@
       "confirmVisaTitle": "Confirm Visa Submission",
       "confirmVisaDesc": "Please ensure the number of uploaded visas matches the number of pilgrims.",
       "submitVisa": "Submit Visa",
+      "listMembers": "Pilgrim & File List",
+      "noVisaFile": "No visa file yet",
       "refund": {
         "title": "Refund Estimation",
         "desc": "There are {count} rejected pilgrims. Provider is required to refund {amount} to the pilgrims.",
@@ -703,5 +705,14 @@
     "settingUp": "Setting up...",
     "terms": "By continuing, you agree to our terms of service and identity guidelines.",
     "success": "Agency setup completed successfully!"
+  },
+  "UnderConstruction": {
+    "title": "Feature Under Development",
+    "description": "We're working hard to bring you this feature. Stay tuned for updates!",
+    "goBack": "Go Back",
+    "comingSoon": "Coming Soon"
+  },
+  "ManifestsPage": {
+    "description": "Collective manifest and logistics data module is under development. Coming soon to simplify your departure management."
   }
 }

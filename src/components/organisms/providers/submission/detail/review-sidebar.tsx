@@ -7,6 +7,7 @@ import { cn } from '@/shared/utils';
 import { AlertCircle, Info, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { ConfirmVisaDialog } from './confirm-visa-dialog';
 
 interface DetailReviewSidebarProps {
   submission: ISubmissionListItem;
@@ -161,7 +162,11 @@ export const DetailReviewSidebar = ({
         <div className="space-y-3">
           <Button
             onClick={() => (isVisaPhase ? setShowConfirm(true) : onFinalSubmit())}
-            disabled={isSubmitting || !isComplete || submission.agency?.status === 'RESTRICTED'}
+            disabled={
+              isSubmitting || 
+              (!isVisaPhase && !isComplete) || 
+              submission.agency?.status === 'RESTRICTED'
+            }
           >
             {isVisaPhase ? tq('submitVisa') : ta('submit')}
           </Button>
@@ -178,47 +183,16 @@ export const DetailReviewSidebar = ({
         </div>
       </Card>
 
-      <DialogDrawer
+      <ConfirmVisaDialog
         open={showConfirm}
         setOpen={setShowConfirm}
-        title={tq('confirmVisaTitle')}
-        description={tq('confirmVisaDesc')}
-        submitButton={tq('submitVisa')}
-        onSubmit={() => {
-          setShowConfirm(false);
-          onFinalSubmit();
-        }}
-        onCancel={() => setShowConfirm(false)}
-      >
-        <div className="py-4 space-y-4 max-h-[60vh] overflow-y-auto pr-2">
-          <div className="flex items-center gap-2 pb-2 border-b border-gray-50">
-            <Users className="h-4 w-4 text-gray-400" />
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-              List Jamaah & File
-            </span>
-          </div>
-          {(submission.members || []).filter(m => memberStatuses[m.id]?.valid).map((m) => (
-            <div key={m.id} className="p-3 bg-gray-50 rounded-xl border border-gray-100">
-              <p className="text-sm font-black text-gray-900">{m.fullName}</p>
-              <div className="mt-2 space-y-1">
-                {visaFiles[m.id]?.length > 0 ? (
-                  visaFiles[m.id].map((file, idx) => (
-                    <p
-                      key={idx}
-                      className="text-[10px] text-green-600 font-bold flex items-center gap-1"
-                    >
-                      <div className="h-1 w-1 bg-green-500 rounded-full" />
-                      {file.name}
-                    </p>
-                  ))
-                ) : (
-                  <p className="text-[10px] text-red-400 italic">Belum ada file visa</p>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </DialogDrawer>
+        submission={submission}
+        memberStatuses={memberStatuses}
+        visaFiles={visaFiles}
+        isSubmitting={isSubmitting}
+        isComplete={isComplete}
+        onFinalSubmit={onFinalSubmit}
+      />
     </>
   );
 };

@@ -42,6 +42,7 @@ module.exports = withNextIntl(
       CDN_URL: process.env.CDN_URL,
       ONESIGNAL_APP_ID: process.env.ONESIGNAL_APP_ID,
       API_KEY: process.env.API_KEY,
+      APP_VERSION: process.env.APP_VERSION,
     },
     headers: async () => {
       return [

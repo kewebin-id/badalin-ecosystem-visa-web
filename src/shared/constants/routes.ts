@@ -22,6 +22,7 @@ export const ROUTES = {
     DETAIL: (slug: string = 'p', id: string) => `/${slug}/submissions/${id}`,
     PAYMENT_VERIFICATION: (slug: string = 'p') => `/${slug}/payment-verification`,
     MANIFEST: (slug: string = 'p', id: string) => `/${slug}/submissions/${id}/manifest`,
+    MANIFEST_LIST: (slug: string = 'p') => `/${slug}/manifests`,
     SETTINGS: (slug: string = 'p') => `/${slug}/settings`,
     AUTH: {
       LOGIN: (slug: string = 'p') => `/${slug}/auth/login`,
