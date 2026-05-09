@@ -23,4 +23,8 @@ export interface IProviderSubmissionsRepository {
     payloads: ITransportManifestPayload[],
   ): Promise<ResponseREST<void>>;
   reviewSubmission(id: string, payload: IReviewSubmissionPayload): Promise<ResponseREST<void>>;
+  submitVisas(
+    id: string,
+    visaFiles: Record<string, { name: string; base64: string }[]>,
+  ): Promise<ResponseREST<void>>;
 }

@@ -76,6 +76,21 @@ export const useProviderSubmissionsController = () => {
       },
     });
 
+  const useSubmitVisas = () =>
+    useMutation({
+      mutationFn: ({
+        id,
+        visaFiles,
+      }: {
+        id: string;
+        visaFiles: Record<string, { name: string; base64: string }[]>;
+      }) => usecase.submitVisas(id, visaFiles),
+      onSuccess: (_, { id }) => {
+        queryClient.invalidateQueries({ queryKey: ['provider', 'submissions'] });
+        queryClient.invalidateQueries({ queryKey: ['provider', 'submissions', id] });
+      },
+    });
+
   const useExportSubmission = () =>
     useMutation({
       mutationFn: async (id: string) => {
@@ -106,6 +121,7 @@ export const useProviderSubmissionsController = () => {
     useAddHotelManifest,
     useAddTransportManifest,
     useReviewSubmission,
+    useSubmitVisas,
     useExportSubmission,
     fetchSubmissionDetail,
   };

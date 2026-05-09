@@ -60,6 +60,7 @@ export const endpoints = {
       flightManifest: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/manifest/flight`,
       hotelManifest: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/manifest/hotel`,
       transportManifest: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/manifest/transport`,
+      submitVisas: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/submit-visas`,
     },
   },
   nextApi: {
@@ -95,6 +96,7 @@ export const endpoints = {
         flightManifest: (id: string) => `/api/provider/submissions/${id}/manifest/flight`,
         hotelManifest: (id: string) => `/api/provider/submissions/${id}/manifest/hotel`,
         transportManifest: (id: string) => `/api/provider/submissions/${id}/manifest/transport`,
+        submitVisas: (id: string) => `/api/provider/submissions/${id}/submit-visas`,
       },
     },
     visa: {

@@ -38,12 +38,13 @@ export const SubmissionDetailView = () => {
   const t = useTranslations('ProviderSubmissions');
   const router = useRouter();
   const { id, slug } = useParams();
-  const { useSubmissionDetail, useVerifyPayment, useReviewSubmission } =
+  const { useSubmissionDetail, useVerifyPayment, useReviewSubmission, useSubmitVisas } =
     useProviderSubmissionsController();
 
   const { data, isPending } = useSubmissionDetail(id as string);
   const verifyPaymentMutation = useVerifyPayment();
   const reviewSubmissionMutation = useReviewSubmission();
+  const submitVisasMutation = useSubmitVisas();
 
   const submission = data?.data;
 
@@ -116,9 +117,16 @@ export const SubmissionDetailView = () => {
 
   const handleFinalSubmit = async () => {
     if (isVisaPhase) {
-      // Handle Visa Final Submission Logic
-      toast.success('Visa submitted successfully');
-      router.push(ROUTES.PROVIDER.SUBMISSIONS(slug as string));
+      try {
+        await submitVisasMutation.mutateAsync({
+          id: submission!.id,
+          visaFiles,
+        });
+        toast.success(t('toasts.saveSuccess'));
+        router.push(ROUTES.PROVIDER.SUBMISSIONS(slug as string));
+      } catch (error) {
+        toast.error(t('toasts.saveError'));
+      }
       return;
     }
 
@@ -135,7 +143,8 @@ export const SubmissionDetailView = () => {
     const allMembersValid = submission?.members.every((m) => memberStatuses[m.id]?.valid);
 
     try {
-      const status = paymentAction === 'APPROVE' && logisticsValid === true ? 'VERIFIED' : 'REJECTED';
+      const status =
+        paymentAction === 'APPROVE' && logisticsValid === true ? 'VERIFIED' : 'REJECTED';
 
       const reason =
         paymentAction === 'REJECT'

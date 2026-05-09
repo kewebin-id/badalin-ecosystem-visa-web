@@ -143,4 +143,23 @@ export class ProviderSubmissionsUseCase implements IProviderSubmissionsUseCase {
       return { error: error as Error, message: 'Internal server error' };
     }
   }
+ 
+  async submitVisas(
+    id: string,
+    visaFiles: Record<string, { name: string; base64: string }[]>,
+  ): Promise<IUsecaseResponse<boolean>> {
+    try {
+      const res = await this.repo.submitVisas(id, visaFiles);
+      if (res.code === 200 || res.code === 201) {
+        return { data: true, message: res.message };
+      }
+      return {
+        error: new Error(res.message || 'Failed to submit visas'),
+        message: res.message,
+      };
+    } catch (error) {
+      Logger.error(error, { location: 'ProviderSubmissionsUseCase.submitVisas' });
+      return { error: error as Error, message: 'Internal server error' };
+    }
+  }
 }

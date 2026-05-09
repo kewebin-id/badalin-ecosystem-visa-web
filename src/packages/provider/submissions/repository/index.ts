@@ -73,6 +73,17 @@ export class ProviderSubmissionsRepository implements IProviderSubmissionsReposi
     });
   }
 
+  async submitVisas(
+    id: string,
+    visaFiles: Record<string, { name: string; base64: string }[]>,
+  ): Promise<ResponseREST<void>> {
+    return this.api.patch<void>({
+      endpoint: endpoints.nextApi.provider.submissions.submitVisas(id),
+      body: visaFiles,
+      isNextApi: true,
+    });
+  }
+
   private async addManifest(
     id: string,
     type: 'flight' | 'hotel' | 'transport',

@@ -46,6 +46,7 @@ export const DetailReviewSidebar = ({
   const isAllMembersProcessed = Object.keys(memberStatuses).length === totalMembers;
 
   const uploadedMembersCount = Object.keys(visaFiles).length;
+  const hasUploadedVisas = uploadedMembersCount > 0;
   const isAllVisasUploaded = uploadedMembersCount === validMembersCount;
 
   const isComplete = isVisaPhase
@@ -162,9 +163,11 @@ export const DetailReviewSidebar = ({
         <div className="space-y-3">
           <Button
             onClick={() => (isVisaPhase ? setShowConfirm(true) : onFinalSubmit())}
+            className="w-full h-14 rounded-2xl text-lg font-black shadow-[0_8px_20px_-6px_rgba(234,88,12,0.3)] active:scale-[0.98] transition-all"
             disabled={
-              isSubmitting || 
-              (!isVisaPhase && !isComplete) || 
+              isSubmitting ||
+              (!isVisaPhase && !isComplete) ||
+              (isVisaPhase && !hasUploadedVisas) ||
               submission.agency?.status === 'RESTRICTED'
             }
           >
