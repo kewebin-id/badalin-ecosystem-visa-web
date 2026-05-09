@@ -14,12 +14,14 @@ interface DetailSidebarActionsProps {
   transaction: ITransaction;
   onEdit: () => void;
   onDownload?: () => void;
+  isDownloading?: boolean;
 }
 
 export const DetailSidebarActions = ({
   transaction,
   onEdit,
   onDownload,
+  isDownloading,
 }: DetailSidebarActionsProps) => {
   const t = useTranslations('VisaTransaction');
 
@@ -59,9 +61,10 @@ export const DetailSidebarActions = ({
               className="w-full rounded-2xl shadow-lg shadow-primary-500/20 py-6"
               size="lg"
               onClick={onDownload}
+              disabled={isDownloading}
             >
-              <Download className="size-5 mr-3" />
-              {t('detail.downloadVisa')}
+              <Download className={`size-5 mr-3 ${isDownloading ? 'animate-bounce' : ''}`} />
+              {isDownloading ? t('detail.downloading') : t('detail.downloadVisa')}
             </Button>
           ) : (
             <>

@@ -25,7 +25,8 @@ export const TransactionDetailView = () => {
   const params = useParams();
   const id = params?.id as string;
 
-  const { useTransactionDetail, useUploadProof } = useTransactionController();
+  const { useTransactionDetail, useUploadProof, handleDownloadAllVisas, isDownloading } =
+    useTransactionController();
   const { data: detailRes, isLoading, refetch } = useTransactionDetail(id);
   const transaction = detailRes?.data || null;
 
@@ -127,6 +128,8 @@ export const TransactionDetailView = () => {
           <DetailSidebarActions
             transaction={transaction}
             onEdit={() => router.push(`${ROUTES.PILGRIM.TRANSACTION.FORM}?id=${transaction.id}`)}
+            onDownload={() => handleDownloadAllVisas(transaction)}
+            isDownloading={isDownloading}
           />
         </div>
       </div>
