@@ -3,7 +3,18 @@
 import { Button, Card, NotFoundComp } from '@/components/atoms';
 import { DatePicker, HeaderPageContent, InputSelect, InputText } from '@/components/molecules';
 import { ROUTES } from '@/shared/constants/routes';
-import { ArrowLeft, Book, Bus, CreditCard, Download, FileText, Hotel, Lock, Plane, Users } from 'lucide-react';
+import {
+  ArrowLeft,
+  Book,
+  Bus,
+  CreditCard,
+  Download,
+  FileText,
+  Hotel,
+  Lock,
+  Plane,
+  Users,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';

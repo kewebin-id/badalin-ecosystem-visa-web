@@ -57,9 +57,12 @@ export const endpoints = {
       verifyPayment: (slug: string, id: string) =>
         `/api/v1/${slug}/submissions/${id}/verify-payment`,
       review: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/review`,
-      flightManifest: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/manifest/flight`,
-      hotelManifest: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/manifest/hotel`,
-      transportManifest: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/manifest/transport`,
+      flightManifest: (slug: string, id: string) =>
+        `/api/v1/${slug}/submissions/${id}/manifest/flight`,
+      hotelManifest: (slug: string, id: string) =>
+        `/api/v1/${slug}/submissions/${id}/manifest/hotel`,
+      transportManifest: (slug: string, id: string) =>
+        `/api/v1/${slug}/submissions/${id}/manifest/transport`,
       submitVisas: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/submit-visas`,
       uploadVisas: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/upload-visas`,
     },

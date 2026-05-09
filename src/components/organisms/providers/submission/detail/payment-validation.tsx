@@ -35,9 +35,7 @@ export const DetailPaymentValidation = ({
           <div className="p-2 bg-green-50 rounded-xl">
             <CheckCircle2 className="h-5 w-5 text-green-500" />
           </div>
-          <h3 className="text-lg font-black text-gray-900 tracking-tight">
-            1. {ts('payment')}
-          </h3>
+          <h3 className="text-lg font-black text-gray-900 tracking-tight">1. {ts('payment')}</h3>
         </div>
       </div>
       <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -82,9 +80,7 @@ export const DetailPaymentValidation = ({
             </div>
             <div className="grid grid-cols-2 gap-2 text-sm">
               <p className="text-gray-500">{t('nominal')}:</p>
-              <p className="font-bold text-gray-900">
-                {currencyFormat(submission.totalAmount)}
-              </p>
+              <p className="font-bold text-gray-900">{currencyFormat(submission.totalAmount)}</p>
               <p className="text-gray-500">{t('ocrStatus')}:</p>
               <p className="font-bold text-green-600">{t('successRead')}</p>
             </div>

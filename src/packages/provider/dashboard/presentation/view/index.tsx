@@ -138,7 +138,10 @@ export const ProviderDashboardView = () => {
       <HeaderPageContent title={t('title')} subtitle={t('subtitle')} hideBack />
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div
+        id="tour-dashboard-overview"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700"
+      >
         {stats.map((s) => (
           <CardWrapper
             key={s.label}

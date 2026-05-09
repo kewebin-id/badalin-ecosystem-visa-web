@@ -40,7 +40,6 @@ export const GET = async (req: NextRequest) => {
 
     return response.handler(res);
   } catch (error: unknown) {
-
     Logger.error(error, { location: 'api/visa/submissions/route.ts - GET' });
     return response[500]({ message: 'Internal server error' });
   }

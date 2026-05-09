@@ -12,11 +12,7 @@ interface UnderConstructionProps {
   backHref?: string;
 }
 
-export const UnderConstruction = ({
-  title,
-  description,
-  backHref,
-}: UnderConstructionProps) => {
+export const UnderConstruction = ({ title, description, backHref }: UnderConstructionProps) => {
   const t = useTranslations('UnderConstruction');
   const router = useRouter();
 

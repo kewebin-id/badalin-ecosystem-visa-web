@@ -27,12 +27,7 @@ export const ImageThumbnailList = ({
           onClick={() => onPreview({ src: url, alt: `${altPrefix} ${i + 1}` })}
           className="relative h-12 w-12 rounded-lg border border-gray-200 overflow-hidden hover:opacity-80 transition-opacity group cursor-pointer"
         >
-          <Image
-            src={url}
-            alt={`${altPrefix} ${i + 1}`}
-            fill
-            className="object-cover"
-          />
+          <Image src={url} alt={`${altPrefix} ${i + 1}`} fill className="object-cover" />
           <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
             <Eye className="h-4 w-4 text-white" />
           </div>

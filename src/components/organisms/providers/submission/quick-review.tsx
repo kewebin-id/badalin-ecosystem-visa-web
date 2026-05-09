@@ -60,19 +60,19 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
       {/* Visa Upload CTA */}
       {submission.reviewStatus !== 'ISSUED' && (
         <Card className="p-4 bg-green-50 border-green-100 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-green-100 rounded-lg text-green-600">
-            <FileText className="h-5 w-5" />
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-green-100 rounded-lg text-green-600">
+              <FileText className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-sm font-black text-green-900">{t('uploadVisaAction')}</p>
+              <p className="text-xs text-green-600 font-medium">{t('uploadVisaDesc')}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm font-black text-green-900">{t('uploadVisaAction')}</p>
-            <p className="text-xs text-green-600 font-medium">{t('uploadVisaDesc')}</p>
-          </div>
-        </div>
-        <Button size="lg" href={ROUTES.PROVIDER.DETAIL(slug, submission.id)}>
-          {t('uploadVisaAction')} <ExternalLink className="h-4 w-4" />
-        </Button>
-      </Card>
+          <Button size="lg" href={ROUTES.PROVIDER.DETAIL(slug, submission.id)}>
+            {t('uploadVisaAction')} <ExternalLink className="h-4 w-4" />
+          </Button>
+        </Card>
       )}
 
       {/* Logistics Section */}
@@ -272,7 +272,9 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
                   </td>
                   <td className="p-4">
                     <ImageThumbnailList
-                      images={[m.photoUrl, m.passportUrl, m.ktpUrl, m.visaUrl].filter(Boolean) as string[]}
+                      images={
+                        [m.photoUrl, m.passportUrl, m.ktpUrl, m.visaUrl].filter(Boolean) as string[]
+                      }
                       onPreview={onPreview}
                       altPrefix={m.fullName || 'Jamaah'}
                       className="!mt-0"

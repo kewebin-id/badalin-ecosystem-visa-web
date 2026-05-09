@@ -6,11 +6,7 @@ import {
 } from '../domain/transaction';
 
 export interface ITransactionRepository {
-  findAll(params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-  }): Promise<
+  findAll(params?: { page?: number; limit?: number; search?: string }): Promise<
     ResponseREST<{
       items: IApiTransaction[];
       totalItems: number;

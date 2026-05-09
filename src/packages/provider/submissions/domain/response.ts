@@ -1,4 +1,8 @@
-import { IFlight, IHotel, ITransportation } from '@/packages/pilgrim/transaction/domain/transaction';
+import {
+  IFlight,
+  IHotel,
+  ITransportation,
+} from '@/packages/pilgrim/transaction/domain/transaction';
 
 export interface ILeader {
   id: string;

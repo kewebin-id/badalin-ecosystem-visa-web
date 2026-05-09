@@ -5,6 +5,4 @@ export const metadata: Metadata = {
   title: 'Submissions | Badalin Visa',
 };
 
-export default function ProviderSubmissionsPage() {
-  return <SubmissionsMonitoring />;
-}
+export default SubmissionsMonitoring;

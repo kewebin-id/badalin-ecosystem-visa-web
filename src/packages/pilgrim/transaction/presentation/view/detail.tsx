@@ -93,7 +93,7 @@ export const TransactionDetailView = () => {
           <Tabs defaultValue="logistik" className="w-full">
             <TabsList>
               <TabsTrigger value="logistik">{t('detail.logistics')}</TabsTrigger>
-              <TabsTrigger value="pembayaran" className="relative">
+              <TabsTrigger id="tour-payment-status" value="pembayaran" className="relative">
                 <div className="flex items-center gap-2">
                   {t('detail.paymentStatus')}
                   {transaction.paymentStatus !== 'PENDING' && (

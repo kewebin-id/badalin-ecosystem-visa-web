@@ -31,8 +31,18 @@ export const LoginContent: FC<{ providerSlug?: string }> = () => {
   useEffect(() => {
     if (callbackUrl) {
       const segments = callbackUrl.split('/').filter(Boolean);
-      const reservedPaths = ['console', 'auth', 'public', 'api', 'transactions', 'family', 'pilgrim', 'profile', 'dashboard'];
-      
+      const reservedPaths = [
+        'console',
+        'auth',
+        'public',
+        'api',
+        'transactions',
+        'family',
+        'pilgrim',
+        'profile',
+        'dashboard',
+      ];
+
       if (segments.length > 0 && !reservedPaths.includes(segments[0])) {
         const agencySlug = segments[0] === 'p' ? segments[1] : segments[0];
         if (agencySlug) {

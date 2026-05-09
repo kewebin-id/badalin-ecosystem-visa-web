@@ -280,7 +280,10 @@ export const MemberFormView = () => {
           </section>
 
           {/* OCR Section */}
-          <section className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-6">
+          <section
+            id="tour-pilgrim-ocr"
+            className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-6"
+          >
             <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
               {t('documentSection')}
             </h3>

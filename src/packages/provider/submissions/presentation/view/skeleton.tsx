@@ -78,7 +78,10 @@ export const SubmissionDetailSkeleton = () => {
             <Skeleton className="h-16 w-full rounded-none" />
             <div className="p-0">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="flex justify-between items-center p-6 border-b border-gray-50">
+                <div
+                  key={i}
+                  className="flex justify-between items-center p-6 border-b border-gray-50"
+                >
                   <div className="space-y-2">
                     <Skeleton className="h-5 w-48" />
                     <Skeleton className="h-3 w-32" />

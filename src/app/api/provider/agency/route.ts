@@ -7,6 +7,33 @@ import { NextRequest } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
+export const GET = async (req: NextRequest) => {
+  try {
+    const session = await getAuthTokenFromRequest(req);
+    const agencySlug = req.cookies.get('agency_slug')?.value || session?.user?.agency?.slug;
+    const apiKey = process.env.API_KEY;
+
+    if (!session?.token) return response[401]({ message: 'Unauthorized' });
+    if (!apiKey) return response[500]({ message: 'Internal server error' });
+
+    const restApi = new RestAPI(undefined, session.token as string);
+    const res = await restApi.get({
+      endpoint: endpoints.provider.agency.base,
+      config: {
+        headers: {
+          'x-api-key': apiKey,
+          Cookie: `agency_slug=${agencySlug}`,
+        },
+      },
+    });
+
+    return response.handler(res);
+  } catch (error: unknown) {
+    Logger.error(error, { location: 'api/provider/agency/route.ts - GET' });
+    return response[500]({ message: 'Internal server error' });
+  }
+};
+
 export const PATCH = async (req: NextRequest) => {
   try {
     const session = await getAuthTokenFromRequest(req);

@@ -37,7 +37,9 @@ export const PATCH = async (req: NextRequest, { params }: { params: Promise<{ id
 
     return response.handler(res);
   } catch (error: unknown) {
-    Logger.error(error, { location: `api/provider/submissions/${id}/upload-visas/route.ts - PATCH` });
+    Logger.error(error, {
+      location: `api/provider/submissions/${id}/upload-visas/route.ts - PATCH`,
+    });
     return response[500]({ message: 'Internal server error' });
   }
 };

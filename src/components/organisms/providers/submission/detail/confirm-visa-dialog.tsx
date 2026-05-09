@@ -51,29 +51,30 @@ export const ConfirmVisaDialog = ({
             {tq('listMembers')}
           </span>
         </div>
-        {(submission.members || []).filter(m => memberStatuses[m.id]?.valid).map((m) => (
-          <div key={m.id} className="p-3 bg-gray-50 rounded-xl border border-gray-100">
-            <p className="text-sm font-black text-gray-900">{m.fullName}</p>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {visaFiles[m.id]?.length > 0 ? (
-                visaFiles[m.id].map((file, idx) => (
-                  <div key={idx} className="relative group size-12 rounded-lg border border-gray-200 overflow-hidden bg-white">
-                    <img 
-                      src={file.base64} 
-                      alt={file.name} 
-                      className="size-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <div className="size-1.5 bg-white rounded-full animate-pulse" />
+        {(submission.members || [])
+          .filter((m) => memberStatuses[m.id]?.valid)
+          .map((m) => (
+            <div key={m.id} className="p-3 bg-gray-50 rounded-xl border border-gray-100">
+              <p className="text-sm font-black text-gray-900">{m.fullName}</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {visaFiles[m.id]?.length > 0 ? (
+                  visaFiles[m.id].map((file, idx) => (
+                    <div
+                      key={idx}
+                      className="relative group size-12 rounded-lg border border-gray-200 overflow-hidden bg-white"
+                    >
+                      <img src={file.base64} alt={file.name} className="size-full object-cover" />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <div className="size-1.5 bg-white rounded-full animate-pulse" />
+                      </div>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-[10px] text-red-400 italic">{tq('noVisaFile')}</p>
-              )}
+                  ))
+                ) : (
+                  <p className="text-[10px] text-red-400 italic">{tq('noVisaFile')}</p>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </DialogDrawer>
   );

@@ -188,8 +188,18 @@ export const AppSidebar = ({
             <SidebarMenu className="space-y-1.5">
               {menuItems.map((item) => {
                 const isActive = item.exact ? pathname === item.url : pathname.startsWith(item.url);
+                const tourId =
+                  item.title === 'ProviderSidebar.submissions'
+                    ? 'tour-submissions-menu'
+                    : item.title === 'ProviderSidebar.settings'
+                      ? 'tour-agency-settings'
+                      : item.title === 'Dashboard.familyGroup'
+                        ? 'tour-pilgrim-management'
+                        : item.title === 'Dashboard.transactions'
+                          ? 'tour-visa-application'
+                          : undefined;
                 return (
-                  <SidebarMenuItem key={item.url}>
+                  <SidebarMenuItem key={item.url} id={tourId}>
                     <SidebarMenuButton asChild tooltip={!isLoading ? t(item.title) : ''}>
                       <NavLink
                         href={item.url}

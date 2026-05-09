@@ -47,7 +47,7 @@ export const SubmissionDetailView = () => {
   const submitVisasMutation = useSubmitVisas();
 
   const submission = data?.data;
- 
+
   const isIssued = submission?.reviewStatus === 'ISSUED';
   const isVisaPhase = submission?.reviewStatus === 'VERIFIED';
 
@@ -208,7 +208,7 @@ export const SubmissionDetailView = () => {
     <div className="space-y-8 pb-24 max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
       <LoadingOverlay
         isLoading={
-          reviewSubmissionMutation.isPending || 
+          reviewSubmissionMutation.isPending ||
           verifyPaymentMutation.isPending ||
           submitVisasMutation.isPending
         }

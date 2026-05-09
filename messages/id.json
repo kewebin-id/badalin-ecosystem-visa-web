@@ -727,5 +727,84 @@
   },
   "ManifestsPage": {
     "description": "Modul data manifest dan logistik kolektif sedang dalam tahap pengembangan. Segera hadir untuk memudahkan manajemen keberangkatan Anda."
+  },
+  "Onboarding": {
+    "next": "Lanjut",
+    "prev": "Kembali",
+    "done": "Selesai",
+    "provider": {
+      "dashboard": {
+        "title": "Ringkasan Dashboard",
+        "description": "Di sini Anda bisa melihat statistik cepat mengenai jumlah pengajuan, status pembayaran, dan visa yang sedang diproses."
+      },
+      "submissions": {
+        "title": "Monitoring Pengajuan",
+        "description": "Gunakan menu ini untuk memantau data jamaah secara detail dan memverifikasi bukti pembayaran yang mereka unggah."
+      },
+      "settings": {
+        "title": "Pengaturan Agensi",
+        "description": "Lengkapi identitas agensi Anda. Ingat: Slug (URL) hanya bisa diubah sekali dalam 90 hari."
+      },
+      "pricing": {
+        "title": "Harga Visa",
+        "description": "Harga yang Anda tetapkan di sini akan menjadi harga dasar bagi jamaah yang mendaftar melalui portal Anda."
+      },
+      "bank": {
+        "title": "Informasi Bank",
+        "description": "Wajib diisi! Data ini akan muncul di instruksi pembayaran jamaah sebagai tujuan transfer."
+      }
+    },
+    "pilgrim": {
+      "family": {
+        "title": "Kelola Anggota",
+        "description": "Tambahkan anggota keluarga atau grup Anda. Gunakan fitur OCR untuk memindai data dari foto paspor/KTP secara otomatis."
+      },
+      "application": {
+        "title": "Ajukan Visa",
+        "description": "Pilih anggota yang ingin didaftarkan, lalu lengkapi detail logistik perjalanan Anda di sini."
+      },
+      "payment": {
+        "title": "Pembayaran & Status",
+        "description": "Pantau status pengajuan Anda dan unggah bukti transfer di menu ini agar bisa segera diproses oleh provider."
+      }
+    }
+  },
+  "AgencySettings": {
+    "title": "Pengaturan Agensi",
+    "subtitle": "Kelola identitas dan operasional bisnis agensi Anda",
+    "updateSuccess": "Pengaturan agensi berhasil diperbarui",
+    "updateError": "Gagal memperbarui pengaturan agensi",
+    "fields": {
+      "name": "Nama Agensi",
+      "slug": "Slug Agensi (URL)",
+      "visaPrice": "Harga Visa (IDR)",
+      "bankName": "Nama Bank",
+      "bankAccountName": "Nama Pemilik Rekening",
+      "bankAccountNumber": "Nomor Rekening"
+    },
+    "placeholders": {
+      "name": "Masukkan nama agensi",
+      "slug": "contoh-agensi-saya",
+      "visaPrice": "Contoh: 1500000",
+      "bankName": "Contoh: BCA",
+      "bankAccountName": "Masukkan nama pemilik rekening",
+      "bankAccountNumber": "Masukkan nomor rekening"
+    },
+    "sections": {
+      "identity": "Identitas Agensi",
+      "pricing": "Kebijakan Harga",
+      "bank": "Informasi Rekening"
+    },
+    "hints": {
+      "slug": "Hati-hati! Setelah diset, slug hanya bisa diubah sekali dalam 90 hari.",
+      "slugCooldown": "Slug sedang dalam masa cooldown. Anda bisa mengubahnya lagi dalam {days} hari.",
+      "visaPrice": "Harga ini akan menjadi tagihan otomatis bagi jamaah yang mendaftar.",
+      "bank": "Pastikan data rekening benar agar instruksi pembayaran jamaah akurat."
+    },
+    "save": "Simpan Perubahan",
+    "validation": {
+      "required": "Field ini wajib diisi",
+      "slugRegex": "Slug hanya boleh huruf kecil, angka, dan tanda hubung"
+    }
   }
 }

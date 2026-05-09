@@ -12,11 +12,7 @@ import { ITransactionRepository } from '../port/repository.port';
 export class TransactionRepository implements ITransactionRepository {
   constructor(private readonly api: RestAPI) {}
 
-  async findAll(params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-  }): Promise<
+  async findAll(params?: { page?: number; limit?: number; search?: string }): Promise<
     ResponseREST<{
       items: IApiTransaction[];
       totalItems: number;

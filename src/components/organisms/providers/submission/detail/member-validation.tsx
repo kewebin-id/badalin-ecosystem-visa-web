@@ -30,7 +30,7 @@ interface DetailMemberValidationProps {
   onVisaChange?: (memberId: string, files: UploadFile[]) => void;
   readOnly?: boolean;
 }
- 
+
 export const DetailMemberValidation = ({
   members,
   memberStatuses,
@@ -284,7 +284,7 @@ export const DetailMemberValidation = ({
                     />
                   </div>
                 )}
- 
+
                 {isIssued && (
                   <div className="mb-4">
                     <ActionButton
@@ -300,7 +300,7 @@ export const DetailMemberValidation = ({
                     />
                   </div>
                 )}
- 
+
                 <div className="grid grid-cols-3 gap-3">
                   <ActionButton
                     icon={Book}

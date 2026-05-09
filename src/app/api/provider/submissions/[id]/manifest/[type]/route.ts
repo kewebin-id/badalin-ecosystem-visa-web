@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 export const POST = async (
   req: NextRequest,
-  { params }: { params: Promise<{ id: string; type: string }> }
+  { params }: { params: Promise<{ id: string; type: string }> },
 ) => {
   try {
     const { id, type } = await params;
@@ -55,7 +55,9 @@ export const POST = async (
 
     return response.handler(res);
   } catch (error: unknown) {
-    Logger.error(error, { location: `api/provider/submissions/[id]/manifest/[type]/route.ts - POST` });
+    Logger.error(error, {
+      location: `api/provider/submissions/[id]/manifest/[type]/route.ts - POST`,
+    });
     return response[500]({ message: 'Internal server error' });
   }
 };

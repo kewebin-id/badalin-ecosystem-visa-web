@@ -143,7 +143,7 @@ export class ProviderSubmissionsUseCase implements IProviderSubmissionsUseCase {
       return { error: error as Error, message: 'Internal server error' };
     }
   }
- 
+
   async uploadVisas(
     id: string,
     visaFiles: Record<string, { name: string; base64: string }[]>,

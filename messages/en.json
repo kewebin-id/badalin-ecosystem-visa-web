@@ -727,5 +727,84 @@
   },
   "ManifestsPage": {
     "description": "Collective manifest and logistics data module is under development. Coming soon to simplify your departure management."
+  },
+  "Onboarding": {
+    "next": "Next",
+    "prev": "Previous",
+    "done": "Finish",
+    "provider": {
+      "dashboard": {
+        "title": "Dashboard Overview",
+        "description": "Here you can see quick statistics on the number of submissions, payment status, and visas being processed."
+      },
+      "submissions": {
+        "title": "Monitoring Submissions",
+        "description": "Use this menu to monitor pilgrim data in detail and verify the payment proof they upload."
+      },
+      "settings": {
+        "title": "Agency Settings",
+        "description": "Complete your agency identity. Remember: Slug (URL) can only be changed once every 90 days."
+      },
+      "pricing": {
+        "title": "Visa Pricing",
+        "description": "The price you set here will be the base price for pilgrims registering through your portal."
+      },
+      "bank": {
+        "title": "Bank Information",
+        "description": "Required! This data will appear in pilgrim payment instructions as the transfer destination."
+      }
+    },
+    "pilgrim": {
+      "family": {
+        "title": "Manage Members",
+        "description": "Add your family or group members. Use the OCR feature to automatically scan data from passport/KTP photos."
+      },
+      "application": {
+        "title": "Apply for Visa",
+        "description": "Select the members you want to register, then complete your travel logistics details here."
+      },
+      "payment": {
+        "title": "Payment & Status",
+        "description": "Monitor your application status and upload transfer proof in this menu so it can be processed by the provider."
+      }
+    }
+  },
+  "AgencySettings": {
+    "title": "Agency Settings",
+    "subtitle": "Manage your agency identity and business operations",
+    "updateSuccess": "Agency settings updated successfully",
+    "updateError": "Failed to update agency settings",
+    "fields": {
+      "name": "Agency Name",
+      "slug": "Agency Slug (URL)",
+      "visaPrice": "Visa Price (IDR)",
+      "bankName": "Bank Name",
+      "bankAccountName": "Account Holder Name",
+      "bankAccountNumber": "Account Number"
+    },
+    "placeholders": {
+      "name": "Enter agency name",
+      "slug": "example-my-agency",
+      "visaPrice": "Example: 1500000",
+      "bankName": "Example: BCA",
+      "bankAccountName": "Enter account holder name",
+      "bankAccountNumber": "Enter account number"
+    },
+    "sections": {
+      "identity": "Agency Identity",
+      "pricing": "Pricing Policy",
+      "bank": "Bank Account"
+    },
+    "hints": {
+      "slug": "Be careful! Once set, the slug can only be changed once every 90 days.",
+      "slugCooldown": "Slug is in cooldown. You can change it again in {days} day(s).",
+      "visaPrice": "This price will be automatically billed to pilgrims who register.",
+      "bank": "Ensure account data is correct so pilgrim payment instructions are accurate."
+    },
+    "save": "Save Changes",
+    "validation": {
+      "required": "This field is required",
+      "slugRegex": "Slug can only contain lowercase letters, numbers, and hyphens"
+    }
   }
 }

@@ -10,6 +10,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { AppHeader } from '../../organisms/layout/app-header';
 import { AppSidebar } from '../../organisms/layout/app-sidebar';
+import { useOnboardingTour } from '@/shared/hooks/use-onboarding-tour';
 
 export const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const t = useTranslations();
@@ -17,6 +18,9 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const params = useParams();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  // Initialize Onboarding Tour
+  useOnboardingTour(user?.role);
 
   // 1. Handle Slug Synchronization (Client-side redirect if mismatch)
   useEffect(() => {
