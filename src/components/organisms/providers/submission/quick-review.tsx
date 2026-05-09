@@ -58,7 +58,8 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
       </div>
 
       {/* Visa Upload CTA */}
-      <Card className="p-4 bg-green-50 border-green-100 flex flex-col md:flex-row items-center justify-between gap-4">
+      {submission.reviewStatus !== 'ISSUED' && (
+        <Card className="p-4 bg-green-50 border-green-100 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-green-100 rounded-lg text-green-600">
             <FileText className="h-5 w-5" />
@@ -72,6 +73,7 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
           {t('uploadVisaAction')} <ExternalLink className="h-4 w-4" />
         </Button>
       </Card>
+      )}
 
       {/* Logistics Section */}
       <div className="space-y-6">
@@ -270,7 +272,7 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
                   </td>
                   <td className="p-4">
                     <ImageThumbnailList
-                      images={[m.photoUrl, m.passportUrl, m.ktpUrl].filter(Boolean) as string[]}
+                      images={[m.photoUrl, m.passportUrl, m.ktpUrl, m.visaUrl].filter(Boolean) as string[]}
                       onPreview={onPreview}
                       altPrefix={m.fullName || 'Jamaah'}
                       className="!mt-0"

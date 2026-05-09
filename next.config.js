@@ -43,6 +43,7 @@ module.exports = withNextIntl(
       ONESIGNAL_APP_ID: process.env.ONESIGNAL_APP_ID,
       API_KEY: process.env.API_KEY,
       APP_VERSION: process.env.APP_VERSION,
+      BADALIN_CS_NUMBER: process.env.BADALIN_CS_NUMBER,
     },
     headers: async () => {
       return [

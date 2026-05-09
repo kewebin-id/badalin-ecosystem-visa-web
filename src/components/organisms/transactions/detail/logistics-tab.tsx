@@ -7,9 +7,12 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/atoms
 import { InputFile } from '@/components/molecules/input/file';
 import { ITransaction } from '@/packages/pilgrim/transaction/domain/transaction';
 import { formatDate } from '@/shared/utils';
-import { Bus, FileText, History as HistoryIcon, Plane, Timer } from 'lucide-react';
+import { AlertCircle, Bus, FileText, History as HistoryIcon, MessageCircle, Plane, Timer, XCircle } from 'lucide-react';
+import { Button } from '@/components/atoms/button';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+
+const BADALIN_CS_NUMBER = process.env.BADALIN_CS_NUMBER || '6281333737330';
 
 interface DetailLogisticsTabProps {
   transaction: ITransaction;
@@ -77,23 +80,34 @@ export const DetailLogisticsTab = ({ transaction }: DetailLogisticsTabProps) => 
               <Card
                 key={member.id}
                 onClick={() => setSelectedMember(member)}
-                className="bg-white border border-gray-100 shadow-sm rounded-3xl p-5 flex items-center gap-4 hover:border-primary-default/20 transition-all hover:shadow-md group cursor-pointer active:scale-95"
+                className={`bg-white border shadow-sm rounded-3xl p-5 flex items-center justify-between gap-4 transition-all hover:shadow-md group cursor-pointer active:scale-95 ${
+                  member.isEligible === false
+                    ? 'border-danger-500 bg-danger-50/30'
+                    : 'border-gray-100 hover:border-primary-default/20'
+                }`}
               >
-                <div className="size-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-primary-default group-hover:text-white transition-all shadow-inner overflow-hidden border border-gray-100/50">
-                  <UserAvatar
-                    name={member.fullName}
-                    src={member.photoUrl}
-                    seed={member.id}
-                    className="size-full"
-                    fallbackClassName="text-sm rounded-none"
-                  />
+                <div className="flex items-center gap-4 min-w-0">
+                  <div className="size-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-primary-default group-hover:text-white transition-all shadow-inner overflow-hidden border border-gray-100/50">
+                    <UserAvatar
+                      name={member.fullName}
+                      src={member.photoUrl}
+                      seed={member.id}
+                      className="size-full"
+                      fallbackClassName="text-sm rounded-none"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-black text-foreground truncate">{member.fullName}</p>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">
+                      {tPilgrim(`relations.${member.relation}`)} • {member.passportNumber}
+                    </p>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-black text-foreground truncate">{member.fullName}</p>
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">
-                    {tPilgrim(`relations.${member.relation}`)} • {member.passportNumber}
-                  </p>
-                </div>
+                {member.isEligible === false && (
+                  <div className="p-2 bg-danger-100 rounded-xl text-danger-600 animate-pulse">
+                    <XCircle className="size-5" />
+                  </div>
+                )}
               </Card>
             ))}
           </div>
@@ -121,6 +135,33 @@ export const DetailLogisticsTab = ({ transaction }: DetailLogisticsTabProps) => 
               </SheetHeader>
 
               <div className="p-6 space-y-8">
+                {/* Rejection Alert */}
+                {selectedMember?.isEligible === false && (
+                  <div className="bg-danger-50 border border-danger-100 rounded-3xl p-5 space-y-4">
+                    <div className="flex items-start gap-3 text-danger-600">
+                      <AlertCircle className="size-5 mt-0.5 shrink-0" />
+                      <div className="space-y-1">
+                        <p className="text-xs font-black uppercase tracking-wider">Pengajuan Ditolak</p>
+                        <p className="text-sm font-medium leading-relaxed">
+                          {selectedMember.rejectionReason || 'Alasan tidak disebutkan oleh provider.'}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <Button 
+                      className="w-full bg-danger-600 hover:bg-danger-700 text-white rounded-2xl h-12 flex items-center gap-2"
+                      onClick={() => {
+                        const phone = transaction.agency?.phoneNumber || BADALIN_CS_NUMBER;
+                        const message = `Halo, saya ${selectedMember.fullName}. Saya mendapatkan informasi bahwa pengajuan visa saya ditolak dengan alasan: ${selectedMember.rejectionReason || '-'}. Mohon bantuannya untuk proses perbaikan dokumen. Terima kasih.`;
+                        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                      }}
+                    >
+                      <MessageCircle className="size-4" />
+                      Hubungi Pendamping
+                    </Button>
+                  </div>
+                )}
+
                 {/* Personal Info */}
                 <div className="space-y-4">
                   <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-50">

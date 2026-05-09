@@ -95,11 +95,14 @@ export interface ITransaction {
     maritalStatus?: string;
     birthDate?: string;
     passportExpiry?: string;
+    isEligible?: boolean;
+    rejectionReason?: string;
   }[];
   agency?: {
     bankName?: string;
     bankAccountName?: string;
     bankAccountNumber?: string;
+    phoneNumber?: string;
   };
 }
 
