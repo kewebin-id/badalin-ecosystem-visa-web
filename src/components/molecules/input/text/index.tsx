@@ -1,9 +1,9 @@
 'use client';
 
+import { Image } from '@/components/atoms';
 import styles from '@/shared/styles/components/input.module.css';
 import { cn, formatRupiah, unformatRupiah } from '@/shared/utils';
 import { AlertTriangle, Check, Sparkles } from 'lucide-react';
-import { Image } from '@/components/atoms';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { InputTextProps } from '../input';
@@ -76,36 +76,50 @@ const InputTextRoot = ({
     if (value === undefined || value === null || value === '') {
       setInputState(undefined);
     } else {
-      setInputState(value);
+      const displayValue = type === 'price' ? formatRupiah(Number(value)) : value;
+      setInputState(displayValue);
     }
-  }, [value]);
+  }, [value, type]);
 
   useEffect(() => {
     if (tuningRegister && value) {
-      setInputState(value);
+      const displayValue = type === 'price' ? formatRupiah(Number(value)) : value;
+      setInputState(displayValue);
     }
-  }, [tuningRegister, value]);
+  }, [tuningRegister, value, type]);
 
   useEffect(() => {
     if (watchedValue !== undefined && watchedValue !== inputState) {
-      setInputState((watchedValue as string | number | undefined) ?? undefined);
+      const displayValue =
+        type === 'price'
+          ? formatRupiah(Number(watchedValue))
+          : (watchedValue as string | number | undefined);
+      setInputState(displayValue ?? undefined);
     }
-  }, [watchedValue, inputState]);
+  }, [watchedValue, inputState, type]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    if (tuningRegister) {
-      tuningRegister?.onChange(e);
-    } else {
-      if (setValue) setValue(val);
-    }
+    let val = e.target.value;
 
     if (type === 'price') {
       const numericValue = unformatRupiah(val);
       const formattedValue = formatRupiah(Number(numericValue));
+
       setInputState(formattedValue);
+
+      e.target.value = numericValue;
+      if (tuningRegister) {
+        tuningRegister.onChange(e);
+      } else if (setValue) {
+        setValue(numericValue);
+      }
     } else {
       setInputState(val);
+      if (tuningRegister) {
+        tuningRegister.onChange(e);
+      } else if (setValue) {
+        setValue(val);
+      }
     }
   };
 
@@ -208,7 +222,10 @@ const InputTextRoot = ({
               styles[
                 `form-label-inside${[inputState, value, watchedValue].some((v) => v !== undefined && v !== null && v !== '') ? '-active' : ''}`
               ],
-              handleIsFocused || [inputState, value, watchedValue].some((v) => v !== undefined && v !== null && v !== '')
+              handleIsFocused ||
+                [inputState, value, watchedValue].some(
+                  (v) => v !== undefined && v !== null && v !== '',
+                )
                 ? 'text-gray-500'
                 : 'text-gray-400',
             )}
