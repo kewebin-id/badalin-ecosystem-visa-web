@@ -139,7 +139,7 @@ export const DetailReviewSidebar = ({
           </div>
         )}
 
-        {rejectedCount > 0 && (
+        {isVisaPhase && rejectedCount > 0 && (
           <div className="mb-8 p-4 bg-red-50 rounded-2xl border border-red-100 space-y-3">
             <div className="flex items-center gap-2">
               <AlertCircle className="h-4 w-4 text-red-500" />
