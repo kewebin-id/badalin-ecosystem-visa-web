@@ -163,7 +163,9 @@ const InputTextRoot = ({
               errorMessage ? styles['form-input-error'] : styles['form-input'],
               disabled && 'cursor-not-allowed bg-gray-100! border-gray-200!',
               useLabelInside &&
-                styles[`form-input-inside${inputState || value || watchedValue ? '-active' : ''}`],
+                styles[
+                  `form-input-inside${[inputState, value, watchedValue].some((v) => v !== undefined && v !== null && v !== '') ? '-active' : ''}`
+                ],
               (iconPosition === 'left' || (icon && !iconPosition)) && 'pl-10',
               iconPosition === 'right' && 'pr-10',
               handleIsFocused && 'input-focused',
@@ -176,7 +178,7 @@ const InputTextRoot = ({
             onBlur={handleBlur}
             onFocus={handleFocus}
             onKeyDown={handleKeyDown}
-            value={inputState || ''}
+            value={inputState ?? ''}
             type={type}
             placeholder={!useLabelInside ? placeholder : ''}
             readOnly={readonly}
@@ -191,7 +193,9 @@ const InputTextRoot = ({
               errorMessage ? styles['form-input-error'] : styles['form-input'],
               disabled && 'cursor-not-allowed bg-gray-100! border-gray-200!',
               useLabelInside &&
-                styles[`form-input-inside${inputState || value || watchedValue ? '-active' : ''}`],
+                styles[
+                  `form-input-inside${[inputState, value, watchedValue].some((v) => v !== undefined && v !== null && v !== '') ? '-active' : ''}`
+                ],
               (iconPosition === 'left' || (icon && !iconPosition)) && 'pl-10',
               iconPosition === 'right' && 'pr-10',
               handleIsFocused && 'input-focused',
@@ -201,8 +205,10 @@ const InputTextRoot = ({
         {label && useLabelInside && (
           <label
             className={cn(
-              styles[`form-label-inside${inputState || value || watchedValue ? '-active' : ''}`],
-              handleIsFocused || inputState || value || !!watchedValue
+              styles[
+                `form-label-inside${[inputState, value, watchedValue].some((v) => v !== undefined && v !== null && v !== '') ? '-active' : ''}`
+              ],
+              handleIsFocused || [inputState, value, watchedValue].some((v) => v !== undefined && v !== null && v !== '')
                 ? 'text-gray-500'
                 : 'text-gray-400',
             )}

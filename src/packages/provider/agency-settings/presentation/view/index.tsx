@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Building2, Clock, CreditCard, DollarSign, Globe, Info, Save } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { AgencyFormValues, getAgencySchema } from '../../domain/request';
 import { useAgencySettingsController } from '../controller/index';
 
@@ -37,12 +37,7 @@ export const AgencySettingsView = () => {
     return !isTempSlug && slugCooldownDaysLeft > 0;
   }, [agency, slugCooldownDaysLeft]);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isDirty },
-  } = useForm<AgencyFormValues>({
+  const methods = useForm<AgencyFormValues>({
     resolver: zodResolver(getAgencySchema(t)),
     defaultValues: {
       name: '',
@@ -53,6 +48,13 @@ export const AgencySettingsView = () => {
       bankAccountNumber: '',
     },
   });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty },
+  } = methods;
 
   useEffect(() => {
     if (agency) {
@@ -95,10 +97,11 @@ export const AgencySettingsView = () => {
 
       <HeaderPageContent title={t('title')} subtitle={t('subtitle')} hideBack />
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
-      >
+      <FormProvider {...methods}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+        >
         {/* ── Left Column ── */}
         <div className="lg:col-span-7 space-y-8">
           {/* Agency Identity */}
@@ -254,6 +257,7 @@ export const AgencySettingsView = () => {
           </Button>
         </div>
       </form>
-    </div>
-  );
+    </FormProvider>
+  </div>
+);
 };
