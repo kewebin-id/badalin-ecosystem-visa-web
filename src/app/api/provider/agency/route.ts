@@ -18,7 +18,7 @@ export const GET = async (req: NextRequest) => {
 
     const restApi = new RestAPI(undefined, session.token as string);
     const res = await restApi.get({
-      endpoint: endpoints.provider.agency.base,
+      endpoint: endpoints.provider.agency.base(agencySlug),
       config: {
         headers: {
           'x-api-key': apiKey,
@@ -46,7 +46,7 @@ export const PATCH = async (req: NextRequest) => {
 
     const restApi = new RestAPI(undefined, session.token as string);
     const res = await restApi.patch({
-      endpoint: endpoints.provider.agency.base,
+      endpoint: endpoints.provider.agency.base(agencySlug),
       body,
       config: {
         headers: {

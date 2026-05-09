@@ -16,11 +16,12 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const t = useTranslations();
   const { signOut, user } = useAuth();
   const params = useParams();
+  const slug = (params?.slug as string) || user?.agencySlug || user?.agency?.slug;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   // Initialize Onboarding Tour
-  useOnboardingTour(user?.role);
+  useOnboardingTour(user?.role, slug);
 
   // 1. Handle Slug Synchronization (Client-side redirect if mismatch)
   useEffect(() => {

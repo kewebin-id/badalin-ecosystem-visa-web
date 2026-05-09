@@ -44,7 +44,7 @@ export const endpoints = {
       resetPassword: '/api/v1/p/auth/reset-password',
     },
     agency: {
-      base: '/api/v1/p/agency',
+      base: (slug: string = 'p') => `/api/v1/${slug}/agency`,
       checkSlug: '/api/v1/p/agency/check-slug',
       validateSession: (slug: string = 'p') => `/api/v1/${slug}/agency/validate`,
     },

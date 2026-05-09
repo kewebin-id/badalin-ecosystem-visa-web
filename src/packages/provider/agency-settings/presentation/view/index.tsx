@@ -3,7 +3,7 @@
 import { Button } from '@/components/atoms/button';
 import { Card } from '@/components/atoms/card';
 import { Skeleton } from '@/components/atoms/skeleton';
-import { HeaderPageContent } from '@/components/molecules';
+import { HeaderPageContent, LoadingOverlay } from '@/components/molecules';
 import { InputText } from '@/components/molecules/input/text';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Building2, Clock, CreditCard, DollarSign, Globe, Info, Save } from 'lucide-react';
@@ -41,7 +41,7 @@ export const AgencySettingsView = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<AgencyFormValues>({
     resolver: zodResolver(getAgencySchema(t)),
     defaultValues: {
@@ -90,7 +90,9 @@ export const AgencySettingsView = () => {
   }
 
   return (
-    <div className="space-y-8 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="relative space-y-8 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <LoadingOverlay isLoading={isUpdating} message={tCommon('loading')} />
+
       <HeaderPageContent title={t('title')} subtitle={t('subtitle')} hideBack />
 
       <form
@@ -112,6 +114,7 @@ export const AgencySettingsView = () => {
             </div>
             <div className="space-y-5">
               <InputText
+                useLabelInside
                 type="text"
                 size="lg"
                 label={t('fields.name')}
@@ -122,6 +125,7 @@ export const AgencySettingsView = () => {
               />
               <div id="tour-agency-slug">
                 <InputText
+                  useLabelInside
                   type="text"
                   size="lg"
                   label={t('fields.slug')}
@@ -164,6 +168,7 @@ export const AgencySettingsView = () => {
               </div>
               <div className="space-y-4">
                 <InputText
+                  useLabelInside
                   type="price"
                   size="lg"
                   label={t('fields.visaPrice')}
@@ -199,6 +204,7 @@ export const AgencySettingsView = () => {
               </div>
               <div className="space-y-5">
                 <InputText
+                  useLabelInside
                   type="text"
                   size="lg"
                   label={t('fields.bankName')}
@@ -208,6 +214,7 @@ export const AgencySettingsView = () => {
                   errorMessage={errors.bankName?.message}
                 />
                 <InputText
+                  useLabelInside
                   type="text"
                   size="lg"
                   label={t('fields.bankAccountName')}
@@ -217,6 +224,7 @@ export const AgencySettingsView = () => {
                   errorMessage={errors.bankAccountName?.message}
                 />
                 <InputText
+                  useLabelInside
                   type="text"
                   size="lg"
                   label={t('fields.bankAccountNumber')}
@@ -238,7 +246,7 @@ export const AgencySettingsView = () => {
           <Button
             type="submit"
             className="w-full rounded-2xl h-14 shadow-lg text-base font-semibold gap-2"
-            disabled={isUpdating}
+            disabled={isUpdating || !isDirty}
             isSubmitting={isUpdating}
           >
             <Save size={20} />
