@@ -102,162 +102,162 @@ export const AgencySettingsView = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
         >
-        {/* ── Left Column ── */}
-        <div className="lg:col-span-7 space-y-8">
-          {/* Agency Identity */}
-          <Card className="p-8 rounded-[2rem] border-gray-100 shadow-sm space-y-6 overflow-hidden relative">
-            <div className="absolute top-0 right-0 p-8 opacity-[0.04] pointer-events-none select-none">
-              <Building2 size={120} />
-            </div>
-            <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
-              <div className="p-2.5 bg-blue-50 rounded-xl text-blue-600">
-                <Globe size={20} />
-              </div>
-              <h3 className="text-base font-bold text-gray-900">{t('sections.identity')}</h3>
-            </div>
-            <div className="space-y-5">
-              <InputText
-                useLabelInside
-                type="text"
-                size="lg"
-                label={t('fields.name')}
-                placeholder={t('placeholders.name')}
-                register={register}
-                name="name"
-                errorMessage={errors.name?.message}
-              />
-              <div id="tour-agency-slug">
-                <InputText
-                  useLabelInside
-                  type="text"
-                  size="lg"
-                  label={t('fields.slug')}
-                  placeholder={t('placeholders.slug')}
-                  register={register}
-                  name="slug"
-                  errorMessage={errors.slug?.message}
-                  disabled={isSlugLocked}
-                />
-                {isSlugLocked ? (
-                  <div className="mt-2 flex items-start gap-2.5 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3">
-                    <Clock size={16} className="text-amber-600 shrink-0 mt-0.5" />
-                    <p className="text-xs font-medium text-amber-800 leading-relaxed">
-                      {t('hints.slugCooldown', { days: slugCooldownDaysLeft })}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="mt-2 flex items-start gap-2.5 rounded-xl bg-blue-50/60 border border-blue-100 px-4 py-3">
-                    <Info size={16} className="text-blue-500 shrink-0 mt-0.5" />
-                    <p className="text-xs font-medium text-blue-800 leading-relaxed">
-                      {t('hints.slug')}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </Card>
-
-          {/* Visa Pricing */}
-          <div id="tour-visa-pricing">
+          {/* ── Left Column ── */}
+          <div className="lg:col-span-7 space-y-8">
+            {/* Agency Identity */}
             <Card className="p-8 rounded-[2rem] border-gray-100 shadow-sm space-y-6 overflow-hidden relative">
               <div className="absolute top-0 right-0 p-8 opacity-[0.04] pointer-events-none select-none">
-                <DollarSign size={120} />
+                <Building2 size={120} />
               </div>
               <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
-                <div className="p-2.5 bg-orange-50 rounded-xl text-orange-600">
-                  <DollarSign size={20} />
+                <div className="p-2.5 bg-blue-50 rounded-xl text-blue-600">
+                  <Globe size={20} />
                 </div>
-                <h3 className="text-base font-bold text-gray-900">{t('sections.pricing')}</h3>
-              </div>
-              <div className="space-y-4">
-                <InputText
-                  useLabelInside
-                  type="price"
-                  size="lg"
-                  label={t('fields.visaPrice')}
-                  placeholder={t('placeholders.visaPrice')}
-                  register={register}
-                  name="visaPrice"
-                  errorMessage={errors.visaPrice?.message}
-                />
-                <div className="flex items-start gap-2.5 rounded-xl bg-orange-50/60 border border-orange-100 px-4 py-3">
-                  <Info size={16} className="text-orange-500 shrink-0 mt-0.5" />
-                  <p className="text-xs font-medium text-orange-800 leading-relaxed">
-                    {t('hints.visaPrice')}
-                  </p>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
-
-        {/* ── Right Column ── */}
-        <div className="lg:col-span-5 space-y-8">
-          {/* Bank Info */}
-          <div id="tour-bank-info">
-            <Card className="p-8 rounded-[2rem] border-gray-100 shadow-sm space-y-6 overflow-hidden relative">
-              <div className="absolute top-0 right-0 p-8 opacity-[0.04] pointer-events-none select-none">
-                <CreditCard size={120} />
-              </div>
-              <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
-                <div className="p-2.5 bg-green-50 rounded-xl text-green-600">
-                  <CreditCard size={20} />
-                </div>
-                <h3 className="text-base font-bold text-gray-900">{t('sections.bank')}</h3>
+                <h3 className="text-base font-bold text-gray-900">{t('sections.identity')}</h3>
               </div>
               <div className="space-y-5">
                 <InputText
                   useLabelInside
                   type="text"
                   size="lg"
-                  label={t('fields.bankName')}
-                  placeholder={t('placeholders.bankName')}
+                  label={t('fields.name')}
+                  placeholder={t('placeholders.name')}
                   register={register}
-                  name="bankName"
-                  errorMessage={errors.bankName?.message}
+                  name="name"
+                  errorMessage={errors.name?.message}
                 />
-                <InputText
-                  useLabelInside
-                  type="text"
-                  size="lg"
-                  label={t('fields.bankAccountName')}
-                  placeholder={t('placeholders.bankAccountName')}
-                  register={register}
-                  name="bankAccountName"
-                  errorMessage={errors.bankAccountName?.message}
-                />
-                <InputText
-                  useLabelInside
-                  type="text"
-                  size="lg"
-                  label={t('fields.bankAccountNumber')}
-                  placeholder={t('placeholders.bankAccountNumber')}
-                  register={register}
-                  name="bankAccountNumber"
-                  errorMessage={errors.bankAccountNumber?.message}
-                />
-                <div className="flex items-start gap-2.5 rounded-xl bg-green-50/60 border border-green-100 px-4 py-3">
-                  <Info size={16} className="text-green-600 shrink-0 mt-0.5" />
-                  <p className="text-xs font-medium text-green-800 leading-relaxed">
-                    {t('hints.bank')}
-                  </p>
+                <div id="tour-agency-slug">
+                  <InputText
+                    useLabelInside
+                    type="text"
+                    size="lg"
+                    label={t('fields.slug')}
+                    placeholder={t('placeholders.slug')}
+                    register={register}
+                    name="slug"
+                    errorMessage={errors.slug?.message}
+                    disabled={isSlugLocked}
+                  />
+                  {isSlugLocked ? (
+                    <div className="mt-2 flex items-start gap-2.5 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3">
+                      <Clock size={16} className="text-amber-600 shrink-0 mt-0.5" />
+                      <p className="text-xs font-medium text-amber-800 leading-relaxed">
+                        {t('hints.slugCooldown', { days: slugCooldownDaysLeft })}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="mt-2 flex items-start gap-2.5 rounded-xl bg-blue-50/60 border border-blue-100 px-4 py-3">
+                      <Info size={16} className="text-blue-500 shrink-0 mt-0.5" />
+                      <p className="text-xs font-medium text-blue-800 leading-relaxed">
+                        {t('hints.slug')}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </Card>
+
+            {/* Visa Pricing */}
+            <div id="tour-visa-pricing">
+              <Card className="p-8 rounded-[2rem] border-gray-100 shadow-sm space-y-6 overflow-hidden relative">
+                <div className="absolute top-0 right-0 p-8 opacity-[0.04] pointer-events-none select-none">
+                  <DollarSign size={120} />
+                </div>
+                <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
+                  <div className="p-2.5 bg-orange-50 rounded-xl text-orange-600">
+                    <DollarSign size={20} />
+                  </div>
+                  <h3 className="text-base font-bold text-gray-900">{t('sections.pricing')}</h3>
+                </div>
+                <div className="space-y-4">
+                  <InputText
+                    useLabelInside
+                    type="price"
+                    size="lg"
+                    label={t('fields.visaPrice')}
+                    placeholder={t('placeholders.visaPrice')}
+                    register={register}
+                    name="visaPrice"
+                    errorMessage={errors.visaPrice?.message}
+                  />
+                  <div className="flex items-start gap-2.5 rounded-xl bg-orange-50/60 border border-orange-100 px-4 py-3">
+                    <Info size={16} className="text-orange-500 shrink-0 mt-0.5" />
+                    <p className="text-xs font-medium text-orange-800 leading-relaxed">
+                      {t('hints.visaPrice')}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </div>
           </div>
 
-          <Button
-            type="submit"
-            className="w-full rounded-2xl h-14 shadow-lg text-base font-semibold gap-2"
-            disabled={isUpdating || !isDirty}
-            isSubmitting={isUpdating}
-          >
-            <Save size={20} />
-            {isUpdating ? tCommon('loading') : t('save')}
-          </Button>
-        </div>
-      </form>
-    </FormProvider>
-  </div>
-);
+          {/* ── Right Column ── */}
+          <div className="lg:col-span-5 space-y-8">
+            {/* Bank Info */}
+            <div id="tour-bank-info">
+              <Card className="p-8 rounded-[2rem] border-gray-100 shadow-sm space-y-6 overflow-hidden relative">
+                <div className="absolute top-0 right-0 p-8 opacity-[0.04] pointer-events-none select-none">
+                  <CreditCard size={120} />
+                </div>
+                <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
+                  <div className="p-2.5 bg-green-50 rounded-xl text-green-600">
+                    <CreditCard size={20} />
+                  </div>
+                  <h3 className="text-base font-bold text-gray-900">{t('sections.bank')}</h3>
+                </div>
+                <div className="space-y-5">
+                  <InputText
+                    useLabelInside
+                    type="text"
+                    size="lg"
+                    label={t('fields.bankName')}
+                    placeholder={t('placeholders.bankName')}
+                    register={register}
+                    name="bankName"
+                    errorMessage={errors.bankName?.message}
+                  />
+                  <InputText
+                    useLabelInside
+                    type="text"
+                    size="lg"
+                    label={t('fields.bankAccountName')}
+                    placeholder={t('placeholders.bankAccountName')}
+                    register={register}
+                    name="bankAccountName"
+                    errorMessage={errors.bankAccountName?.message}
+                  />
+                  <InputText
+                    useLabelInside
+                    type="text"
+                    size="lg"
+                    label={t('fields.bankAccountNumber')}
+                    placeholder={t('placeholders.bankAccountNumber')}
+                    register={register}
+                    name="bankAccountNumber"
+                    errorMessage={errors.bankAccountNumber?.message}
+                  />
+                  <div className="flex items-start gap-2.5 rounded-xl bg-green-50/60 border border-green-100 px-4 py-3">
+                    <Info size={16} className="text-green-600 shrink-0 mt-0.5" />
+                    <p className="text-xs font-medium text-green-800 leading-relaxed">
+                      {t('hints.bank')}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full rounded-2xl h-14 shadow-lg text-base font-semibold gap-2"
+              disabled={isUpdating || !isDirty}
+              isSubmitting={isUpdating}
+            >
+              <Save size={20} />
+              {isUpdating ? tCommon('loading') : t('save')}
+            </Button>
+          </div>
+        </form>
+      </FormProvider>
+    </div>
+  );
 };

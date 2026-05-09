@@ -2,7 +2,7 @@ import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
 import { useTranslations } from 'next-intl';
 import { useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { ROUTES } from '@/shared/constants/routes';
 
 type TRole = 'PROVIDER' | 'PILGRIM';
@@ -10,6 +10,7 @@ type TRole = 'PROVIDER' | 'PILGRIM';
 export const useOnboardingTour = (role: string | undefined, slug?: string) => {
   const t = useTranslations('Onboarding');
   const router = useRouter();
+  const pathname = usePathname();
 
   const startTour = useCallback((initialStep?: number) => {
     if (!role) return;
@@ -53,9 +54,9 @@ export const useOnboardingTour = (role: string | undefined, slug?: string) => {
                   align: 'start',
                   onNextClick: () => {
                     if (slug) {
+                      localStorage.setItem(`tour_step_${role}`, '3');
                       router.push(ROUTES.PROVIDER.SETTINGS(slug));
                       driverObj.destroy();
-                      localStorage.setItem(`tour_step_${role}`, '3');
                     } else {
                       driverObj.moveNext();
                     }
@@ -90,9 +91,9 @@ export const useOnboardingTour = (role: string | undefined, slug?: string) => {
                   side: 'right',
                   align: 'start',
                   onNextClick: () => {
+                    localStorage.setItem(`tour_step_${role}`, '1');
                     router.push(ROUTES.PILGRIM.FAMILY.INDEX);
                     driverObj.destroy();
-                    localStorage.setItem(`tour_step_${role}`, '1');
                   },
                 },
               },
@@ -104,9 +105,9 @@ export const useOnboardingTour = (role: string | undefined, slug?: string) => {
                   side: 'right',
                   align: 'start',
                   onNextClick: () => {
+                    localStorage.setItem(`tour_step_${role}`, '2');
                     router.push(ROUTES.PILGRIM.TRANSACTION.INDEX);
                     driverObj.destroy();
-                    localStorage.setItem(`tour_step_${role}`, '2');
                   },
                 },
               },
@@ -130,27 +131,32 @@ export const useOnboardingTour = (role: string | undefined, slug?: string) => {
   }, [role, t, slug, router]);
 
   useEffect(() => {
+    if (!role) return;
+
     const hasSeenTour = localStorage.getItem(`has_seen_tour_${role}`);
     const savedStep = localStorage.getItem(`tour_step_${role}`);
 
-    if (role) {
-      if (savedStep) {
-        // Resume tour from saved step
-        const timer = setTimeout(() => {
-          startTour(parseInt(savedStep));
-          localStorage.removeItem(`tour_step_${role}`);
-          localStorage.setItem(`has_seen_tour_${role}`, 'true');
-        }, 1000);
-        return () => clearTimeout(timer);
-      } else if (!hasSeenTour) {
-        const timer = setTimeout(() => {
-          startTour();
-          localStorage.setItem(`has_seen_tour_${role}`, 'true');
-        }, 1500);
-        return () => clearTimeout(timer);
-      }
+    // Logic for resuming tour after navigation
+    if (savedStep) {
+      const timer = setTimeout(() => {
+        // Double check if elements exist before starting
+        const stepIndex = parseInt(savedStep);
+        startTour(stepIndex);
+        localStorage.removeItem(`tour_step_${role}`);
+        localStorage.setItem(`has_seen_tour_${role}`, 'true');
+      }, 800); // Slightly reduced delay but more robust with pathname dependency
+      return () => clearTimeout(timer);
+    } 
+    
+    // Logic for starting tour for the first time
+    if (!hasSeenTour) {
+      const timer = setTimeout(() => {
+        startTour();
+        localStorage.setItem(`has_seen_tour_${role}`, 'true');
+      }, 1500);
+      return () => clearTimeout(timer);
     }
-  }, [role, startTour]);
+  }, [role, pathname, startTour]);
 
   return { startTour };
 };
