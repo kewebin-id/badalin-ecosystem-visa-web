@@ -164,7 +164,6 @@ export const DetailReviewSidebar = ({
           {!isIssued ? (
             <>
               <Button
-                size="3xl"
                 onClick={() => (isVisaPhase ? setShowConfirm(true) : onFinalSubmit())}
                 disabled={
                   isSubmitting ||

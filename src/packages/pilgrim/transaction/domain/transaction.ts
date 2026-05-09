@@ -89,6 +89,7 @@ export interface ITransaction {
     photoUrl?: string;
     ktpUrl?: string;
     passportUrl?: string;
+    visaUrl?: string;
     nik?: string;
     gender?: string;
     maritalStatus?: string;
