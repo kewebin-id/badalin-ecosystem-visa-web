@@ -78,13 +78,27 @@ export const useProviderSubmissionsController = () => {
 
   const useSubmitVisas = () =>
     useMutation({
-      mutationFn: ({
+      mutationFn: async ({
         id,
         visaFiles,
       }: {
         id: string;
         visaFiles: Record<string, { name: string; base64: string }[]>;
-      }) => usecase.submitVisas(id, visaFiles),
+      }) => {
+        // Step 1: Upload files and get URLs
+        const uploadRes = await usecase.uploadVisas(id, visaFiles);
+        if (uploadRes.error || !uploadRes.data) {
+          throw uploadRes.error || new Error(uploadRes.message || 'Failed to upload visas');
+        }
+
+        // Step 2: Submit with URLs to update status to ISSUED
+        const submitRes = await usecase.submitVisas(id, uploadRes.data);
+        if (submitRes.error) {
+          throw submitRes.error;
+        }
+
+        return submitRes.data;
+      },
       onSuccess: (_, { id }) => {
         queryClient.invalidateQueries({ queryKey: ['provider', 'submissions'] });
         queryClient.invalidateQueries({ queryKey: ['provider', 'submissions', id] });

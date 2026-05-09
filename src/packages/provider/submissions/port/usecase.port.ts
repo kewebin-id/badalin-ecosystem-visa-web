@@ -32,8 +32,9 @@ export interface IProviderSubmissionsUseCase {
     id: string,
     payload: IReviewSubmissionPayload,
   ): Promise<IUsecaseResponse<boolean>>;
-  submitVisas(
+  uploadVisas(
     id: string,
     visaFiles: Record<string, { name: string; base64: string }[]>,
-  ): Promise<IUsecaseResponse<boolean>>;
+  ): Promise<IUsecaseResponse<Record<string, string>>>;
+  submitVisas(id: string, visaUrls: Record<string, string>): Promise<IUsecaseResponse<boolean>>;
 }

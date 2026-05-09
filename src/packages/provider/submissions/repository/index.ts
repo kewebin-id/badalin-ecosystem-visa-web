@@ -73,12 +73,20 @@ export class ProviderSubmissionsRepository implements IProviderSubmissionsReposi
     });
   }
 
-  async submitVisas(
-    id: string,
-    visaFiles: Record<string, { name: string; base64: string }[]>,
-  ): Promise<ResponseREST<void>> {
+  async submitVisas(id: string, visaUrls: Record<string, string>): Promise<ResponseREST<void>> {
     return this.api.patch<void>({
       endpoint: endpoints.nextApi.provider.submissions.submitVisas(id),
+      body: visaUrls,
+      isNextApi: true,
+    });
+  }
+
+  async uploadVisas(
+    id: string,
+    visaFiles: Record<string, { name: string; base64: string }[]>,
+  ): Promise<ResponseREST<Record<string, string>>> {
+    return this.api.patch<Record<string, string>>({
+      endpoint: endpoints.nextApi.provider.submissions.uploadVisas(id),
       body: visaFiles,
       isNextApi: true,
     });
