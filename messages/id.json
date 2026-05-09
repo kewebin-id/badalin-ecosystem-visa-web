@@ -391,7 +391,19 @@
       "transferStatusLabel": "Status Transfer",
       "notes": "Catatan / Berita",
       "checkStatus": "Status Pengecekan",
-      "systemVerification": "Verifikasi Sistem"
+      "systemVerification": "Verifikasi Sistem",
+      "pilgrimListHeader": "Daftar Jamaah",
+      "downloadAllVisas": "Unduh Semua Visa",
+      "downloading": "Mengunduh...",
+      "rejectionBanner": "Ditolak: {reason}",
+      "checkDetail": "Cek Detail",
+      "rejectionTitle": "Pengajuan Ditolak",
+      "rejectionDefaultReason": "Alasan tidak disebutkan oleh provider.",
+      "contactSupport": "Hubungi Pendamping",
+      "noVisaToDownload": "Tidak ada file visa yang tersedia untuk diunduh",
+      "preparingVisas": "Menyiapkan {count} file visa...",
+      "downloadSuccess": "Berhasil mengunduh semua visa",
+      "downloadError": "Gagal mengunduh visa massal"
     },
     "status": {
       "Submit": "Submit",

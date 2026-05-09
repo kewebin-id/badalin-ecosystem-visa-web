@@ -9,6 +9,9 @@ import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
+import { useState } from 'react';
 import {
   ICreateTransactionRequest,
   ILogisticsOcrResponse,
@@ -337,7 +340,50 @@ export const useTransactionController = () => {
     });
   };
 
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownloadAllVisas = async (transaction: ITransaction) => {
+    try {
+      setIsDownloading(true);
+      const zip = new JSZip();
+      const folder = zip.folder('visas');
+
+      const membersWithVisas = transaction.members.filter((m) => m.visaUrl);
+
+      if (membersWithVisas.length === 0) {
+        toast.error(t('detail.noVisaToDownload'));
+        return;
+      }
+
+      toast.info(t('detail.preparingVisas', { count: membersWithVisas.length }));
+
+      const downloadPromises = membersWithVisas.map(async (member) => {
+        try {
+          const response = await fetch(member.visaUrl!);
+          const blob = await response.blob();
+          const extension = member.visaUrl!.split('.').pop()?.split('?')[0] || 'jpg';
+          const fileName = `${member.fullName.toLowerCase().replace(/\s+/g, '-')}_visa.${extension}`;
+          folder?.file(fileName, blob);
+        } catch (error) {
+          console.error(`Failed to download visa for ${member.fullName}`, error);
+        }
+      });
+
+      await Promise.all(downloadPromises);
+      const content = await zip.generateAsync({ type: 'blob' });
+      saveAs(content, `visas_${transaction.id.slice(0, 8)}.zip`);
+      toast.success(t('detail.downloadSuccess'));
+    } catch (error) {
+      console.error('Error generating zip', error);
+      toast.error(t('detail.downloadError'));
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   return {
+    isDownloading,
+    handleDownloadAllVisas,
     useTransactions,
     useTransactionDetail,
     useCreateTransaction,

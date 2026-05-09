@@ -391,7 +391,19 @@
       "transferStatusLabel": "Transfer Status",
       "notes": "Notes / Remarks",
       "checkStatus": "Check Status",
-      "systemVerification": "System Verification"
+      "systemVerification": "System Verification",
+      "pilgrimListHeader": "Pilgrim List",
+      "downloadAllVisas": "Download All Visas",
+      "downloading": "Downloading...",
+      "rejectionBanner": "Rejected: {reason}",
+      "checkDetail": "Check Detail",
+      "rejectionTitle": "Application Rejected",
+      "rejectionDefaultReason": "Reason not specified by the provider.",
+      "contactSupport": "Contact Support",
+      "noVisaToDownload": "No visa files available for download",
+      "preparingVisas": "Preparing {count} visa files...",
+      "downloadSuccess": "Successfully downloaded all visas",
+      "downloadError": "Failed to download bulk visas"
     },
     "status": {
       "Submit": "Submit",
