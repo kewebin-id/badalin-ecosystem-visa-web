@@ -69,7 +69,23 @@ export default withAuth(
       }
     }
 
-    return NextResponse.next();
+    const response = NextResponse.next();
+
+    // 5. Agency Context (Cookie Setting)
+    const reservedPaths = ['console', 'auth', 'public', 'api', ...pilgrimBasePaths];
+    const isPotentialAgencyPath = segments.length > 0 && !reservedPaths.includes(segments[0]);
+
+    if (isPotentialAgencyPath) {
+      const agencySlug = segments[0] === 'p' ? segments[1] : segments[0];
+      if (agencySlug) {
+        response.cookies.set('agency_id', agencySlug, {
+          path: '/',
+          maxAge: 30 * 24 * 60 * 60,
+        });
+      }
+    }
+
+    return response;
   },
   {
     callbacks: {
@@ -79,6 +95,9 @@ export default withAuth(
 
         if (pathname.startsWith('/auth/') || pathname.startsWith('/public/')) return true;
         if (segments.length >= 2 && segments[1] === 'auth') return true;
+
+        // Allow public access to provider landing page to set cookie
+        if (segments.length === 2 && segments[0] === 'p') return true;
 
         // Biarkan request masuk ke middleware function untuk di-redirect ke login provider
         if (segments.length >= 2 && segments[1] === 'dashboard') return true;
