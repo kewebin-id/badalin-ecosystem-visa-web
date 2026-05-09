@@ -24,18 +24,22 @@ interface DetailMemberValidationProps {
   onToggleStatus: (memberId: string, reason?: string) => void;
   onPreview: (image: { src: string; alt: string } | null) => void;
   isVisaPhase?: boolean;
+  isIssued?: boolean;
   visaFiles?: Record<string, UploadFile[]>;
+  visaUrls?: Record<string, string>;
   onVisaChange?: (memberId: string, files: UploadFile[]) => void;
   readOnly?: boolean;
 }
-
+ 
 export const DetailMemberValidation = ({
   members,
   memberStatuses,
   onToggleStatus,
   onPreview,
   isVisaPhase,
+  isIssued,
   visaFiles = {},
+  visaUrls = {},
   onVisaChange,
   readOnly,
 }: DetailMemberValidationProps) => {
@@ -162,6 +166,19 @@ export const DetailMemberValidation = ({
                           className="!w-fit"
                         />
                       </div>
+                    ) : isIssued ? (
+                      <div className="flex justify-end">
+                        <ActionButton
+                          image={visaUrls[member.id]}
+                          title={t('table.verify')}
+                          onClick={() =>
+                            onPreview({
+                              src: visaUrls[member.id] || '',
+                              alt: `Visa ${member.fullName}`,
+                            })
+                          }
+                        />
+                      </div>
                     ) : (
                       <div className="flex justify-end gap-2">
                         <button
@@ -267,7 +284,23 @@ export const DetailMemberValidation = ({
                     />
                   </div>
                 )}
-
+ 
+                {isIssued && (
+                  <div className="mb-4">
+                    <ActionButton
+                      image={visaUrls[member.id]}
+                      label="VISA"
+                      onClick={() =>
+                        onPreview({
+                          src: visaUrls[member.id] || '',
+                          alt: `Visa ${member.fullName}`,
+                        })
+                      }
+                      className="w-full h-12"
+                    />
+                  </div>
+                )}
+ 
                 <div className="grid grid-cols-3 gap-3">
                   <ActionButton
                     icon={Book}

@@ -69,6 +69,11 @@ export const ReviewStatusBadge = ({ status }: { status: ProviderSubmission['revi
       className: 'bg-rose-50 text-rose-600 border-rose-100',
       dotClassName: 'bg-rose-400',
     },
+    ISSUED: {
+      label: t('issued'),
+      className: 'bg-emerald-50 text-emerald-600 border-emerald-100',
+      dotClassName: 'bg-emerald-400',
+    },
   };
 
   const current = config[status];

@@ -41,7 +41,8 @@ const statusConfig: Record<string, { label: string; variant: BadgeVariant }> = {
   // Visa statuses
   IN_REVIEW: { label: 'In Review', variant: 'info' },
   VERIFIED: { label: 'Verified', variant: 'success' },
-  SUBMIT: { label: 'Submitted', variant: 'warning' },
+  REJECTED: { label: 'Rejected', variant: 'destructive' },
+  ISSUED: { label: 'Issued', variant: 'success' },
   PENDING_PAYMENT: { label: 'Pending Payment', variant: 'warning' },
   CHECKING_PAYMENT: { label: 'Checking Payment', variant: 'secondary' },
 };

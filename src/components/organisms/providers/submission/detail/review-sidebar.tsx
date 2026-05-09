@@ -1,10 +1,8 @@
 import { Badge, Button, Card } from '@/components/atoms';
-import { DialogDrawer } from '@/components/molecules';
 import { UploadFile } from '@/components/molecules/input/file';
 import { ISubmissionListItem } from '@/packages/provider/submissions/domain/response';
-import { formatRupiah } from '@/shared/utils';
-import { cn } from '@/shared/utils';
-import { AlertCircle, Info, Users } from 'lucide-react';
+import { cn, formatRupiah } from '@/shared/utils';
+import { AlertCircle, Info } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { ConfirmVisaDialog } from './confirm-visa-dialog';
@@ -18,6 +16,7 @@ interface DetailReviewSidebarProps {
   onCancel: () => void;
   isSubmitting: boolean;
   isVisaPhase?: boolean;
+  isIssued?: boolean;
   visaFiles?: Record<string, UploadFile[]>;
 }
 
@@ -30,6 +29,7 @@ export const DetailReviewSidebar = ({
   onCancel,
   isSubmitting,
   isVisaPhase,
+  isIssued,
   visaFiles = {},
 }: DetailReviewSidebarProps) => {
   const t = useTranslations('ProviderSubmissions.detail');
@@ -97,10 +97,12 @@ export const DetailReviewSidebar = ({
           )}
           <div className="flex items-center justify-between py-2 border-b border-gray-50">
             <span className="text-sm font-medium text-gray-500">
-              {t('table.members')} (
-              {isVisaPhase ? uploadedMembersCount : validMembersCount}/{isVisaPhase ? validMembersCount : totalMembers})
+              {t('table.members')} ({isVisaPhase ? uploadedMembersCount : validMembersCount}/
+              {isVisaPhase ? validMembersCount : totalMembers})
             </span>
-            {isVisaPhase ? (
+            {isIssued ? (
+              <Badge className="bg-green-500 text-white border-none">SUCCESS</Badge>
+            ) : isVisaPhase ? (
               <Badge
                 className={cn(
                   isAllVisasUploaded ? 'bg-green-500' : 'bg-yellow-500',
@@ -153,29 +155,35 @@ export const DetailReviewSidebar = ({
               {tr('desc', { count: rejectedCount, amount: formatRupiah(refundAmount) })}
             </p>
             <div className="pt-2 border-t border-red-100">
-              <p className="text-[9px] text-red-400 font-medium italic">
-                * {tr('penaltyWarning')}
-              </p>
+              <p className="text-[9px] text-red-400 font-medium italic">* {tr('penaltyWarning')}</p>
             </div>
           </div>
         )}
 
         <div className="space-y-3">
-          <Button
-            onClick={() => (isVisaPhase ? setShowConfirm(true) : onFinalSubmit())}
-            className="w-full h-14 rounded-2xl text-lg font-black shadow-[0_8px_20px_-6px_rgba(234,88,12,0.3)] active:scale-[0.98] transition-all"
-            disabled={
-              isSubmitting ||
-              (!isVisaPhase && !isComplete) ||
-              (isVisaPhase && !hasUploadedVisas) ||
-              submission.agency?.status === 'RESTRICTED'
-            }
-          >
-            {isVisaPhase ? tq('submitVisa') : ta('submit')}
-          </Button>
-          <Button variant="transparent" onClick={onCancel}>
-            {ta('cancel')}
-          </Button>
+          {!isIssued ? (
+            <>
+              <Button
+                size="3xl"
+                onClick={() => (isVisaPhase ? setShowConfirm(true) : onFinalSubmit())}
+                disabled={
+                  isSubmitting ||
+                  (!isVisaPhase && !isComplete) ||
+                  (isVisaPhase && !hasUploadedVisas) ||
+                  submission.agency?.status === 'RESTRICTED'
+                }
+              >
+                {isVisaPhase ? tq('submitVisa') : ta('submit')}
+              </Button>
+              <Button variant="transparent" onClick={onCancel}>
+                {ta('cancel')}
+              </Button>
+            </>
+          ) : (
+            <Button variant="oceanOutline" onClick={onCancel}>
+              {t('detail.backToList')}
+            </Button>
+          )}
         </div>
 
         <div className="mt-6 p-4 bg-gray-50 rounded-2xl border border-gray-100">

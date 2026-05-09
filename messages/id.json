@@ -396,7 +396,7 @@
     "status": {
       "Submit": "Submit",
       "Process": "Diproses",
-      "Issued": "Diterbitkan",
+      "ISSUED": "Diterbitkan",
       "Expired": "Kedaluwarsa",
       "IN_REVIEW": "Dalam Tinjauan",
       "VERIFIED": "Diproses",
@@ -498,7 +498,8 @@
       "completed": "Selesai",
       "inReview": "Dalam Tinjauan",
       "verified": "Sedang diajukan visanya",
-      "rejected": "Ditolak"
+      "rejected": "Ditolak",
+      "issued": "Selesai"
     },
     "manifest": {
       "title": "Logistik & Manifest",

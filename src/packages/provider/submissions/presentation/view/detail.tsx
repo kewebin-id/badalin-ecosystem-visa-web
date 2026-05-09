@@ -47,8 +47,9 @@ export const SubmissionDetailView = () => {
   const submitVisasMutation = useSubmitVisas();
 
   const submission = data?.data;
-
-  const isVisaPhase = submission?.verifyStatus === 'VERIFIED';
+ 
+  const isIssued = submission?.reviewStatus === 'ISSUED';
+  const isVisaPhase = submission?.reviewStatus === 'VERIFIED';
 
   const [paymentAction, setPaymentAction] = useState<'APPROVE' | 'REJECT' | null>(null);
   const [paymentReason, setPaymentReason] = useState('');
@@ -182,7 +183,7 @@ export const SubmissionDetailView = () => {
     }
   };
 
-  const isSubmissionRejected = submission?.verifyStatus === 'REJECTED';
+  const isSubmissionRejected = submission?.reviewStatus === 'REJECTED';
   const isPaymentApproved = paymentAction === 'APPROVE';
   const showProcessGuard = !isPaymentApproved && !isVisaPhase && !isSubmissionRejected;
 
@@ -206,7 +207,11 @@ export const SubmissionDetailView = () => {
   return (
     <div className="space-y-8 pb-24 max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
       <LoadingOverlay
-        isLoading={reviewSubmissionMutation.isPending || verifyPaymentMutation.isPending}
+        isLoading={
+          reviewSubmissionMutation.isPending || 
+          verifyPaymentMutation.isPending ||
+          submitVisasMutation.isPending
+        }
         message={t('detail.loading')}
       />
 
@@ -221,7 +226,7 @@ export const SubmissionDetailView = () => {
         extra={
           <div className="flex gap-2">
             <PaymentStatusBadge status={submission.paymentStatus} />
-            <ReviewStatusBadge status={submission.verifyStatus} />
+            <ReviewStatusBadge status={submission.reviewStatus} />
           </div>
         }
       />
@@ -259,7 +264,9 @@ export const SubmissionDetailView = () => {
               onToggleStatus={toggleMemberStatus}
               onPreview={setPreviewImage}
               isVisaPhase={isVisaPhase}
+              isIssued={isIssued}
               visaFiles={visaFiles}
+              visaUrls={submission.resultSnapshot?.visaUrls}
               onVisaChange={handleVisaChange}
             />
           </div>
@@ -296,6 +303,7 @@ export const SubmissionDetailView = () => {
               onCancel={() => router.push(ROUTES.PROVIDER.SUBMISSIONS(slug as string))}
               isSubmitting={reviewSubmissionMutation.isPending || verifyPaymentMutation.isPending}
               isVisaPhase={isVisaPhase}
+              isIssued={isIssued}
               visaFiles={visaFiles}
             />
           </div>

@@ -51,7 +51,7 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
               <p className="text-xs font-bold text-orange-400 uppercase tracking-wider">
                 {t('visaStatus')}
               </p>
-              <p className="text-sm font-black text-orange-900">{submission.verifyStatus || '-'}</p>
+              <p className="text-sm font-black text-orange-900">{submission.reviewStatus || '-'}</p>
             </div>
           </div>
         </Card>

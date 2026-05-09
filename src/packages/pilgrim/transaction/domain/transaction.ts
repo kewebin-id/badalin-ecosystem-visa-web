@@ -1,4 +1,4 @@
-export type TTransactionStatus = 'Submit' | 'Process' | 'Issued' | 'Expired' | 'IN_REVIEW';
+export type TTransactionStatus = 'IN_REVIEW' | 'VERIFIED' | 'REJECTED' | 'AUTO_CANCELED' | 'ISSUED';
 export type TPaymentStatus = 'PENDING' | 'CHECKING' | 'COMPLETED';
 
 export type TOcrType =

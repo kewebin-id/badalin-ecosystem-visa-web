@@ -396,7 +396,7 @@
     "status": {
       "Submit": "Submit",
       "Process": "In Process",
-      "Issued": "Issued",
+      "ISSUED": "Issued",
       "Expired": "Expired",
       "IN_REVIEW": "In Review",
       "VERIFIED": "Processing",
@@ -498,7 +498,8 @@
       "completed": "Completed",
       "inReview": "In Review",
       "verified": "Visa is being applied for",
-      "rejected": "Rejected"
+      "rejected": "Rejected",
+      "issued": "Issued"
     },
     "manifest": {
       "title": "Logistics & Manifest",

@@ -22,7 +22,7 @@ export interface ISubmissionListItem {
   id: string;
   agencySlug: string;
   paymentStatus: 'PENDING' | 'CHECKING' | 'COMPLETED';
-  verifyStatus: 'PENDING' | 'IN_REVIEW' | 'VERIFIED' | 'REJECTED';
+  reviewStatus: 'PENDING' | 'IN_REVIEW' | 'VERIFIED' | 'REJECTED' | 'ISSUED';
   totalAmount: number;
   createdAt: string;
   leader: ILeader;
@@ -56,5 +56,5 @@ export type ISubmissionResponse = ISubmissionListItem;
 export interface IVerifyPaymentResponse {
   id: string;
   paymentStatus: 'COMPLETED';
-  verifyStatus: 'IN_REVIEW';
+  reviewStatus: 'IN_REVIEW';
 }

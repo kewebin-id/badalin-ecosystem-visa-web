@@ -83,7 +83,7 @@ export const SubmissionsMonitoring = () => {
     leaderName: s.leader?.fullName || '-',
     totalMembers: s.members?.length || 0,
     paymentStatus: s.paymentStatus,
-    reviewStatus: s.verifyStatus,
+    reviewStatus: s.reviewStatus,
     amount: Number(s.totalAmount || 0),
     paymentProofUrl: s.proofOfPayment,
     rejectionReason: s.rejectionReason,
