@@ -113,13 +113,13 @@ export class ManagementUseCase implements IManagementUseCase {
     try {
       await this.handleFileUploads(data);
       const res = await this.repository.create(this.mapToApi(data) as IApiCreateMemberRequest);
-      if (res.code !== 201 || !res.data) {
-        return {
-          message: res.message,
-          error: new Error(res.message || 'Gagal menambahkan anggota'),
-        };
+      if ((res?.code === 200 || res?.code === 201) && res?.data) {
+        return { message: res.message, data: this.mapToDomain(res?.data) };
       }
-      return { message: res.message, data: this.mapToDomain(res.data) };
+      return {
+        message: res.message,
+        error: new Error(res.message || 'Gagal menambahkan anggota'),
+      };
     } catch {
       return { error: new Error('Terjadi kesalahan saat menambahkan anggota') };
     }
