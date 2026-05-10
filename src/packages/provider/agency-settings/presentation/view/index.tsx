@@ -5,6 +5,7 @@ import { Card } from '@/components/atoms/card';
 import { Skeleton } from '@/components/atoms/skeleton';
 import { HeaderPageContent, LoadingOverlay } from '@/components/molecules';
 import { InputText } from '@/components/molecules/input/text';
+import { unformatRupiah } from '@/shared/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Building2, Clock, CreditCard, DollarSign, Globe, Info, Save } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -39,6 +40,7 @@ export const AgencySettingsView = () => {
 
   const methods = useForm<AgencyFormValues>({
     resolver: zodResolver(getAgencySchema(t)),
+    mode: 'onChange',
     defaultValues: {
       name: '',
       slug: '',
@@ -179,6 +181,14 @@ export const AgencySettingsView = () => {
                     register={register}
                     name="visaPrice"
                     errorMessage={errors.visaPrice?.message}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      const val = e.target.value;
+                      const numeric = unformatRupiah(val);
+                      methods.setValue('visaPrice', numeric ? Number(numeric) : 0, {
+                        shouldDirty: true,
+                        shouldValidate: true,
+                      });
+                    }}
                   />
                   <div className="flex items-start gap-2.5 rounded-xl bg-orange-50/60 border border-orange-100 px-4 py-3">
                     <Info size={16} className="text-orange-500 shrink-0 mt-0.5" />

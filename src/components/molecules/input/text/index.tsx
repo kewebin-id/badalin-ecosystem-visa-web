@@ -66,6 +66,7 @@ const InputTextRoot = ({
   isReadingOcr,
   disabled,
   watchedValue,
+  onChange: onChangeProp,
 }: InputTextProps & { watchedValue?: unknown }) => {
   const [inputState, setInputState] = useState<string | number | undefined>(value);
   const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -113,6 +114,7 @@ const InputTextRoot = ({
       } else if (setValue) {
         setValue(numericValue);
       }
+      if (onChangeProp) onChangeProp(e);
     } else {
       setInputState(val);
       if (tuningRegister) {
@@ -120,6 +122,7 @@ const InputTextRoot = ({
       } else if (setValue) {
         setValue(val);
       }
+      if (onChangeProp) onChangeProp(e);
     }
   };
 

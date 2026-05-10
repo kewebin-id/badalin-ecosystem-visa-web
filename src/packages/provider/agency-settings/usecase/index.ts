@@ -26,7 +26,11 @@ export class AgencySettingsUseCase implements IAgencySettingsUseCase {
 
   async updateAgencyData(data: IUpdateAgencyRequest): Promise<IUsecaseResponse<IAgency>> {
     try {
-      const res = await this.repo.updateAgencyData(data);
+      const payload = {
+        ...data,
+        visaPrice: data.visaPrice !== undefined ? String(data.visaPrice) : undefined,
+      };
+      const res = await this.repo.updateAgencyData(payload as any);
       if (res.data) {
         return { data: res.data, message: res.message };
       }
