@@ -188,6 +188,8 @@ export const TransactionFormView = () => {
   }, []);
 
   const handleValidateSubmission = useCallback(async () => {
+    if (previewMutation.isPending || isValidated) return;
+
     try {
       setApiErrors([]);
       setApiWarnings([]);
@@ -230,7 +232,8 @@ export const TransactionFormView = () => {
     } catch {}
   }, [
     form,
-    previewMutation,
+    previewMutation.mutateAsync,
+    isValidated,
     mapBackendPathToFrontend,
     setTotalAmount,
     setBreakdown,

@@ -71,76 +71,72 @@ export const useManagementController = () => {
       staleTime: 0,
     });
 
-  const useCreateMember = () =>
-    useMutation({
-      mutationFn: (data: ICreateMemberRequest) => useCase.createMember(data),
-      onSuccess: (res) => {
-        if (!res.error) {
-          queryClient.invalidateQueries({ queryKey: ['family-members'] });
-          toast.success(res.message || t('addMemberSuccess'));
-          router.push(ROUTES.PILGRIM.FAMILY.INDEX);
-        } else {
-          toast.error(res.message || res.error.message || t('addMemberError'));
-        }
-      },
-      onError: (err: Error) => toast.error(err.message || t('systemError')),
-    });
+  const createMemberMutation = useMutation({
+    mutationFn: (data: ICreateMemberRequest) => useCase.createMember(data),
+    onSuccess: (res) => {
+      if (!res.error) {
+        queryClient.invalidateQueries({ queryKey: ['family-members'] });
+        toast.success(res.message || t('addMemberSuccess'));
+        router.push(ROUTES.PILGRIM.FAMILY.INDEX);
+      } else {
+        toast.error(res.message || res.error.message || t('addMemberError'));
+      }
+    },
+    onError: (err: Error) => toast.error(err.message || t('systemError')),
+  });
 
-  const useUpdateMember = () =>
-    useMutation({
-      mutationFn: (data: IUpdateMemberRequest) => useCase.updateMember(data),
-      onSuccess: (res) => {
-        if (!res.error) {
-          queryClient.invalidateQueries({ queryKey: ['family-members'] });
-          toast.success(res.message || t('updateMemberSuccess'));
-          router.push(ROUTES.PILGRIM.FAMILY.INDEX);
-        } else {
-          toast.error(res.message || res.error.message || t('updateMemberError'));
-        }
-      },
-      onError: (err: Error) => toast.error(err.message || t('systemError')),
-    });
+  const updateMemberMutation = useMutation({
+    mutationFn: (data: IUpdateMemberRequest) => useCase.updateMember(data),
+    onSuccess: (res) => {
+      if (!res.error) {
+        queryClient.invalidateQueries({ queryKey: ['family-members'] });
+        toast.success(res.message || t('updateMemberSuccess'));
+        router.push(ROUTES.PILGRIM.FAMILY.INDEX);
+      } else {
+        toast.error(res.message || res.error.message || t('updateMemberError'));
+      }
+    },
+    onError: (err: Error) => toast.error(err.message || t('systemError')),
+  });
 
-  const useDeleteMember = () =>
-    useMutation({
-      mutationFn: (memberId: string) => useCase.deleteMember(memberId),
-      onSuccess: (res) => {
-        if (!res.error) {
-          queryClient.invalidateQueries({ queryKey: ['family-members'] });
-          toast.success(res.message || t('deleteMemberSuccess'));
-        } else {
-          toast.error(res.message || res.error.message || t('deleteMemberError'));
-        }
-      },
-      onError: (err: Error) => toast.error(err.message || t('systemError')),
-    });
-
-  const useProcessOcr = (
-    onOcrSuccess: (
-      data: Partial<IFamilyMember> & {
-        confidence: number;
-        publicUrl?: string;
-        nusuk_compatibility?: INusukCompatibility;
-      },
-    ) => void,
-  ) =>
-    useMutation({
-      mutationFn: ({ file, type }: { file: File; type: 'passport' | 'ktp' }) =>
-        useCase.processOcr(file, type),
-      onSuccess: (res) => {
-        if (res.data) onOcrSuccess(res.data);
-      },
-      onError: () => toast.error(t('ocrReadError')),
-    });
+  const deleteMemberMutation = useMutation({
+    mutationFn: (memberId: string) => useCase.deleteMember(memberId),
+    onSuccess: (res) => {
+      if (!res.error) {
+        queryClient.invalidateQueries({ queryKey: ['family-members'] });
+        toast.success(res.message || t('deleteMemberSuccess'));
+      } else {
+        toast.error(res.message || res.error.message || t('deleteMemberError'));
+      }
+    },
+    onError: (err: Error) => toast.error(err.message || t('systemError')),
+  });
 
   return {
     id,
     useMembers,
     useMemberDetail,
-    useCreateMember,
-    useUpdateMember,
-    useDeleteMember,
-    useProcessOcr,
+    useCreateMember: () => createMemberMutation,
+    useUpdateMember: () => updateMemberMutation,
+    useDeleteMember: () => deleteMemberMutation,
+    useProcessOcr: (
+      onOcrSuccess: (
+        data: Partial<IFamilyMember> & {
+          confidence: number;
+          publicUrl?: string;
+          nusuk_compatibility?: INusukCompatibility;
+        },
+      ) => void,
+    ) =>
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useMutation({
+        mutationFn: ({ file, type }: { file: File; type: 'passport' | 'ktp' }) =>
+          useCase.processOcr(file, type),
+        onSuccess: (res) => {
+          if (res.data) onOcrSuccess(res.data);
+        },
+        onError: () => toast.error(t('ocrReadError')),
+      }),
     formSchema,
   };
 };

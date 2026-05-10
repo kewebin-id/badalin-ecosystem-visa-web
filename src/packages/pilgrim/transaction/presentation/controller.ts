@@ -140,7 +140,7 @@ const getWizardSchema = (t: (key: string) => string) =>
 
 export type TWizardForm = z.infer<ReturnType<typeof getWizardSchema>>;
 
-const transformToRequest = (data: TWizardForm): ICreateTransactionRequest => {
+export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest => {
   return {
     pilgrimIds: data.pilgrimIds,
     rawdahMenTime: data.rawdahMenTime,
@@ -274,72 +274,6 @@ export const useTransactionController = () => {
     });
   };
 
-  const useCreateTransaction = () => {
-    return useMutation({
-      mutationFn: async (form: TWizardForm) => {
-        const uploadedForm = await handleUploadImages(form);
-        return useCase.createTransaction(transformToRequest(uploadedForm));
-      },
-      onSuccess: (res) => {
-        if (!res.error) {
-          queryClient.invalidateQueries({ queryKey: ['visa-transactions'] });
-          toast.success('Pengajuan visa berhasil dibuat!');
-          router.push(ROUTES.PILGRIM.TRANSACTION.INDEX);
-        } else {
-          toast.error(res.message || res.error.message || 'Gagal membuat pengajuan');
-        }
-      },
-      onError: (err: Error) => toast.error(err.message),
-    });
-  };
-
-  const useUpdateTransaction = () => {
-    return useMutation({
-      mutationFn: async ({ id, form }: { id: string; form: TWizardForm }) => {
-        const uploadedForm = await handleUploadImages(form);
-        return useCase.updateTransaction(id, transformToRequest(uploadedForm));
-      },
-      onSuccess: (res) => {
-        if (!res.error) {
-          queryClient.invalidateQueries({ queryKey: ['visa-transactions'] });
-          queryClient.invalidateQueries({ queryKey: ['visa-transaction', res.data?.id] });
-          toast.success('Pengajuan visa berhasil diperbarui!');
-          router.push(ROUTES.PILGRIM.TRANSACTION.INDEX);
-        } else {
-          toast.error(res.message || res.error.message || 'Gagal memperbarui pengajuan');
-        }
-      },
-      onError: (err: Error) => toast.error(err.message),
-    });
-  };
-
-  const useProcessOcr = (onOcrSuccess: (data: ILogisticsOcrResponse) => void) =>
-    useMutation({
-      mutationFn: ({ file, ocrType = 'LOGISTICS' }: { file: File; ocrType?: TOcrType }) =>
-        useCase.processOcr(file, ocrType),
-      onSuccess: (res) => {
-        if (res.data) onOcrSuccess(res.data);
-      },
-      onError: () => toast.error('Gagal memproses OCR dokumen logistik'),
-    });
-
-  const useUploadProof = () => {
-    return useMutation({
-      mutationFn: ({ id, file }: { id: string; file: File }) =>
-        useCase.updatePaymentProof(id, file),
-      onSuccess: (res) => {
-        if (!res.error) {
-          queryClient.invalidateQueries({ queryKey: ['visa-transactions'] });
-          queryClient.invalidateQueries({ queryKey: ['visa-transaction', res.data?.id] });
-          toast.success('Bukti pembayaran berhasil diunggah!');
-        } else {
-          toast.error(res.message || res.error.message || 'Gagal mengunggah bukti pembayaran');
-        }
-      },
-      onError: (err: Error) => toast.error(err.message),
-    });
-  };
-
   const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownloadAllVisas = async (transaction: ITransaction) => {
@@ -381,23 +315,82 @@ export const useTransactionController = () => {
     }
   };
 
+  const createTransactionMutation = useMutation({
+    mutationFn: async (form: TWizardForm) => {
+      const uploadedForm = await handleUploadImages(form);
+      return useCase.createTransaction(transformToRequest(uploadedForm));
+    },
+    onSuccess: (res) => {
+      if (!res.error) {
+        queryClient.invalidateQueries({ queryKey: ['visa-transactions'] });
+        toast.success('Pengajuan visa berhasil dibuat!');
+        router.push(ROUTES.PILGRIM.TRANSACTION.INDEX);
+      } else {
+        toast.error(res.message || res.error.message || 'Gagal membuat pengajuan');
+      }
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
+  const updateTransactionMutation = useMutation({
+    mutationFn: async ({ id, form }: { id: string; form: TWizardForm }) => {
+      const uploadedForm = await handleUploadImages(form);
+      return useCase.updateTransaction(id, transformToRequest(uploadedForm));
+    },
+    onSuccess: (res) => {
+      if (!res.error) {
+        queryClient.invalidateQueries({ queryKey: ['visa-transactions'] });
+        queryClient.invalidateQueries({ queryKey: ['visa-transaction', res.data?.id] });
+        toast.success('Pengajuan visa berhasil diperbarui!');
+        router.push(ROUTES.PILGRIM.TRANSACTION.INDEX);
+      } else {
+        toast.error(res.message || res.error.message || 'Gagal memperbarui pengajuan');
+      }
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
+  const uploadProofMutation = useMutation({
+    mutationFn: ({ id, file }: { id: string; file: File }) => useCase.updatePaymentProof(id, file),
+    onSuccess: (res) => {
+      if (!res.error) {
+        queryClient.invalidateQueries({ queryKey: ['visa-transactions'] });
+        queryClient.invalidateQueries({ queryKey: ['visa-transaction', res.data?.id] });
+        toast.success('Bukti pembayaran berhasil diunggah!');
+      } else {
+        toast.error(res.message || res.error.message || 'Gagal mengunggah bukti pembayaran');
+      }
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
+  const previewSubmissionMutation = useMutation({
+    mutationFn: async (form: TWizardForm) => {
+      const uploadedForm = await handleUploadImages(form);
+      return useCase.previewSubmission(transformToRequest(uploadedForm));
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
   return {
     isDownloading,
     handleDownloadAllVisas,
     useTransactions,
     useTransactionDetail,
-    useCreateTransaction,
-    useUpdateTransaction,
-    useProcessOcr,
-    useUploadProof,
-    usePreviewSubmission: () =>
+    useCreateTransaction: () => createTransactionMutation,
+    useUpdateTransaction: () => updateTransactionMutation,
+    useProcessOcr: (onOcrSuccess: (data: ILogisticsOcrResponse) => void) =>
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       useMutation({
-        mutationFn: async (form: TWizardForm) => {
-          const uploadedForm = await handleUploadImages(form);
-          return useCase.previewSubmission(transformToRequest(uploadedForm));
+        mutationFn: ({ file, ocrType = 'LOGISTICS' }: { file: File; ocrType?: TOcrType }) =>
+          useCase.processOcr(file, ocrType),
+        onSuccess: (res) => {
+          if (res.data) onOcrSuccess(res.data);
         },
-        onError: (err: Error) => toast.error(err.message),
+        onError: () => toast.error('Gagal memproses OCR dokumen logistik'),
       }),
+    useUploadProof: () => uploadProofMutation,
+    usePreviewSubmission: () => previewSubmissionMutation,
     wizardSchema,
   };
 };
