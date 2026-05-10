@@ -28,7 +28,7 @@ export class AgencySettingsUseCase implements IAgencySettingsUseCase {
     try {
       const payload = {
         ...data,
-        visaPrice: data.visaPrice !== undefined ? String(data.visaPrice) : undefined,
+        visaPrice: data.visaPrice !== undefined ? Math.abs(Number(data.visaPrice)) : undefined,
       };
       const res = await this.repo.updateAgencyData(payload as any);
       if (res.data) {

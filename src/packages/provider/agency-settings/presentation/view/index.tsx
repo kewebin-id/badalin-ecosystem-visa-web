@@ -72,7 +72,11 @@ export const AgencySettingsView = () => {
   }, [agency, reset]);
 
   const onSubmit = (values: AgencyFormValues) => {
-    updateAgency(values);
+    const payload = {
+      ...values,
+      visaPrice: Math.abs(Number(values.visaPrice)) || 0,
+    };
+    updateAgency(payload);
   };
 
   if (isLoadingData && !agency) {
