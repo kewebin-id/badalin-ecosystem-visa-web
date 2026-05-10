@@ -152,8 +152,8 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
         carrier: data.departureCarrier,
         from: data.departureFlightFrom,
         to: data.departureFlightTo,
-        flightDate: data.departureFlightEtd
-          ? dateUtil(data.departureFlightEtd).format('YYYY-MM-DD')
+        flightDate: data.departureFlightEta
+          ? dateUtil(data.departureFlightEta).format('YYYY-MM-DD')
           : '',
         eta: data.departureFlightEta,
         etd: data.departureFlightEtd,
