@@ -1,6 +1,6 @@
 import { ROUTES } from '@/shared/constants';
 import { RestAPI } from '@/shared/utils/rest-api';
-import { isBase64 } from '@/shared/utils/validator';
+import { dateUtil, isBase64 } from '@/shared/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
@@ -92,7 +92,7 @@ const getWizardSchema = (t: (key: string) => string) =>
     .refine(
       (data) => {
         if (data.departureFlightEtd) {
-          return new Date(data.departureFlightEtd) >= new Date();
+          return dateUtil(data.departureFlightEtd).isAfter(dateUtil().subtract(1, 'minute'));
         }
         return true;
       },
@@ -104,7 +104,7 @@ const getWizardSchema = (t: (key: string) => string) =>
     .refine(
       (data) => {
         if (data.departureFlightEtd && data.departureFlightEta) {
-          return new Date(data.departureFlightEta) >= new Date(data.departureFlightEtd);
+          return !dateUtil(data.departureFlightEta).isBefore(dateUtil(data.departureFlightEtd));
         }
         return true;
       },
@@ -116,7 +116,7 @@ const getWizardSchema = (t: (key: string) => string) =>
     .refine(
       (data) => {
         if (data.departureFlightEta && data.returnFlightEtd) {
-          return new Date(data.returnFlightEtd) >= new Date(data.departureFlightEta);
+          return !dateUtil(data.returnFlightEtd).isBefore(dateUtil(data.departureFlightEta));
         }
         return true;
       },
@@ -128,7 +128,7 @@ const getWizardSchema = (t: (key: string) => string) =>
     .refine(
       (data) => {
         if (data.returnFlightEtd && data.returnFlightEta) {
-          return new Date(data.returnFlightEta) >= new Date(data.returnFlightEtd);
+          return !dateUtil(data.returnFlightEta).isBefore(dateUtil(data.returnFlightEtd));
         }
         return true;
       },
@@ -153,7 +153,7 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
         from: data.departureFlightFrom,
         to: data.departureFlightTo,
         flightDate: data.departureFlightEta
-          ? new Date(data.departureFlightEta).toISOString().split('T')[0]
+          ? dateUtil(data.departureFlightEta).format('YYYY-MM-DD')
           : '',
         eta: data.departureFlightEta,
         etd: data.departureFlightEtd,
@@ -166,7 +166,7 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
         from: data.returnFlightFrom,
         to: data.returnFlightTo,
         flightDate: data.returnFlightEta
-          ? new Date(data.returnFlightEta).toISOString().split('T')[0]
+          ? dateUtil(data.returnFlightEta).format('YYYY-MM-DD')
           : '',
         eta: data.returnFlightEta,
         etd: data.returnFlightEtd,

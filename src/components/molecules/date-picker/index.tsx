@@ -1,10 +1,8 @@
 'use client';
 
 import { Calendar } from '@/components/atoms';
-import { cn } from '@/shared/utils';
+import { cn, dateUtil } from '@/shared/utils';
 import { CalendarFold, X } from 'lucide-react';
-import moment from 'moment';
-import 'moment/locale/id';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { DialogDrawer } from '../dialog-drawer';
 import { InputSelect } from '../input/select';
@@ -49,7 +47,7 @@ export const DatePicker: FC<DatePickerProps> = ({
 }: DatePickerProps) => {
   const [date, setDate] = useState<Date | null>(() => {
     if (value) {
-      const parsedDate = typeof value === 'string' ? new Date(value) : value;
+      const parsedDate = dateUtil(value).toDate();
       if (!isNaN(parsedDate.getTime())) {
         return parsedDate;
       }
@@ -59,16 +57,16 @@ export const DatePicker: FC<DatePickerProps> = ({
 
   const [hours, setHours] = useState<string>(() => {
     if (value) {
-      const parsedDate = typeof value === 'string' ? new Date(value) : value;
-      return String(parsedDate.getHours()).padStart(2, '0');
+      const d = dateUtil(value);
+      return String(d.hour()).padStart(2, '0');
     }
     return '00';
   });
 
   const [minutes, setMinutes] = useState<string>(() => {
     if (value) {
-      const parsedDate = typeof value === 'string' ? new Date(value) : value;
-      return String(parsedDate.getMinutes()).padStart(2, '0');
+      const d = dateUtil(value);
+      return String(d.minute()).padStart(2, '0');
     }
     return '00';
   });
@@ -77,11 +75,12 @@ export const DatePicker: FC<DatePickerProps> = ({
 
   useEffect(() => {
     if (value) {
-      const newDate = typeof value === 'string' ? new Date(value) : value;
-      if (!isNaN(newDate.getTime())) {
+      const d = dateUtil(value);
+      if (d.isValid()) {
+        const newDate = d.toDate();
         setDate(newDate);
-        setHours(String(newDate.getHours()).padStart(2, '0'));
-        setMinutes(String(newDate.getMinutes()).padStart(2, '0'));
+        setHours(String(d.hour()).padStart(2, '0'));
+        setMinutes(String(d.minute()).padStart(2, '0'));
       }
     } else {
       setDate(null);
@@ -90,11 +89,14 @@ export const DatePicker: FC<DatePickerProps> = ({
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (selectedDate) {
-      const newDate = new Date(selectedDate);
-      newDate.setHours(parseInt(hours));
-      newDate.setMinutes(parseInt(minutes));
-      setDate(newDate);
-      onChange(newDate.toISOString());
+      const d = dateUtil(selectedDate)
+        .hour(parseInt(hours))
+        .minute(parseInt(minutes))
+        .second(0)
+        .millisecond(0);
+      
+      setDate(d.toDate());
+      onChange(d.format());
       if (!showTime) {
         setOpened(false);
       }
@@ -105,10 +107,12 @@ export const DatePicker: FC<DatePickerProps> = ({
     setHours(newHours);
     setMinutes(newMinutes);
     if (date) {
-      const updatedDate = new Date(date);
-      updatedDate.setHours(parseInt(newHours));
-      updatedDate.setMinutes(parseInt(newMinutes));
-      onChange(updatedDate.toISOString());
+      const d = dateUtil(date)
+        .hour(parseInt(newHours))
+        .minute(parseInt(newMinutes))
+        .second(0)
+        .millisecond(0);
+      onChange(d.format());
     }
   };
 
@@ -155,7 +159,7 @@ export const DatePicker: FC<DatePickerProps> = ({
           type="text"
           label={label}
           required={required}
-          value={date ? moment(date).format(showTime ? 'DD MMMM YYYY HH:mm' : 'DD MMMM YYYY') : ''}
+          value={date ? dateUtil(date).format(showTime ? 'DD MMMM YYYY HH:mm' : 'DD MMMM YYYY') : ''}
           placeholder={placeholder}
           onFocus={() => !disabled && setOpened(true)}
           icon={

@@ -10,6 +10,7 @@ import {
   useTransactionController,
 } from '@/packages/pilgrim/transaction/presentation/controller';
 import { isBase64 } from '@/shared/utils/validator';
+import { getTodayJakarta } from '@/shared/utils';
 import { Building2, History as HistoryIcon, Plane } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -252,7 +253,7 @@ export const LogisticsForm = () => {
                 setValue('departureFlightEtd', val as string, { shouldValidate: true })
               }
               errorMessage={errors.departureFlightEtd?.message}
-              minDate={new Date().toISOString()}
+              minDate={getTodayJakarta().toISOString()}
               isAutoDetected={isAutoDetected['departureFlightEtd']}
               confidence={isAutoDetected['departureFlightEtd'] ? watch('ocrConfidence') : undefined}
             />
@@ -267,7 +268,7 @@ export const LogisticsForm = () => {
                 setValue('departureFlightEta', val as string, { shouldValidate: true })
               }
               errorMessage={errors.departureFlightEta?.message}
-              minDate={watch('departureFlightEtd') || new Date().toISOString()}
+              minDate={watch('departureFlightEtd') || getTodayJakarta().toISOString()}
               isAutoDetected={isAutoDetected['departureFlightEta']}
               confidence={isAutoDetected['departureFlightEta'] ? watch('ocrConfidence') : undefined}
             />
@@ -363,7 +364,7 @@ export const LogisticsForm = () => {
                 setValue('returnFlightEtd', val as string, { shouldValidate: true })
               }
               errorMessage={errors.returnFlightEtd?.message}
-              minDate={watch('departureFlightEta') || new Date().toISOString()}
+              minDate={watch('departureFlightEta') || getTodayJakarta().toISOString()}
             />
             <DatePicker
               useLabelInside
@@ -376,7 +377,7 @@ export const LogisticsForm = () => {
                 setValue('returnFlightEta', val as string, { shouldValidate: true })
               }
               errorMessage={errors.returnFlightEta?.message}
-              minDate={watch('returnFlightEtd') || new Date().toISOString()}
+              minDate={watch('returnFlightEtd') || getTodayJakarta().toISOString()}
             />
           </div>
         </div>
@@ -460,7 +461,7 @@ export const LogisticsForm = () => {
                 setValue('hotelMakkahCheckIn', val as string, { shouldValidate: true })
               }
               errorMessage={errors.hotelMakkahCheckIn?.message}
-              minDate={new Date().toISOString()}
+              minDate={getTodayJakarta().toISOString()}
               isAutoDetected={isAutoDetected['hotelMakkahCheckIn']}
               confidence={isAutoDetected['hotelMakkahCheckIn'] ? watch('ocrConfidence') : undefined}
             />
@@ -474,7 +475,7 @@ export const LogisticsForm = () => {
                 setValue('hotelMakkahCheckOut', val as string, { shouldValidate: true })
               }
               errorMessage={errors.hotelMakkahCheckOut?.message}
-              minDate={watch('hotelMakkahCheckIn') || new Date().toISOString()}
+              minDate={watch('hotelMakkahCheckIn') || getTodayJakarta().toISOString()}
               isAutoDetected={isAutoDetected['hotelMakkahCheckOut']}
               confidence={
                 isAutoDetected['hotelMakkahCheckOut'] ? watch('ocrConfidence') : undefined
@@ -561,7 +562,7 @@ export const LogisticsForm = () => {
                 setValue('hotelMadinahCheckIn', val as string, { shouldValidate: true })
               }
               errorMessage={errors.hotelMadinahCheckIn?.message}
-              minDate={new Date().toISOString()}
+              minDate={getTodayJakarta().toISOString()}
             />
             <DatePicker
               useLabelInside
@@ -573,7 +574,7 @@ export const LogisticsForm = () => {
                 setValue('hotelMadinahCheckOut', val as string, { shouldValidate: true })
               }
               errorMessage={errors.hotelMadinahCheckOut?.message}
-              minDate={watch('hotelMadinahCheckIn') || new Date().toISOString()}
+              minDate={watch('hotelMadinahCheckIn') || getTodayJakarta().toISOString()}
             />
           </div>
         </div>

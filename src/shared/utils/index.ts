@@ -1,6 +1,7 @@
 export * from './cors-config';
 export * from './crypto';
 export * from './currency';
+export * from './date-utils';
 export * from './export-utils';
 export * from './formattor';
 export * from './logger';
