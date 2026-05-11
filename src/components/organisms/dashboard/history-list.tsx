@@ -68,7 +68,7 @@ export const HistoryList = () => {
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {history?.map((item: IVisaHistory) => (
-            <TransactionCard key={item.transaction_id} transaction={item} />
+            <TransactionCard key={item.transactionId} transaction={item} />
           ))}
         </div>
       )}
