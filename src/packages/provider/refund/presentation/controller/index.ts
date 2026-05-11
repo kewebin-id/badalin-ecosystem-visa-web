@@ -14,15 +14,20 @@ export const useRefundController = () => {
   const queryClient = useQueryClient();
   const t = useTranslations('RefundManagement.toasts');
 
-  const useRefundList = () => {
+  const useRefundList = (page: number = 1, limit: number = 10, search?: string) => {
     const refundRes = useQuery({
-      queryKey: ['provider', 'refund', 'list'],
-      queryFn: () => usecase.getRefundList(),
+      queryKey: ['provider', 'refund', 'list', page, limit, search],
+      queryFn: () => usecase.getRefundList(page, limit, search),
     });
-    
-    const refunds = useMemo(() => refundRes?.data?.data || [], [refundRes]);
-    
-    return { ...refundRes, refunds };
+
+    const refunds = useMemo(() => refundRes?.data?.data?.items || [], [refundRes]);
+    const pagination = useMemo(() => {
+      if (!refundRes?.data?.data) return null;
+      const { items: _, ...rest } = refundRes.data.data;
+      return rest;
+    }, [refundRes]);
+
+    return { ...refundRes, refunds, pagination };
   };
 
   const useSettleRefund = () =>

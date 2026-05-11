@@ -7,9 +7,20 @@ import { IRefundUseCase } from '../port/usecase.port';
 export class RefundUseCase implements IRefundUseCase {
   constructor(private readonly repository: IRefundRepository) {}
 
-  async getRefundList(): Promise<IUsecaseResponse<IRefundListItem[]>> {
+  async getRefundList(
+    page: number = 1,
+    limit: number = 10,
+    search?: string,
+  ): Promise<
+    IUsecaseResponse<{
+      items: IRefundListItem[];
+      totalItems: number;
+      totalPages: number;
+      currentPage: number;
+    }>
+  > {
     try {
-      const res = await this.repository.getRefundList();
+      const res = await this.repository.getRefundList(page, limit, search);
       if (res.code === 200 && res.data) {
         return { data: res.data, message: res.message };
       }

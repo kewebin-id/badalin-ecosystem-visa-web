@@ -7,10 +7,22 @@ import { IRefundRepository } from '../port/repository.port';
 export class RefundRepository implements IRefundRepository {
   constructor(private readonly api: RestAPI) {}
 
-  async getRefundList(): Promise<ResponseREST<IRefundListItem[]>> {
+  async getRefundList(
+    page: number = 1,
+    limit: number = 10,
+    search?: string,
+  ): Promise<
+    ResponseREST<{
+      items: IRefundListItem[];
+      totalItems: number;
+      totalPages: number;
+      currentPage: number;
+    }>
+  > {
     try {
-      return await this.api.get<IRefundListItem[]>({
+      return await this.api.get({
         endpoint: endpoints.nextApi.provider.refund.base,
+        queryParam: { page, limit, search },
         isNextApi: true,
       });
     } catch {
