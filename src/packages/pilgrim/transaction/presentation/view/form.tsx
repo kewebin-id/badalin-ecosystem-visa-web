@@ -155,6 +155,17 @@ export const TransactionFormView = () => {
     }
   };
 
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      const firstError = Object.keys(errors)[0];
+      const element = document.getElementsByName(firstError)[0];
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.focus();
+      }
+    }
+  }, [errors]);
+
   const mapBackendPathToFrontend = useCallback((path: string) => {
     if (path.startsWith('flights.0.')) {
       const field = path.replace('flights.0.', '');
@@ -252,7 +263,21 @@ export const TransactionFormView = () => {
   const nextStep = async () => {
     const fieldsToValidate = getStepFields(step);
     const isValid = await trigger(fieldsToValidate);
-    if (isValid) setStep((s: number) => s + 1);
+    if (isValid) {
+      setStep((s: number) => s + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      const firstError = Object.keys(errors).find((key) =>
+        fieldsToValidate.includes(key as keyof TWizardForm),
+      );
+      if (firstError) {
+        const element = document.getElementsByName(firstError)[0];
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          element.focus();
+        }
+      }
+    }
   };
 
   const prevStep = () => setStep((s: number) => s - 1);

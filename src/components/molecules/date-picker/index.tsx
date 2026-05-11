@@ -25,6 +25,7 @@ export interface DatePickerProps {
   confidence?: number;
   isReadingOcr?: boolean;
   showTime?: boolean;
+  name?: string;
 }
 
 export const DatePicker: FC<DatePickerProps> = ({
@@ -44,6 +45,7 @@ export const DatePicker: FC<DatePickerProps> = ({
   confidence,
   isReadingOcr,
   showTime = false,
+  name,
 }: DatePickerProps) => {
   const [date, setDate] = useState<Date | null>(() => {
     if (value) {
@@ -157,6 +159,7 @@ export const DatePicker: FC<DatePickerProps> = ({
         <InputText
           readonly
           type="text"
+          name={name}
           label={label}
           required={required}
           value={date ? dateUtil(date).format(showTime ? 'DD MMMM YYYY HH:mm' : 'DD MMMM YYYY') : ''}

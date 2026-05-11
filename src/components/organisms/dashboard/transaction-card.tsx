@@ -1,10 +1,10 @@
 import { Button } from '@/components/atoms/button';
+import dayjs from 'dayjs';
+import 'dayjs/locale/id';
 import { ArrowRight, Building2, Calendar, FileCheck, Hash, Plane, Users } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { StatusBadge } from './status-badge';
-import dayjs from 'dayjs';
-import 'dayjs/locale/id';
 
 import { IVisaHistory } from '@/packages/pilgrim/dashboard/domain';
 import { getSeasonConfig } from '@/packages/pilgrim/dashboard/domain/utils';
@@ -119,23 +119,27 @@ export const TransactionCard = ({ transaction }: TransactionCardProps) => {
             {transaction.transactionId?.split('-').pop()?.toUpperCase() ||
               transaction.id?.split('-').pop()?.toUpperCase()}
           </div>
-          <span className={`text-xl font-black tracking-tighter ${seasonConfig.themeColor.split(' ')[0]}`}>
+          <span
+            className={`text-xl font-black tracking-tighter ${seasonConfig.themeColor.split(' ')[0]}`}
+          >
             {formatIDR(transaction?.totalAmount || transaction.invoiceAmount || 0)}
           </span>
         </div>
-        <Button
-          onClick={handleDetail}
-          variant={isIssued ? 'success' : 'dark'}
-          size="lg"
-          className="w-fit !rounded-2xl text-xs font-black active:scale-95 flex items-center gap-2 group/btn"
-        >
-          {isIssued ? 'Lihat E-Visa' : t('detail')}
-          {isIssued ? (
-            <FileCheck className="size-4 group-hover/btn:scale-110 transition-transform" />
-          ) : (
-            <ArrowRight className="size-3.5 group-hover/btn:translate-x-1 transition-transform" />
-          )}
-        </Button>
+        <div>
+          <Button
+            onClick={handleDetail}
+            variant={isIssued ? 'success' : 'dark'}
+            size="lg"
+            className="w-fit !rounded-2xl text-xs font-black active:scale-95 flex items-center gap-2 group/btn"
+          >
+            {isIssued ? 'Lihat E-Visa' : t('detail')}
+            {isIssued ? (
+              <FileCheck className="size-4 group-hover/btn:scale-110 transition-transform" />
+            ) : (
+              <ArrowRight className="size-3.5 group-hover/btn:translate-x-1 transition-transform" />
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   );

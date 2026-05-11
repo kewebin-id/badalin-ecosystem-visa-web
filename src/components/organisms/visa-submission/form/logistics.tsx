@@ -29,6 +29,7 @@ export const LogisticsForm = () => {
     watch,
     setValue,
     register,
+    trigger,
     formState: { errors },
   } = useFormContext<TWizardForm>();
   const [isAutoDetected, setIsAutoDetected] = useState<Record<string, boolean>>({});
@@ -162,6 +163,19 @@ export const LogisticsForm = () => {
     return () => subscription.unsubscribe();
   }, [watch, isAutoDetected]);
 
+  const departureFlightEta = watch('departureFlightEta');
+  const returnFlightEtd = watch('returnFlightEtd');
+
+  useEffect(() => {
+    const fieldsToRevalidate: Path<TWizardForm>[] = [
+      'hotelMakkahCheckIn',
+      'hotelMakkahCheckOut',
+      'hotelMadinahCheckIn',
+      'hotelMadinahCheckOut',
+    ];
+    trigger(fieldsToRevalidate);
+  }, [departureFlightEta, returnFlightEtd, trigger]);
+
   return (
     <div className="space-y-6">
       <div className="p-6 border border-gray-100 rounded-[32px] bg-gray-50/30 space-y-6">
@@ -244,6 +258,7 @@ export const LogisticsForm = () => {
 
             <DatePicker
               useLabelInside
+              name="departureFlightEtd"
               size="lg"
               label={t('flightEtd')}
               required
@@ -259,6 +274,7 @@ export const LogisticsForm = () => {
             />
             <DatePicker
               useLabelInside
+              name="departureFlightEta"
               size="lg"
               label={t('flightEta')}
               required
@@ -355,6 +371,7 @@ export const LogisticsForm = () => {
 
             <DatePicker
               useLabelInside
+              name="returnFlightEtd"
               size="lg"
               label={t('flightEtd')}
               required
@@ -368,6 +385,7 @@ export const LogisticsForm = () => {
             />
             <DatePicker
               useLabelInside
+              name="returnFlightEta"
               size="lg"
               label={t('flightEta')}
               required
@@ -453,6 +471,7 @@ export const LogisticsForm = () => {
 
             <DatePicker
               useLabelInside
+              name="hotelMakkahCheckIn"
               size="lg"
               label={t('hotelCheckin')}
               required
@@ -461,12 +480,14 @@ export const LogisticsForm = () => {
                 setValue('hotelMakkahCheckIn', val as string, { shouldValidate: true })
               }
               errorMessage={errors.hotelMakkahCheckIn?.message}
-              minDate={watch('departureFlightEta') || getTodayRiyadh().toISOString()}
+              minDate={departureFlightEta || getTodayRiyadh().toISOString()}
+              maxDate={returnFlightEtd}
               isAutoDetected={isAutoDetected['hotelMakkahCheckIn']}
               confidence={isAutoDetected['hotelMakkahCheckIn'] ? watch('ocrConfidence') : undefined}
             />
             <DatePicker
               useLabelInside
+              name="hotelMakkahCheckOut"
               size="lg"
               label={t('hotelCheckout')}
               required
@@ -477,9 +498,10 @@ export const LogisticsForm = () => {
               errorMessage={errors.hotelMakkahCheckOut?.message}
               minDate={
                 watch('hotelMakkahCheckIn') ||
-                watch('departureFlightEta') ||
+                departureFlightEta ||
                 getTodayRiyadh().toISOString()
               }
+              maxDate={returnFlightEtd}
               isAutoDetected={isAutoDetected['hotelMakkahCheckOut']}
               confidence={
                 isAutoDetected['hotelMakkahCheckOut'] ? watch('ocrConfidence') : undefined
@@ -558,6 +580,7 @@ export const LogisticsForm = () => {
             />
             <DatePicker
               useLabelInside
+              name="hotelMadinahCheckIn"
               size="lg"
               label={t('hotelCheckin')}
               required
@@ -566,10 +589,12 @@ export const LogisticsForm = () => {
                 setValue('hotelMadinahCheckIn', val as string, { shouldValidate: true })
               }
               errorMessage={errors.hotelMadinahCheckIn?.message}
-              minDate={watch('departureFlightEta') || getTodayRiyadh().toISOString()}
+              minDate={departureFlightEta || getTodayRiyadh().toISOString()}
+              maxDate={returnFlightEtd}
             />
             <DatePicker
               useLabelInside
+              name="hotelMadinahCheckOut"
               size="lg"
               label={t('hotelCheckout')}
               required
@@ -580,9 +605,10 @@ export const LogisticsForm = () => {
               errorMessage={errors.hotelMadinahCheckOut?.message}
               minDate={
                 watch('hotelMadinahCheckIn') ||
-                watch('departureFlightEta') ||
+                departureFlightEta ||
                 getTodayRiyadh().toISOString()
               }
+              maxDate={returnFlightEtd}
             />
           </div>
         </div>

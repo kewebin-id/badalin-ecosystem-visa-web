@@ -130,6 +130,7 @@ const InputSelectBase: FC<InputSelectBaseProps> = ({
         onOpenChange={setOpened}
         onValueChange={onValueInternalChange}
         value={currentValue}
+        name={name}
       >
         <span className="relative block w-full">
           <SelectTrigger

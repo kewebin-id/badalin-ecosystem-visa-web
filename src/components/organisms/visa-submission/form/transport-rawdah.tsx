@@ -6,6 +6,7 @@ import { InputFile } from '@/components/molecules/input/file';
 import { InputSelect } from '@/components/molecules/input/select';
 import { InputText } from '@/components/molecules/input/text';
 import { TWizardForm } from '@/packages/pilgrim/transaction/presentation/controller';
+import { getTodayRiyadh } from '@/shared/utils';
 import {
   Bus,
   CalendarCheck,
@@ -17,8 +18,8 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { dateRiyadh, getTodayRiyadh } from '@/shared/utils';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useEffect } from 'react';
+import { Path, useFieldArray, useFormContext } from 'react-hook-form';
 
 const TRANSPORT_TYPE_OPTIONS = [
   { label: 'Bus', value: 'BUS' },
@@ -56,6 +57,16 @@ export const TransportRawdahForm = () => {
     control,
     name: 'transportations',
   });
+  const { trigger } = useFormContext<TWizardForm>();
+
+  const departureFlightEta = watch('departureFlightEta');
+  const returnFlightEtd = watch('returnFlightEtd');
+
+  useEffect(() => {
+    const transportFields = fields.map((_, index) => `transportations.${index}.date` as Path<TWizardForm>);
+    const rawdahFields: Path<TWizardForm>[] = ['rawdahMenTime', 'rawdahWomenTime'];
+    trigger([...transportFields, ...rawdahFields]);
+  }, [departureFlightEta, returnFlightEtd, fields.length, trigger]);
 
   const handleAddTransport = (type: 'BUS' | 'TRAIN' | 'TAXI' | 'MPV' | 'OTHER') => {
     append({
@@ -232,6 +243,7 @@ export const TransportRawdahForm = () => {
 
                   <DatePicker
                     useLabelInside
+                    name={`transportations.${index}.date`}
                     size="lg"
                     label={t('form.dateAndTime')}
                     showTime={true}
@@ -288,6 +300,7 @@ export const TransportRawdahForm = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <DatePicker
             useLabelInside
+            name="rawdahMenTime"
             size="lg"
             label={t('form.rawdahMenTime')}
             showTime={true}
@@ -299,6 +312,7 @@ export const TransportRawdahForm = () => {
           />
           <DatePicker
             useLabelInside
+            name="rawdahWomenTime"
             size="lg"
             label={t('form.rawdahWomenTime')}
             showTime={true}

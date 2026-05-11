@@ -87,18 +87,6 @@ export const DetailLogisticsTab = ({ transaction }: DetailLogisticsTabProps) => 
             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary-default">
               {t('detail.pilgrimListHeader')}
             </h3>
-            {transaction.paymentStatus === 'COMPLETED' && (
-              <Button
-                variant="transparent"
-                size="sm"
-                className="text-primary-default font-bold hover:bg-primary-50 h-8 gap-2"
-                onClick={() => handleDownloadAllVisas(transaction)}
-                disabled={isDownloading}
-              >
-                <FileText className="size-4" />
-                {isDownloading ? t('detail.downloading') : t('detail.downloadAllVisas')}
-              </Button>
-            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
