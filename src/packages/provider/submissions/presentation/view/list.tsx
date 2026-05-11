@@ -20,9 +20,11 @@ import {
 } from '@/components/molecules';
 import { SubmissionQuickReview } from '@/components/organisms/providers/submission/quick-review';
 import { EmptyState } from '@/components/templates';
+import { ROUTES } from '@/shared/constants';
 import { useScreenSize } from '@/shared/hooks';
 import { Eye, FileSpreadsheet, Inbox, Loader2, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ProviderSubmission } from '../../domain/entities';
@@ -45,12 +47,18 @@ export const SubmissionsMonitoring = () => {
   const [previewImage, setPreviewImage] = useState<{ src: string; alt: string } | null>(null);
   const [isFetchingDetail, setIsFetchingDetail] = useState<string | null>(null);
 
+  const { slug } = useParams();
+  const { push: navigate } = useRouter();
+
   const handleOpenReview = async (id: string) => {
     setIsFetchingDetail(id);
     try {
       const detail = await fetchSubmissionDetail(id);
 
       if (detail?.data) {
+        if (detail?.data?.paymentStatus === 'CHECKING') {
+          return navigate(ROUTES.PROVIDER.DETAIL(slug as string, id));
+        }
         setReviewData(detail.data);
         setIsReviewOpen(true);
       } else {
