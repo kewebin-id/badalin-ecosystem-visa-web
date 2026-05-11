@@ -812,6 +812,7 @@
     "title": "Refund Management",
     "subtitle": "Kelola pengembalian dana untuk jemaah yang ditolak.",
     "table": {
+      "searchPlaceholder": "Cari nama jemaah atau nomor paspor...",
       "pilgrim": "Jemaah",
       "submissionId": "Submission ID",
       "amount": "Nominal Refund",

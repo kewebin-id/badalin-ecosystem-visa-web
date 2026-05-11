@@ -166,7 +166,7 @@ export const RefundPage = () => {
         emptyTitle={t('empty.title')}
         emptyDescription={t('empty.description')}
         searchKey="fullName"
-        searchPlaceholder={t('searchPlaceholder')}
+        searchPlaceholder={t('table.searchPlaceholder')}
         onSearchChange={onSearchChange}
         delayDebounce={1000}
       />
