@@ -1,11 +1,12 @@
 'use client';
 
-import { Badge, Button } from '@/components/atoms';
+import { Button } from '@/components/atoms';
 import { DataTable } from '@/components/templates/datatable';
+import { StatusBadge } from '@/components/molecules/badge-status';
 import { formatRupiah } from '@/shared/utils';
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { AlertCircle, CheckCircle2, Clock, Upload } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { AlertCircle, Upload } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useState } from 'react';
 import { IRefundListItem } from '../../domain/response';
 import { useRefundController } from '../controller';
@@ -13,6 +14,7 @@ import { SettleRefundDialog } from './settle-refund-dialog';
 
 export const RefundPage = () => {
   const t = useTranslations('RefundManagement');
+  const locale = useLocale();
   const [search, setSearch] = useState('');
   const [{ pageIndex, pageSize }, setPagination] = useState({
     pageIndex: 0,
@@ -64,14 +66,10 @@ export const RefundPage = () => {
       cell: ({ row }) => {
         const isSettled = row.original.refundStatus === 'SETTLED';
         return (
-          <Badge className={isSettled ? 'bg-green-500' : 'bg-yellow-500'}>
-            {isSettled ? (
-              <CheckCircle2 className="w-3 h-3 mr-1" />
-            ) : (
-              <Clock className="w-3 h-3 mr-1" />
-            )}
-            {isSettled ? t('status.settled') : t('status.pending')}
-          </Badge>
+          <StatusBadge
+            status={isSettled ? 'verified' : 'pending'}
+            label={isSettled ? t('status.settled') : t('status.pending')}
+          />
         );
       },
     },
@@ -85,7 +83,7 @@ export const RefundPage = () => {
         return (
           <div className="flex items-center gap-1.5">
             <span className={isOverdue ? 'text-red-500 font-bold' : 'text-gray-600 font-medium'}>
-              {deadline.toLocaleString('id-ID', {
+              {deadline.toLocaleString(locale === 'id' ? 'id-ID' : 'en-US', {
                 dateStyle: 'medium',
                 timeStyle: 'short',
               })}
@@ -98,18 +96,38 @@ export const RefundPage = () => {
     {
       id: 'actions',
       header: t('table.actions'),
-      cell: ({ row }) => (
-        <Button
-          size="sm"
-          variant="primaryOutline"
-          disabled={row.original.refundStatus === 'SETTLED'}
-          onClick={() => setSelectedSubmissionId(row.original.submissionId)}
-          className="h-9 rounded-xl px-4"
-        >
-          <Upload className="w-3.5 h-3.5 mr-2" />
-          {t('table.settleAction')}
-        </Button>
-      ),
+      cell: ({ row }) => {
+        const isSettled = row.original.refundStatus === 'SETTLED';
+        const deadline = row.original.deadline ? new Date(row.original.deadline) : null;
+        const isOverdue = deadline ? deadline < new Date() : false;
+
+        if (isSettled) {
+          return (
+            <StatusBadge status="verified" label={t('status.settled')} className="w-fit h-8" />
+          );
+        }
+
+        if (isOverdue) {
+          return (
+            <div className="flex items-center gap-2 text-red-500 font-bold text-xs bg-red-50 px-3 py-2 rounded-xl border border-red-100 w-fit">
+              <AlertCircle className="w-3.5 h-3.5" />
+              {t('table.callCS')}
+            </div>
+          );
+        }
+
+        return (
+          <Button
+            size="sm"
+            variant="primaryOutline"
+            onClick={() => setSelectedSubmissionId(row.original.submissionId)}
+            className="h-9 rounded-xl px-4"
+          >
+            <Upload className="w-3.5 h-3.5 mr-2" />
+            {t('table.settleAction')}
+          </Button>
+        );
+      },
     },
   ];
 

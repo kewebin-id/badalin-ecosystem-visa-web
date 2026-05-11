@@ -817,11 +817,13 @@
       "amount": "Nominal Refund",
       "status": "Status",
       "deadline": "Deadline",
-      "actions": "Aksi"
+      "actions": "Aksi",
+      "settleAction": "Settle Refund",
+      "callCS": "Hubungi CS"
     },
     "status": {
-      "pending": "PENDING",
-      "settled": "SETTLED"
+      "pending": "Menunggu",
+      "settled": "Selesai"
     },
     "dialog": {
       "title": "Upload Bukti Refund",

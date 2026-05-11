@@ -816,11 +816,13 @@
       "amount": "Refund Amount",
       "status": "Status",
       "deadline": "Deadline",
-      "actions": "Actions"
+      "actions": "Actions",
+      "settleAction": "Settle Refund",
+      "callCS": "Contact Support"
     },
     "status": {
-      "pending": "PENDING",
-      "settled": "SETTLED"
+      "pending": "Pending",
+      "settled": "Settled"
     },
     "dialog": {
       "title": "Upload Refund Proof",
