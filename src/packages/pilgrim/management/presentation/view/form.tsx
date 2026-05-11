@@ -12,8 +12,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 import { INusukCompatibility, RELATIONS, TRelation } from '../../domain/member';
+import { TManagementForm } from '../../domain/request';
 import { DocumentUploadField } from '@/components/organisms/pilgrim-management/document-upload-field';
-import { TManagementForm, useManagementController, useManagementForm } from '../controller';
+import { useManagementController, useManagementForm } from '../controller';
 
 const FormSkeleton = () => (
   <div className="mx-auto space-y-8 pb-20 animate-in fade-in duration-500">

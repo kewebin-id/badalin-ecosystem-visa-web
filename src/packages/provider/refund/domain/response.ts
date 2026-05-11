@@ -7,3 +7,7 @@ export interface IRefundListItem {
   refundStatus: string;
   deadline: string | null;
 }
+
+export interface ISettleRefundResponse {
+  success: boolean;
+}

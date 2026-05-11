@@ -38,14 +38,6 @@ export interface IPaginationParams {
   search?: string;
 }
 
-export interface ICreateMemberRequest extends Omit<IFamilyMember, 'id' | 'isComplete'> {
-  ocrConfidence?: number;
-}
-
-export interface IUpdateMemberRequest extends Partial<ICreateMemberRequest> {
-  id: string;
-}
-
 export interface INusukCompatibility {
   score: number;
   status: 'SAFE' | 'WARNING' | 'REJECTED';

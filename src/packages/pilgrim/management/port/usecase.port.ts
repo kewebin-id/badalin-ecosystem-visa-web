@@ -1,11 +1,6 @@
 import { IUsecaseResponse } from '@/shared/domain/response.usecase';
-import {
-  IFamilyMember,
-  ICreateMemberRequest,
-  IUpdateMemberRequest,
-  IPaginatedPilgrims,
-  IPaginationParams,
-} from '../domain/member';
+import { IFamilyMember, IPaginatedPilgrims, IPaginationParams } from '../domain/member';
+import { ICreateMemberRequest, IUpdateMemberRequest } from '../domain/request';
 
 export interface IManagementUseCase {
   getMembers(params?: IPaginationParams): Promise<IUsecaseResponse<IPaginatedPilgrims>>;

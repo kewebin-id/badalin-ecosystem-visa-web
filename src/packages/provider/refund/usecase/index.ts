@@ -1,7 +1,8 @@
 import { IUsecaseResponse } from '@/shared/domain/response.usecase';
 import Logger from '@/shared/utils/logger';
-import { IRefundRepository, IRefundUseCase } from '../ports';
-import { IRefundListItem } from '../domain/response';
+import { IRefundListItem, ISettleRefundResponse } from '../domain/response';
+import { IRefundRepository } from '../port/repository.port';
+import { IRefundUseCase } from '../port/usecase.port';
 
 export class RefundUseCase implements IRefundUseCase {
   constructor(private readonly repository: IRefundRepository) {}
@@ -22,7 +23,10 @@ export class RefundUseCase implements IRefundUseCase {
     }
   }
 
-  async settleRefund(submissionId: string, file: string): Promise<IUsecaseResponse<any>> {
+  async settleRefund(
+    submissionId: string,
+    file: string,
+  ): Promise<IUsecaseResponse<ISettleRefundResponse>> {
     try {
       const res = await this.repository.settleRefund(submissionId, file);
       if ((res.code === 200 || res.code === 201) && res.data) {

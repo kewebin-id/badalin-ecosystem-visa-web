@@ -1,11 +1,8 @@
 import { IUsecaseResponse } from '@/shared/domain/response.usecase';
 import Logger from '@/shared/utils/logger';
 import { IDashboardSummary } from '../domain/response';
-import { IProviderDashboardRepository } from '../repository';
-
-export interface IProviderDashboardUseCase {
-  getSummary(): Promise<IUsecaseResponse<IDashboardSummary>>;
-}
+import { IProviderDashboardRepository } from '../port/repository.port';
+import { IProviderDashboardUseCase } from '../port/usecase.port';
 
 export class ProviderDashboardUseCase implements IProviderDashboardUseCase {
   constructor(private repo: IProviderDashboardRepository) {}

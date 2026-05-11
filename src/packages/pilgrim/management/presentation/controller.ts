@@ -7,41 +7,19 @@ import { useParams, useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import * as z from 'zod';
+import { IFamilyMember, INusukCompatibility, IPaginationParams, TRelation } from '../domain/member';
 import {
+  getFormSchema,
   ICreateMemberRequest,
-  IFamilyMember,
-  INusukCompatibility,
-  IPaginationParams,
   IUpdateMemberRequest,
-  TRelation,
-} from '../domain/member';
+  TManagementForm,
+} from '../domain/request';
 import { ManagementRepository } from '../repository';
 import { ManagementUseCase } from '../usecase';
 
 const api = new RestAPI();
 const repository = new ManagementRepository(api);
 const useCase = new ManagementUseCase(repository);
-
-const getFormSchema = (t: (key: string) => string) =>
-  z.object({
-    fullName: z.string().min(3, t('validation.nameMin')),
-    passportNumber: z.string().min(5, t('validation.passportInvalid')),
-    passportExpiry: z.string().min(1, t('validation.required')),
-    dob: z.string().min(1, t('validation.required')),
-    nik: z.string().length(16, t('validation.nikDigit')),
-    gender: z.enum(['Male', 'Female']),
-    maritalStatus: z.string().min(1, t('validation.required')),
-    relation: z.enum(['SELF', 'SPOUSE', 'FATHER', 'MOTHER', 'CHILD', 'SIBLING']),
-    ocrConfidence: z.number().optional(),
-    selfieUrl: z.string().optional(),
-    ktpUrl: z.string().optional(),
-    passportUrl: z.string().optional(),
-    bukuNikahUrl: z.string().optional(),
-    akteKelahiranUrl: z.string().optional(),
-  });
-
-export type TManagementForm = z.infer<ReturnType<typeof getFormSchema>>;
 
 export const useManagementController = () => {
   const t = useTranslations('PilgrimManagement');

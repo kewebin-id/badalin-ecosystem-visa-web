@@ -3,19 +3,18 @@ import {
   IApiCreateMemberRequest,
   IApiFamilyMember,
   IApiUpdateMemberRequest,
-  ICreateMemberRequest,
   IFamilyMember,
   IOCRIDCardData,
   IOCRPasportData,
   IPaginatedPilgrims,
   IPaginationParams,
-  IUpdateMemberRequest,
   TRelation,
   RELATION_MAP,
   REVERSE_RELATION_MAP,
   MARITAL_STATUS_MAP,
   REVERSE_MARITAL_STATUS_MAP,
 } from '../domain/member';
+import { ICreateMemberRequest, IUpdateMemberRequest } from '../domain/request';
 import { IManagementRepository } from '../port/repository.port';
 import { IManagementUseCase } from '../port/usecase.port';
 

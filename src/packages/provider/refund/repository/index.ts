@@ -1,8 +1,8 @@
 import { endpoints } from '@/shared/constants/endpoints';
 import { RestAPI } from '@/shared/utils/rest-api';
 import { ResponseREST } from '@/shared/utils/rest-api/types';
-import { IRefundListItem } from '../domain/response';
-import { IRefundRepository } from '../ports';
+import { IRefundListItem, ISettleRefundResponse } from '../domain/response';
+import { IRefundRepository } from '../port/repository.port';
 
 export class RefundRepository implements IRefundRepository {
   constructor(private readonly api: RestAPI) {}
@@ -18,9 +18,12 @@ export class RefundRepository implements IRefundRepository {
     }
   }
 
-  async settleRefund(submissionId: string, file: string): Promise<ResponseREST<any>> {
+  async settleRefund(
+    submissionId: string,
+    file: string,
+  ): Promise<ResponseREST<ISettleRefundResponse>> {
     try {
-      return await this.api.post({
+      return await this.api.post<ISettleRefundResponse>({
         endpoint: endpoints.nextApi.provider.refund.settle(submissionId),
         body: { file },
         isNextApi: true,
