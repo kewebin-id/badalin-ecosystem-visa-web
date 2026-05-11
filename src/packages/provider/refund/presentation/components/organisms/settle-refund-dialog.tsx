@@ -4,7 +4,7 @@ import { DialogDrawer } from '@/components/molecules';
 import { InputFile, UploadFile } from '@/components/molecules/input/file';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import { useRefundController } from '../controller';
+import { useRefundController } from '../../controller';
 
 interface SettleRefundDialogProps {
   open: boolean;
@@ -48,6 +48,7 @@ export const SettleRefundDialog = ({
       cancelButton={t('cancel')}
       onSubmit={handleSubmit}
       disabledSubmitButton={files.length === 0 || settleMutation.isPending}
+      submitting={settleMutation.isPending}
     >
       <div className="space-y-4">
         <p className="text-sm text-gray-500">{t('description')}</p>

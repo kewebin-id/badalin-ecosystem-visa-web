@@ -810,8 +810,8 @@
   "RefundManagement": {
     "title": "Refund Management",
     "subtitle": "Manage refunds for rejected pilgrims.",
+    "searchPlaceholder": "Search pilgrim name or passport number...",
     "table": {
-      "searchPlaceholder": "Search pilgrim name or passport number...",
       "pilgrim": "Pilgrim",
       "submissionId": "Submission ID",
       "amount": "Refund Amount",

@@ -10,7 +10,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useState } from 'react';
 import { IRefundListItem } from '../../domain/response';
 import { useRefundController } from '../controller';
-import { SettleRefundDialog } from './settle-refund-dialog';
+import { SettleRefundDialog } from '../components/organisms/settle-refund-dialog';
 
 export const RefundPage = () => {
   const t = useTranslations('RefundManagement');
@@ -166,7 +166,7 @@ export const RefundPage = () => {
         emptyTitle={t('empty.title')}
         emptyDescription={t('empty.description')}
         searchKey="fullName"
-        searchPlaceholder={t('table.searchPlaceholder')}
+        searchPlaceholder={t('searchPlaceholder')}
         onSearchChange={onSearchChange}
         delayDebounce={1000}
       />
