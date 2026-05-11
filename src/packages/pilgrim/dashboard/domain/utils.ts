@@ -2,56 +2,24 @@ import { IVisaHistory } from './index';
 
 export const getSeasonConfig = (transaction: IVisaHistory, locale: string = 'id') => {
   const date = transaction.destinationDate ? new Date(transaction.destinationDate) : new Date();
+  const month = date.getMonth();
+  const year = date.getFullYear();
 
-  const hijriMonthNumeric = parseInt(
-    new Intl.DateTimeFormat('en-US-u-ca-islamic', { month: 'numeric' }).format(date),
-  );
-  const hijriYear = new Intl.DateTimeFormat('en-US-u-ca-islamic', { year: 'numeric' }).format(date);
-  const hijriMonthName = new Intl.DateTimeFormat(`${locale}-ID-u-ca-islamic`, {
-    month: 'long',
-  }).format(date);
+  const isHaji2026 = year === 2026 && (month === 5 || month === 6);
 
-  if (hijriMonthNumeric === 12) {
+  if (isHaji2026) {
     return {
-      title: locale === 'id' ? `Visa Musim Haji ${hijriYear}` : `Haji Season Visa ${hijriYear}`,
+      title: locale === 'id' ? 'Visa Musim Haji 1447H' : 'Haji Season Visa 1447H',
       themeColor: 'text-amber-600 bg-amber-50',
       iconColor: 'text-amber-600',
       iconBg: 'bg-amber-100',
     };
   }
 
-  if (hijriMonthNumeric === 9) {
-    return {
-      title: locale === 'id' ? 'Layanan Visa Ramadhan' : 'Ramadan Visa Service',
-      themeColor: 'text-emerald-600 bg-emerald-50',
-      iconColor: 'text-emerald-600',
-      iconBg: 'bg-emerald-100',
-    };
-  }
-
   return {
-    title: locale === 'id' ? `Visa Umrah ${hijriMonthName}` : `Umrah Visa ${hijriMonthName}`,
+    title: locale === 'id' ? 'Layanan Visa Umrah' : 'Umrah Visa Service',
     themeColor: 'text-primary-default bg-primary-lighter',
     iconColor: 'text-primary-default',
     iconBg: 'bg-primary-lighter',
   };
-};
-
-export const getAccommodationDuration = (hotels: IVisaHistory['hotels']) => {
-  if (!hotels || hotels.length === 0) return 0;
-
-  let firstCheckIn = new Date(hotels[0].checkIn);
-  let lastCheckOut = new Date(hotels[0].checkOut);
-
-  hotels.forEach((hotel) => {
-    const checkIn = new Date(hotel.checkIn);
-    const checkOut = new Date(hotel.checkOut);
-    if (checkIn < firstCheckIn) firstCheckIn = checkIn;
-    if (checkOut > lastCheckOut) lastCheckOut = checkOut;
-  });
-
-  const diffTime = Math.abs(lastCheckOut.getTime() - firstCheckIn.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  return diffDays;
 };
