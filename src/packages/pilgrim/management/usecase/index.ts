@@ -11,56 +11,13 @@ import {
   IPaginationParams,
   IUpdateMemberRequest,
   TRelation,
+  RELATION_MAP,
+  REVERSE_RELATION_MAP,
+  MARITAL_STATUS_MAP,
+  REVERSE_MARITAL_STATUS_MAP,
 } from '../domain/member';
 import { IManagementRepository } from '../port/repository.port';
 import { IManagementUseCase } from '../port/usecase.port';
-
-const RELATION_MAP: Record<string, TRelation> = {
-  'Saya Sendiri': 'SELF',
-  SELF: 'SELF',
-  Istri: 'SPOUSE',
-  Suami: 'SPOUSE',
-  SPOUSE: 'SPOUSE',
-  Anak: 'CHILD',
-  CHILD: 'CHILD',
-  Ayah: 'FATHER',
-  FATHER: 'FATHER',
-  Ibu: 'MOTHER',
-  MOTHER: 'MOTHER',
-  'Saudara Kandung': 'SIBLING',
-  SIBLING: 'SIBLING',
-};
-
-const REVERSE_RELATION_MAP: Record<TRelation, string> = {
-  SELF: 'SELF',
-  SPOUSE: 'SPOUSE',
-  FATHER: 'FATHER',
-  MOTHER: 'MOTHER',
-  CHILD: 'CHILD',
-  SIBLING: 'SIBLING',
-};
-
-const MARITAL_STATUS_MAP: Record<string, string> = {
-  'Belum Menikah': 'Single',
-  Single: 'Single',
-  Menikah: 'Married',
-  Married: 'Married',
-  'Cerai Hidup': 'Divorced',
-  Divorced: 'Divorced',
-  'Cerai Mati': 'Widowed',
-  Widowed: 'Widowed',
-};
-
-const REVERSE_MARITAL_STATUS_MAP: Record<string, string> = {
-  Single: 'Belum Menikah',
-  SINGLE: 'Belum Menikah',
-  Married: 'Menikah',
-  MARRIED: 'Menikah',
-  Divorced: 'Cerai Hidup',
-  DIVORCED: 'Cerai Hidup',
-  Widowed: 'Cerai Mati',
-  WIDOWED: 'Cerai Mati',
-};
 
 export class ManagementUseCase implements IManagementUseCase {
   constructor(private readonly repository: IManagementRepository) {}

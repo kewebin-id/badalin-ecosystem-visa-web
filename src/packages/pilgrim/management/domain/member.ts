@@ -145,3 +145,50 @@ export interface IApiUpdateMemberRequest {
 export const RELATIONS: TRelation[] = ['SELF', 'SPOUSE', 'FATHER', 'MOTHER', 'CHILD', 'SIBLING'];
 
 export const MARITAL_STATUSES = ['Belum Menikah', 'Menikah', 'Cerai Hidup', 'Cerai Mati'];
+
+export const RELATION_MAP: Record<string, TRelation> = {
+  'Saya Sendiri': 'SELF',
+  SELF: 'SELF',
+  Istri: 'SPOUSE',
+  Suami: 'SPOUSE',
+  SPOUSE: 'SPOUSE',
+  Anak: 'CHILD',
+  CHILD: 'CHILD',
+  Ayah: 'FATHER',
+  FATHER: 'FATHER',
+  Ibu: 'MOTHER',
+  MOTHER: 'MOTHER',
+  'Saudara Kandung': 'SIBLING',
+  SIBLING: 'SIBLING',
+};
+
+export const REVERSE_RELATION_MAP: Record<TRelation, string> = {
+  SELF: 'SELF',
+  SPOUSE: 'SPOUSE',
+  FATHER: 'FATHER',
+  MOTHER: 'MOTHER',
+  CHILD: 'CHILD',
+  SIBLING: 'SIBLING',
+};
+
+export const MARITAL_STATUS_MAP: Record<string, string> = {
+  'Belum Menikah': 'Single',
+  Single: 'Single',
+  Menikah: 'Married',
+  Married: 'Married',
+  'Cerai Hidup': 'Divorced',
+  Divorced: 'Divorced',
+  'Cerai Mati': 'Widowed',
+  Widowed: 'Widowed',
+};
+
+export const REVERSE_MARITAL_STATUS_MAP: Record<string, string> = {
+  Single: 'Belum Menikah',
+  SINGLE: 'Belum Menikah',
+  Married: 'Menikah',
+  MARRIED: 'Menikah',
+  Divorced: 'Cerai Hidup',
+  DIVORCED: 'Cerai Hidup',
+  Widowed: 'Cerai Mati',
+  WIDOWED: 'Cerai Mati',
+};

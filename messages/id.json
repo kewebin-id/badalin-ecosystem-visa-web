@@ -698,6 +698,7 @@
     "submissions": "Submissions",
     "paymentVerification": "Verifikasi Pembayaran",
     "manifestData": "Data Manifest",
+    "refund": "Refund Management",
     "settings": "Pengaturan"
   },
   "SetupSlug": {
@@ -805,6 +806,38 @@
     "validation": {
       "required": "Field ini wajib diisi",
       "slugRegex": "Slug hanya boleh huruf kecil, angka, dan tanda hubung"
+    }
+  },
+  "RefundManagement": {
+    "title": "Refund Management",
+    "subtitle": "Kelola pengembalian dana untuk jemaah yang ditolak.",
+    "table": {
+      "pilgrim": "Jemaah",
+      "submissionId": "Submission ID",
+      "amount": "Nominal Refund",
+      "status": "Status",
+      "deadline": "Deadline",
+      "actions": "Aksi"
+    },
+    "status": {
+      "pending": "PENDING",
+      "settled": "SETTLED"
+    },
+    "dialog": {
+      "title": "Upload Bukti Refund",
+      "description": "Silakan unggah bukti transfer refund untuk jemaah ini. Setelah diunggah, status akan berubah menjadi SETTLED.",
+      "submit": "Settle Refund",
+      "cancel": "Batal",
+      "label": "Bukti Transfer",
+      "dropzone": "Klik atau tarik file bukti transfer di sini"
+    },
+    "toasts": {
+      "success": "Refund berhasil diselesaikan",
+      "error": "Gagal menyelesaikan refund"
+    },
+    "empty": {
+      "title": "Tidak Ada Refund",
+      "description": "Semua refund telah diselesaikan atau tidak ada jemaah yang memerlukan refund."
     }
   }
 }

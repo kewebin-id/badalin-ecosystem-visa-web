@@ -26,6 +26,7 @@ import {
   LogOut,
   PanelLeftClose,
   Plane,
+  RotateCcw,
   Settings,
   Users,
 } from 'lucide-react';
@@ -75,6 +76,11 @@ export const AppSidebar = ({
             title: 'ProviderSidebar.manifestData',
             url: ROUTES.PROVIDER.MANIFEST_LIST(slug),
             icon: FileText,
+          },
+          {
+            title: 'ProviderSidebar.refund',
+            url: `/${slug}/refund`,
+            icon: RotateCcw,
           },
           {
             title: 'ProviderSidebar.settings',

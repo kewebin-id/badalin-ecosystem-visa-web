@@ -2,15 +2,16 @@
 
 import { DialogDrawer } from '@/components/molecules';
 import { SidebarProvider } from '@/components/organisms';
+import { AgencyRestrictionBanner } from '@/components/organisms/layout/agency-restriction-banner';
 import { SetupSlugDialog } from '@/packages/provider/auth/presentation/view/setup-slug-dialog';
 import { useAuth } from '@/shared/hooks';
+import { useOnboardingTour } from '@/shared/hooks/use-onboarding-tour';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AppHeader } from '../../organisms/layout/app-header';
 import { AppSidebar } from '../../organisms/layout/app-sidebar';
-import { useOnboardingTour } from '@/shared/hooks/use-onboarding-tour';
 
 export const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const t = useTranslations();
@@ -97,6 +98,9 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden relative">
           {/* STICKY HEADER: Stays within the flex-1 column */}
           <AppHeader onMenuClick={() => setIsSidebarOpen(true)} />
+
+          {/* RESTRICTION BANNER */}
+          <AgencyRestrictionBanner />
 
           {/* SCROLLABLE MAIN CONTENT */}
           <main className="flex-1 overflow-y-auto bg-gray-50/50">

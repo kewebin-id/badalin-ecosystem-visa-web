@@ -806,5 +806,37 @@
       "required": "This field is required",
       "slugRegex": "Slug can only contain lowercase letters, numbers, and hyphens"
     }
+  },
+  "RefundManagement": {
+    "title": "Refund Management",
+    "subtitle": "Manage refunds for rejected pilgrims.",
+    "table": {
+      "pilgrim": "Pilgrim",
+      "submissionId": "Submission ID",
+      "amount": "Refund Amount",
+      "status": "Status",
+      "deadline": "Deadline",
+      "actions": "Actions"
+    },
+    "status": {
+      "pending": "PENDING",
+      "settled": "SETTLED"
+    },
+    "dialog": {
+      "title": "Upload Refund Proof",
+      "description": "Please upload the refund transfer proof for this pilgrim. Once uploaded, the status will change to SETTLED.",
+      "submit": "Settle Refund",
+      "cancel": "Cancel",
+      "label": "Transfer Proof",
+      "dropzone": "Click or drag transfer proof file here"
+    },
+    "toasts": {
+      "success": "Refund settled successfully",
+      "error": "Failed to settle refund"
+    },
+    "empty": {
+      "title": "No Refunds",
+      "description": "All refunds have been settled or there are no pilgrims requiring a refund."
+    }
   }
 }

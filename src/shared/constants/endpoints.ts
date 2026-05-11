@@ -66,6 +66,10 @@ export const endpoints = {
       submitVisas: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/submit-visas`,
       uploadVisas: (slug: string, id: string) => `/api/v1/${slug}/submissions/${id}/upload-visas`,
     },
+    refund: {
+      base: (slug: string = 'p') => `/api/v1/${slug}/refund`,
+      settle: (slug: string, id: string) => `/api/v1/${slug}/refund/${id}/settle`,
+    },
   },
   nextApi: {
     auth: {
@@ -102,6 +106,10 @@ export const endpoints = {
         transportManifest: (id: string) => `/api/provider/submissions/${id}/manifest/transport`,
         submitVisas: (id: string) => `/api/provider/submissions/${id}/submit-visas`,
         uploadVisas: (id: string) => `/api/provider/submissions/${id}/upload-visas`,
+      },
+      refund: {
+        base: '/api/provider/refund',
+        settle: (id: string) => `/api/provider/refund/${id}/settle`,
       },
     },
     visa: {
