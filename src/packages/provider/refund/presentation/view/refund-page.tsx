@@ -1,16 +1,16 @@
 'use client';
 
 import { Button } from '@/components/atoms';
-import { DataTable } from '@/components/templates/datatable';
 import { StatusBadge } from '@/components/molecules/badge-status';
+import { DataTable } from '@/components/templates/datatable';
 import { formatRupiah } from '@/shared/utils';
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { AlertCircle, Upload } from 'lucide-react';
+import { AlertCircle, MessageCircle, Upload } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useState } from 'react';
 import { IRefundListItem } from '../../domain/response';
-import { useRefundController } from '../controller';
 import { SettleRefundDialog } from '../components/organisms/settle-refund-dialog';
+import { useRefundController } from '../controller';
 
 export const RefundPage = () => {
   const t = useTranslations('RefundManagement');
@@ -102,17 +102,34 @@ export const RefundPage = () => {
         const isOverdue = deadline ? deadline < new Date() : false;
 
         if (isSettled) {
-          return (
-            <StatusBadge status="verified" label={t('status.settled')} className="w-fit h-8" />
-          );
+          return '';
         }
 
         if (isOverdue) {
+          const BADALIN_CS_NUMBER = process.env.BADALIN_CS_NUMBER || '6281333737330';
+          const refundAmount = formatRupiah(row.original.refundAmount);
+          const deadlineDate = row.original.deadline ? new Date(row.original.deadline).toLocaleDateString(locale === 'id' ? 'id-ID' : 'en-US', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          }) : '-';
+          
+          const message = t('whatsappMessage', {
+            submissionId: row.original.submissionId,
+            refundAmount,
+            deadline: deadlineDate
+          });
+          
           return (
-            <div className="flex items-center gap-2 text-red-500 font-bold text-xs bg-red-50 px-3 py-2 rounded-xl border border-red-100 w-fit">
-              <AlertCircle className="w-3.5 h-3.5" />
+            <Button
+              size="sm"
+              variant="dangerOutline"
+              className="h-9 rounded-xl px-4 gap-2 font-bold w-fit"
+              onClick={() => window.open(`https://wa.me/${BADALIN_CS_NUMBER}?text=${encodeURIComponent(message)}`, '_blank')}
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
               {t('table.callCS')}
-            </div>
+            </Button>
           );
         }
 

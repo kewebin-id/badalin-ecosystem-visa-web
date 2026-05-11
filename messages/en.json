@@ -802,6 +802,7 @@
       "bank": "Ensure account data is correct so pilgrim payment instructions are accurate."
     },
     "save": "Save Changes",
+    "updating": "Updating...",
     "validation": {
       "required": "This field is required",
       "slugRegex": "Slug can only contain lowercase letters, numbers, and hyphens"
@@ -811,6 +812,7 @@
     "title": "Refund Management",
     "subtitle": "Manage refunds for rejected pilgrims.",
     "searchPlaceholder": "Search pilgrim name or passport number...",
+    "whatsappMessage": "Hello Badalin CS, I would like to process a pilgrim refund.\n\nSubmission ID: {submissionId}\nRefund Amount: {refundAmount}\nDeadline: {deadline}\n\nI will send this fund to the Badalin account first to be forwarded to the user.",
     "table": {
       "pilgrim": "Pilgrim",
       "submissionId": "Submission ID",

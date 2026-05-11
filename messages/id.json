@@ -803,6 +803,7 @@
       "bank": "Pastikan data rekening benar agar instruksi pembayaran jamaah akurat."
     },
     "save": "Simpan Perubahan",
+    "updating": "Sedang mengubah...",
     "validation": {
       "required": "Field ini wajib diisi",
       "slugRegex": "Slug hanya boleh huruf kecil, angka, dan tanda hubung"
@@ -812,6 +813,7 @@
     "title": "Refund Management",
     "subtitle": "Kelola pengembalian dana untuk jemaah yang ditolak.",
     "searchPlaceholder": "Cari nama jemaah atau nomor paspor...",
+    "whatsappMessage": "Halo CS Badalin, saya ingin memproses refund jemaah.\n\nSubmission ID: {submissionId}\nNominal Refund: {refundAmount}\nDeadline: {deadline}\n\nSaya akan mengirimkan dana ini ke rekening Badalin terlebih dahulu untuk diteruskan ke user.",
     "table": {
       "pilgrim": "Jemaah",
       "submissionId": "Submission ID",

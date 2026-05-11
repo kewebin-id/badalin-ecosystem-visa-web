@@ -99,7 +99,7 @@ export const AgencySettingsView = () => {
 
   return (
     <div className="relative space-y-8 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <LoadingOverlay isLoading={isUpdating} message={tCommon('loading')} />
+      <LoadingOverlay isLoading={isUpdating} message={t('updating')} />
 
       <HeaderPageContent title={t('title')} subtitle={t('subtitle')} hideBack />
 
@@ -267,7 +267,7 @@ export const AgencySettingsView = () => {
               isSubmitting={isUpdating}
             >
               <Save size={20} />
-              {isUpdating ? tCommon('loading') : t('save')}
+              {isUpdating ? t('updating') : t('save')}
             </Button>
           </div>
         </form>
