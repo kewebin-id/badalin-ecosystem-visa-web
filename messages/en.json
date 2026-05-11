@@ -189,8 +189,8 @@
     "ocrReadError": "Failed to read image. Make sure the file format is correct and try again",
     "systemError": "An internal system error occurred",
     "validation": {
-      "required": "Required field",
       "nikDigit": "NIK must be exactly 16 digits",
+      "required": "Required field",
       "nameMin": "Full name must be at least 3 characters",
       "passportInvalid": "Passport number is invalid (min 5 characters)"
     },
@@ -235,8 +235,8 @@
   "VisaTransaction": {
     "title": "Transactions & Applications",
     "description": "Manage visa applications",
-    "addTransaction": "Apply for Visa",
-    "emptyTitle": "No transactions yet",
+    "addTransaction": "Apply Now",
+    "emptyTitle": "No submissions yet",
     "emptyDescription": "Start your first visa application now.",
     "step": "Step",
     "stepTitles": {
@@ -437,8 +437,9 @@
   "TransactionHistory": {
     "title": "Transaction History",
     "total": "Total {count} Transactions",
-    "emptyTitle": "No History Yet",
-    "emptyDescription": "Your transactions will appear here after you apply for a visa.",
+    "emptyTitle": "No submissions yet",
+    "emptyDescription": "Start your first visa application now.",
+    "applyNow": "Apply Now",
     "errorTitle": "Failed to Load Data",
     "errorDefault": "An error occurred while fetching your transaction history.",
     "trxId": "TRX ID",
@@ -698,6 +699,7 @@
     "submissions": "Submissions",
     "paymentVerification": "Payment Verification",
     "manifestData": "Manifest Data",
+    "refund": "Refund Management",
     "settings": "Settings"
   },
   "SetupSlug": {

@@ -235,8 +235,8 @@
   "VisaTransaction": {
     "title": "Transaksi & Pengajuan",
     "description": "Kelola pengajuan visa",
-    "addTransaction": "Ajukan Visa",
-    "emptyTitle": "Belum ada transaksi",
+    "addTransaction": "Ajukan Sekarang",
+    "emptyTitle": "Belum ada pengajuan",
     "emptyDescription": "Mulai pengajuan visa pertama Anda sekarang.",
     "step": "Langkah",
     "stepTitles": {
@@ -437,8 +437,9 @@
   "TransactionHistory": {
     "title": "Riwayat Transaksi",
     "total": "Total {count} Transaksi",
-    "emptyTitle": "Belum Ada Riwayat",
-    "emptyDescription": "Transaksi Anda akan muncul di sini setelah Anda mengajukan visa.",
+    "emptyTitle": "Belum ada pengajuan",
+    "emptyDescription": "Mulai pengajuan visa pertama Anda sekarang.",
+    "applyNow": "Ajukan Sekarang",
     "errorTitle": "Gagal Memuat Data",
     "errorDefault": "Terjadi kesalahan saat mengambil riwayat transaksi Anda.",
     "trxId": "ID TRX",

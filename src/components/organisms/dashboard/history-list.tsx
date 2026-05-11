@@ -2,6 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 import { Skeleton } from '@/components/atoms/skeleton';
+import { Button } from '@/components/atoms/button';
+import { ROUTES } from '@/shared/constants/routes';
+import { Plane } from 'lucide-react';
 import { IVisaHistory } from '@/packages/pilgrim/dashboard/domain';
 import { useDashboardController } from '@/packages/pilgrim/dashboard/presentation/controller';
 import { TransactionCard } from './transaction-card';
@@ -57,13 +60,17 @@ export const HistoryList = () => {
         <p className="text-sm font-medium text-gray-400">{t('total', { count: history.length })}</p>
       </div>
 
-      {!history || history.length === 0 ? (
+        {!history || history.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
           <div className="size-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
             <span className="text-2xl">📋</span>
           </div>
           <h3 className="text-lg font-bold text-dark-900">{t('emptyTitle')}</h3>
-          <p className="text-gray-500">{t('emptyDescription')}</p>
+          <p className="text-gray-500 mb-6">{t('emptyDescription')}</p>
+          <Button href={ROUTES.PILGRIM.TRANSACTION.FORM} size="md">
+            <Plane size={18} />
+            <span>{t('applyNow')}</span>
+          </Button>
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -35,4 +35,12 @@ export const getTodayJakarta = () => {
   return dayjs().tz(DEFAULT_TIMEZONE).startOf('day');
 };
 
+export const dateRiyadh = (date?: dayjs.ConfigType) => {
+  return dayjs(date).tz('Asia/Riyadh');
+};
+
+export const getTodayRiyadh = () => {
+  return dayjs().tz('Asia/Riyadh').startOf('day');
+};
+
 export { dayjs };

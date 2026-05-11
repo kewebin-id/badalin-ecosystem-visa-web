@@ -143,6 +143,7 @@ export const useManagementForm = (initialData?: Partial<IFamilyMember>) => {
         passportUrl: initialData?.passportUrl || '',
         bukuNikahUrl: initialData?.bukuNikahUrl || '',
         akteKelahiranUrl: initialData?.akteKelahiranUrl || '',
+        employmentCertificateUrl: initialData?.employmentCertificateUrl || '',
       };
     }, [initialData]),
   });

@@ -17,6 +17,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { dateRiyadh, getTodayRiyadh } from '@/shared/utils';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 const TRANSPORT_TYPE_OPTIONS = [
@@ -245,7 +246,8 @@ export const TransportRawdahForm = () => {
                         shouldValidate: true,
                       });
                     }}
-                    minDate={new Date().toISOString()}
+                    minDate={watch('departureFlightEta') || getTodayRiyadh().toISOString()}
+                    maxDate={watch('returnFlightEtd')}
                     errorMessage={
                       (errors.transportations?.[index] as Record<string, { message?: string }>)
                         ?.date?.message ||
@@ -291,7 +293,8 @@ export const TransportRawdahForm = () => {
             showTime={true}
             value={watch('rawdahMenTime')}
             onChange={(val) => setValue('rawdahMenTime', val as string, { shouldValidate: true })}
-            minDate={new Date().toISOString()}
+            minDate={watch('departureFlightEta') || getTodayRiyadh().toISOString()}
+            maxDate={watch('returnFlightEtd')}
             errorMessage={errors.rawdahMenTime?.message}
           />
           <DatePicker
@@ -301,7 +304,8 @@ export const TransportRawdahForm = () => {
             showTime={true}
             value={watch('rawdahWomenTime')}
             onChange={(val) => setValue('rawdahWomenTime', val as string, { shouldValidate: true })}
-            minDate={new Date().toISOString()}
+            minDate={watch('departureFlightEta') || getTodayRiyadh().toISOString()}
+            maxDate={watch('returnFlightEtd')}
             errorMessage={errors.rawdahWomenTime?.message}
           />
         </div>

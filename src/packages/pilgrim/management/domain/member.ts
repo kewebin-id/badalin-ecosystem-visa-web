@@ -18,6 +18,7 @@ export interface IFamilyMember {
   passportUrl?: string;
   bukuNikahUrl?: string;
   akteKelahiranUrl?: string;
+  employmentCertificateUrl?: string;
   ocrConfidence?: number;
 }
 
@@ -88,6 +89,7 @@ export interface IApiFamilyMember {
   passportUrl?: string;
   bukuNikahUrl?: string;
   akteKelahiranUrl?: string;
+  employmentCertificateUrl?: string;
   ocrConfidence?: number;
   createdAt?: string;
   updatedAt?: string;
@@ -116,6 +118,7 @@ export interface IApiCreateMemberRequest {
   photoUrl?: string;
   ktpUrl?: string;
   passportUrl?: string;
+  employmentCertificateUrl?: string;
   ocrConfidence?: number;
 }
 
@@ -132,6 +135,7 @@ export interface IApiUpdateMemberRequest {
   photoUrl?: string;
   ktpUrl?: string;
   passportUrl?: string;
+  employmentCertificateUrl?: string;
 }
 
 export const RELATIONS: TRelation[] = ['SELF', 'SPOUSE', 'FATHER', 'MOTHER', 'CHILD', 'SIBLING'];

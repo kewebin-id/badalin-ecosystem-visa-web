@@ -56,6 +56,7 @@ export const MemberFormView = () => {
   const [passportPreview, setPassportPreview] = useState<string>();
   const [ktpPreview, setKtpPreview] = useState<string>();
   const [selfiePreview, setSelfiePreview] = useState<string>();
+  const [employmentCertificatePreview, setEmploymentCertificatePreview] = useState<string>();
 
   const initialData = detailRes?.data;
   const form = useManagementForm(initialData);
@@ -81,6 +82,7 @@ export const MemberFormView = () => {
       setPassportPreview(initialData.passportUrl);
       setKtpPreview(initialData.ktpUrl);
       setSelfiePreview(initialData.selfieUrl);
+      setEmploymentCertificatePreview(initialData.employmentCertificateUrl);
 
       reset({
         ...initialData,
@@ -90,6 +92,7 @@ export const MemberFormView = () => {
       setPassportPreview(undefined);
       setKtpPreview(undefined);
       setSelfiePreview(undefined);
+      setEmploymentCertificatePreview(undefined);
       reset({
         fullName: '',
         passportNumber: '',
@@ -103,6 +106,7 @@ export const MemberFormView = () => {
         selfieUrl: '',
         ktpUrl: '',
         passportUrl: '',
+        employmentCertificateUrl: '',
       });
     }
   }, [initialData, reset]);
@@ -190,6 +194,7 @@ export const MemberFormView = () => {
       passportUrl: data.passportUrl || passportPreview,
       ktpUrl: data.ktpUrl || ktpPreview,
       selfieUrl: data.selfieUrl || selfiePreview,
+      employmentCertificateUrl: data.employmentCertificateUrl || employmentCertificatePreview,
     };
 
     if (id) {
@@ -461,6 +466,35 @@ export const MemberFormView = () => {
                 options={relationOptions}
                 required
                 errorMessage={errors.relation?.message}
+              />
+            </div>
+          </section>
+          
+          {/* Employment Certificate Section */}
+          <section className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-6">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+              Dokumen Tambahan (Opsional)
+            </h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              <InputFile
+                label="Surat Keterangan Kerja / Usaha / IRT"
+                maxFiles={1}
+                allowedTypes={['.png', '.jpeg', '.jpg', '.pdf']}
+                value={
+                  employmentCertificatePreview
+                    ? [
+                        {
+                          name: 'employment-certificate',
+                          base64: employmentCertificatePreview,
+                        },
+                      ]
+                    : []
+                }
+                onChange={(files) => {
+                  const file = files[0];
+                  setEmploymentCertificatePreview(file?.base64);
+                  setValue('employmentCertificateUrl', file?.base64);
+                }}
               />
             </div>
           </section>

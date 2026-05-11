@@ -17,6 +17,7 @@ export const getFormSchema = (t: (key: string) => string) =>
     passportUrl: z.string().optional(),
     bukuNikahUrl: z.string().optional(),
     akteKelahiranUrl: z.string().optional(),
+    employmentCertificateUrl: z.string().optional(),
   });
 
 export type TManagementForm = z.infer<ReturnType<typeof getFormSchema>>;
@@ -35,6 +36,7 @@ export interface ICreateMemberRequest {
   passportUrl?: string;
   bukuNikahUrl?: string;
   akteKelahiranUrl?: string;
+  employmentCertificateUrl?: string;
   ocrConfidence?: number;
 }
 

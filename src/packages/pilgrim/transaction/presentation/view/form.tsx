@@ -410,13 +410,23 @@ export const TransactionFormView = () => {
               </Button>
             )}
             {step < 3 ? (
-              <Button type="button" onClick={nextStep} disabled={!isStepValid} className="flex-1">
+              <Button
+                type="button"
+                onClick={nextStep}
+                disabled={!isStepValid || previewMutation.isPending}
+                className="flex-1"
+              >
                 {tCommon('continue')} <ArrowRight className="size-4 ml-2" />
               </Button>
             ) : (
               <Button
                 type="submit"
-                disabled={!isValidated || createMutation.isPending || updateMutation.isPending}
+                disabled={
+                  !isValidated ||
+                  createMutation.isPending ||
+                  updateMutation.isPending ||
+                  previewMutation.isPending
+                }
                 className="flex-1 shadow-lg shadow-primary-500/20"
               >
                 {createMutation.isPending || updateMutation.isPending ? (

@@ -180,7 +180,16 @@ export const TransactionListView = ({
 
       <div className="grid grid-cols-1 gap-4 lg:hidden">
         {transactions.length === 0 ? (
-          <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
+          <EmptyState
+            title={t('emptyTitle')}
+            description={t('emptyDescription')}
+            action={
+              <Button href={ROUTES.PILGRIM.TRANSACTION.FORM} size="md">
+                <Plane size={18} />
+                <span>{t('addTransaction')}</span>
+              </Button>
+            }
+          />
         ) : (
           transactions.map((tx) => (
             <Card

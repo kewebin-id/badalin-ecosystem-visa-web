@@ -1,3 +1,4 @@
+import { Button } from '@/components/atoms/button';
 import { ArrowRight, Building2, Calendar, FileCheck, Hash, Plane, Users } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
@@ -122,11 +123,11 @@ export const TransactionCard = ({ transaction }: TransactionCardProps) => {
             {formatIDR(transaction?.totalAmount || transaction.invoiceAmount || 0)}
           </span>
         </div>
-        <button
+        <Button
           onClick={handleDetail}
-          className={`px-6 py-3 text-white text-xs font-black rounded-2xl transition-all shadow-lg active:scale-95 flex items-center gap-2 group/btn ${
-            isIssued ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/10' : 'bg-dark-950 hover:bg-primary-default shadow-dark-950/10'
-          }`}
+          variant={isIssued ? 'success' : 'dark'}
+          size="lg"
+          className="w-fit !rounded-2xl text-xs font-black active:scale-95 flex items-center gap-2 group/btn"
         >
           {isIssued ? 'Lihat E-Visa' : t('detail')}
           {isIssued ? (
@@ -134,7 +135,7 @@ export const TransactionCard = ({ transaction }: TransactionCardProps) => {
           ) : (
             <ArrowRight className="size-3.5 group-hover/btn:translate-x-1 transition-transform" />
           )}
-        </button>
+        </Button>
       </div>
     </div>
   );

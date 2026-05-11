@@ -3,7 +3,7 @@
 import { Image } from '@/components/atoms';
 import { ImagePreviewModal } from '@/components/molecules/image-preview-modal';
 import { cn } from '@/shared/utils';
-import { AlertTriangle, Plus, Sparkles, Upload, X } from 'lucide-react';
+import { AlertTriangle, FileText, Plus, Sparkles, Upload, X } from 'lucide-react';
 import { useCallback, useRef, useState } from 'react';
 import { Control } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -38,7 +38,7 @@ export const InputFile = ({
   maxFiles = 3,
   maxSize = 5 * 1024 * 1024, // 5MB
   isDragDrop = false,
-  allowedTypes = ['.png', '.jpeg', '.jpg'],
+  allowedTypes = ['.png', '.jpeg', '.jpg', '.pdf'],
   value = [],
   onChange,
   className,
@@ -51,6 +51,8 @@ export const InputFile = ({
   isReadingOcr,
   dropzoneText,
 }: GlobalUploadProps) => {
+  const isPdf = (src: string) =>
+    src.startsWith('data:application/pdf') || src.toLowerCase().endsWith('.pdf');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [previewImage, setPreviewImage] = useState<{
@@ -260,13 +262,22 @@ export const InputFile = ({
                       setPreviewImage({ src: file.base64, name: file.name });
                     }}
                   >
-                    <Image
-                      src={file.base64}
-                      alt={file.name}
-                      className="h-full w-full object-cover"
-                      height={100}
-                      width={100}
-                    />
+                    {isPdf(file.base64) ? (
+                      <div className="flex h-full w-full flex-col items-center justify-center gap-1 bg-gray-50 text-gray-400">
+                        <FileText className="h-8 w-8" />
+                        <span className="text-[8px] uppercase font-bold px-1 text-center line-clamp-1">
+                          {file.name}
+                        </span>
+                      </div>
+                    ) : (
+                      <Image
+                        src={file.base64}
+                        alt={file.name}
+                        className="h-full w-full object-cover"
+                        height={100}
+                        width={100}
+                      />
+                    )}
                     {!disabled && (
                       <button
                         type="button"
@@ -330,13 +341,22 @@ export const InputFile = ({
               setPreviewImage({ src: file.base64, name: file.name });
             }}
           >
-            <Image
-              src={file.base64}
-              alt={file.name}
-              className="h-full w-full object-cover"
-              height={100}
-              width={100}
-            />
+            {isPdf(file.base64) ? (
+              <div className="flex h-full w-full flex-col items-center justify-center gap-1 bg-gray-50 text-gray-400">
+                <FileText className="h-8 w-8" />
+                <span className="text-[8px] uppercase font-bold px-1 text-center line-clamp-1">
+                  {file.name}
+                </span>
+              </div>
+            ) : (
+              <Image
+                src={file.base64}
+                alt={file.name}
+                className="h-full w-full object-cover"
+                height={100}
+                width={100}
+              />
+            )}
             {!disabled && (
               <button
                 type="button"

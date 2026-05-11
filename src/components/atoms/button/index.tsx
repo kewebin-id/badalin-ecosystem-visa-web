@@ -29,6 +29,9 @@ const buttonVariants = cva(
           'bg-transparent border border-transparent border border border-gray-300 text-black/45  hover:bg-gray-100 focus-visible:ring-gray-default/50',
         transparent:
           'bg-transparent border-transparent border-none text-black/45 hover:bg-gray-100 focus-visible:ring-gray-default/50',
+        success:
+          'bg-emerald-600 border-emerald-600 border text-white hover:bg-emerald-700 focus-visible:ring-emerald-600/50 shadow-lg shadow-emerald-600/10',
+        dark: 'bg-dark-950 border-dark-950 border text-white hover:bg-primary-default hover:border-primary-default focus-visible:ring-dark-950/50 shadow-lg shadow-dark-950/10',
       },
       size: {
         sm: 'h-9 rounded-lg text-xs px-3 has-[>svg]:px-2.5',

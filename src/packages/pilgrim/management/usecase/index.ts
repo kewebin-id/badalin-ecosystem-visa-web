@@ -180,6 +180,7 @@ export class ManagementUseCase implements IManagementUseCase {
       passportUrl: data.passportUrl,
       bukuNikahUrl: data.bukuNikahUrl,
       akteKelahiranUrl: data.akteKelahiranUrl,
+      employmentCertificateUrl: data.employmentCertificateUrl,
       ocrConfidence: data.ocrConfidence,
     };
   }
@@ -206,6 +207,7 @@ export class ManagementUseCase implements IManagementUseCase {
         photoUrl: d.selfieUrl,
         ktpUrl: d.ktpUrl,
         passportUrl: d.passportUrl,
+        employmentCertificateUrl: d.employmentCertificateUrl,
       } as IApiUpdateMemberRequest;
     } else {
       const d = data as ICreateMemberRequest;
@@ -221,6 +223,7 @@ export class ManagementUseCase implements IManagementUseCase {
         photoUrl: d.selfieUrl,
         ktpUrl: d.ktpUrl,
         passportUrl: d.passportUrl,
+        employmentCertificateUrl: d.employmentCertificateUrl,
         ocrConfidence: d.ocrConfidence,
       } as IApiCreateMemberRequest;
     }
@@ -235,6 +238,7 @@ export class ManagementUseCase implements IManagementUseCase {
       'passportUrl',
       'bukuNikahUrl',
       'akteKelahiranUrl',
+      'employmentCertificateUrl',
     ];
 
     const dataObj = data as unknown as Record<string, unknown>;

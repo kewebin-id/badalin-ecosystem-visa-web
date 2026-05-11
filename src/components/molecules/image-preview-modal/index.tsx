@@ -2,6 +2,7 @@
 
 import { Button, Image } from '@/components/atoms';
 import { Minimize2, X, ZoomIn, ZoomOut } from 'lucide-react';
+import { cn } from '@/shared/utils';
 import { useEffect, useRef, useState } from 'react';
 
 export interface ImagePreviewModalProps {
@@ -18,6 +19,8 @@ export const ImagePreviewModal = ({
   imageSrc,
   imageAlt = 'Preview',
 }: ImagePreviewModalProps) => {
+  const isPdf =
+    imageSrc.startsWith('data:application/pdf') || imageSrc.toLowerCase().endsWith('.pdf');
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -118,52 +121,54 @@ export const ImagePreviewModal = ({
       </button>
 
       {/* Zoom Controls */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-1 bg-black/50 backdrop-blur-sm border border-gray-600 rounded-md p-1">
-        <Button
-          type="button"
-          variant="transparent"
-          size="sm"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleZoomOut();
-          }}
-          disabled={scale <= 0.5}
-          className="h-8 w-8 p-0 text-white hover:bg-gray-700 disabled:opacity-50"
-        >
-          <ZoomOut className="h-4 w-4" />
-        </Button>
-        <span className="text-xs text-white px-2 min-w-[60px] text-center">
-          {Math.round(scale * 100)}%
-        </span>
-        <Button
-          type="button"
-          variant="transparent"
-          size="sm"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleZoomIn();
-          }}
-          disabled={scale >= 5}
-          className="h-8 w-8 p-0 text-white hover:bg-gray-700 disabled:opacity-50"
-        >
-          <ZoomIn className="h-4 w-4" />
-        </Button>
-        {scale > 1 && (
+      {!isPdf && (
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-1 bg-black/50 backdrop-blur-sm border border-gray-600 rounded-md p-1">
           <Button
             type="button"
             variant="transparent"
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
-              handleResetZoom();
+              handleZoomOut();
             }}
-            className="h-8 w-8 p-0 text-white hover:bg-gray-700 ml-1"
-            title="Reset zoom"
+            disabled={scale <= 0.5}
+            className="h-8 w-8 p-0 text-white hover:bg-gray-700 disabled:opacity-50"
           >
-            <Minimize2 className="h-4 w-4" />
+            <ZoomOut className="h-4 w-4" />
           </Button>
-        )}
-      </div>
+          <span className="text-xs text-white px-2 min-w-[60px] text-center">
+            {Math.round(scale * 100)}%
+          </span>
+          <Button
+            type="button"
+            variant="transparent"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleZoomIn();
+            }}
+            disabled={scale >= 5}
+            className="h-8 w-8 p-0 text-white hover:bg-gray-700 disabled:opacity-50"
+          >
+            <ZoomIn className="h-4 w-4" />
+          </Button>
+          {scale > 1 && (
+            <Button
+              type="button"
+              variant="transparent"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleResetZoom();
+              }}
+              className="h-8 w-8 p-0 text-white hover:bg-gray-700 ml-1"
+              title="Reset zoom"
+            >
+              <Minimize2 className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      )}
 
       {/* Image Container */}
       <div
@@ -196,28 +201,41 @@ export const ImagePreviewModal = ({
       >
         <div
           ref={imageRef}
-          className="relative transition-transform duration-200 ease-out"
+          className={cn(
+            'relative transition-transform duration-200 ease-out',
+            isPdf && 'w-full h-full max-w-4xl p-4 md:p-10',
+          )}
           style={{
-            transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
-            cursor: scale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
-            maxWidth: '100vw',
-            maxHeight: '100vh',
+            transform: isPdf
+              ? undefined
+              : `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+            cursor: !isPdf && scale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
+            maxWidth: isPdf ? undefined : '100vw',
+            maxHeight: isPdf ? undefined : '100vh',
           }}
         >
-          <Image
-            src={imageSrc}
-            alt={imageAlt}
-            width={2000}
-            height={2000}
-            className="max-w-[100vw] max-h-[100vh] object-contain"
-            style={{ userSelect: 'none' }}
-            draggable={false}
-            priority
-          />
+          {isPdf ? (
+            <iframe
+              src={imageSrc}
+              className="w-full h-full min-h-[500px] rounded-lg shadow-2xl bg-white"
+              title="PDF Preview"
+            />
+          ) : (
+            <Image
+              src={imageSrc}
+              alt={imageAlt}
+              width={2000}
+              height={2000}
+              className="max-w-[100vw] max-h-[100vh] object-contain"
+              style={{ userSelect: 'none' }}
+              draggable={false}
+              priority
+            />
+          )}
         </div>
 
         {/* Zoom hint */}
-        {scale === 1 && (
+        {!isPdf && scale === 1 && (
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white text-xs px-3 py-1 rounded pointer-events-none">
             Scroll to zoom • Click and drag when zoomed • Click outside to close
           </div>

@@ -326,7 +326,8 @@ export const useTransactionController = () => {
         toast.success('Pengajuan visa berhasil dibuat!');
         router.push(ROUTES.PILGRIM.TRANSACTION.INDEX);
       } else {
-        toast.error(res.message || res.error.message || 'Gagal membuat pengajuan');
+        const errorMsg = res.message || res.error.message || 'Gagal membuat pengajuan';
+        toast.error(errorMsg);
       }
     },
     onError: (err: Error) => toast.error(err.message),
@@ -344,7 +345,8 @@ export const useTransactionController = () => {
         toast.success('Pengajuan visa berhasil diperbarui!');
         router.push(ROUTES.PILGRIM.TRANSACTION.INDEX);
       } else {
-        toast.error(res.message || res.error.message || 'Gagal memperbarui pengajuan');
+        const errorMsg = res.message || res.error.message || 'Gagal memperbarui pengajuan';
+        toast.error(errorMsg);
       }
     },
     onError: (err: Error) => toast.error(err.message),
