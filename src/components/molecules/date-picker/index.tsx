@@ -26,6 +26,7 @@ export interface DatePickerProps {
   isReadingOcr?: boolean;
   showTime?: boolean;
   name?: string;
+  disabledTooltip?: string;
 }
 
 export const DatePicker: FC<DatePickerProps> = ({
@@ -46,6 +47,7 @@ export const DatePicker: FC<DatePickerProps> = ({
   isReadingOcr,
   showTime = false,
   name,
+  disabledTooltip,
 }: DatePickerProps) => {
   const [date, setDate] = useState<Date | null>(() => {
     if (value) {
@@ -150,6 +152,7 @@ export const DatePicker: FC<DatePickerProps> = ({
           'relative w-full group/datepicker',
           label && !useLabelInside && 'flex flex-col gap-2',
         )}
+        title={disabled ? disabledTooltip : undefined}
       >
         {label && !useLabelInside && (
           <label>

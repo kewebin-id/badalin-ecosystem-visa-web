@@ -11,7 +11,7 @@ import {
 } from '@/packages/pilgrim/transaction/presentation/controller';
 import { getTodayJakarta, getTodayRiyadh } from '@/shared/utils';
 import { isBase64 } from '@/shared/utils/validator';
-import { Building2, History as HistoryIcon, Plane } from 'lucide-react';
+import { AlertTriangle, Building2, History as HistoryIcon, Plane } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Path, useFormContext } from 'react-hook-form';
@@ -30,9 +30,10 @@ export const LogisticsForm = () => {
     setValue,
     register,
     trigger,
-    formState: { errors },
+    formState: { errors, touchedFields, isSubmitted },
   } = useFormContext<TWizardForm>();
   const [isAutoDetected, setIsAutoDetected] = useState<Record<string, boolean>>({});
+  const [showHotelSyncWarning, setShowHotelSyncWarning] = useState(false);
   const { useProcessOcr } = useTransactionController();
   const handleOcrSuccess = (data: ILogisticsOcrResponse) => {
     const ocrData = data.ocr || data;
@@ -165,6 +166,28 @@ export const LogisticsForm = () => {
 
   const departureFlightEta = watch('departureFlightEta');
   const returnFlightEtd = watch('returnFlightEtd');
+  const isFlightFilled = !!departureFlightEta && !!returnFlightEtd;
+
+  useEffect(() => {
+    const fieldsToReset: Path<TWizardForm>[] = [
+      'hotelMakkahCheckIn',
+      'hotelMakkahCheckOut',
+      'hotelMadinahCheckIn',
+      'hotelMadinahCheckOut',
+    ];
+    
+    let hasValuesBeforeReset = false;
+    fieldsToReset.forEach((field) => {
+      if (watch(field)) {
+        hasValuesBeforeReset = true;
+        setValue(field, '', { shouldValidate: true });
+      }
+    });
+
+    if (hasValuesBeforeReset) {
+      setShowHotelSyncWarning(true);
+    }
+  }, [departureFlightEta, returnFlightEtd]);
 
   useEffect(() => {
     const fieldsToRevalidate: Path<TWizardForm>[] = [
@@ -402,16 +425,24 @@ export const LogisticsForm = () => {
       </div>
 
       <div className="p-6 border border-gray-100 rounded-[32px] bg-gray-50/30 space-y-6">
-        <div className="flex items-center gap-3">
-          <div className="size-8 rounded-xl bg-green-500/10 flex items-center justify-center text-green-500">
-            <Building2 className="size-4" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="size-8 rounded-xl bg-green-500/10 flex items-center justify-center text-green-500">
+              <Building2 className="size-4" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-foreground">{t('hotelMakkahSection')}</p>
+              <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                {t('makkahHotelDesc')}
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm font-bold text-foreground">{t('hotelMakkahSection')}</p>
-            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
-              {t('makkahHotelDesc')}
-            </p>
-          </div>
+          {showHotelSyncWarning && (
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 border border-orange-100 text-[10px] font-bold text-orange-600 animate-pulse">
+              <AlertTriangle className="size-3" />
+              Data penerbangan berubah, silakan sesuaikan kembali tanggal hotel.
+            </div>
+          )}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           <div className="lg:col-span-1">
@@ -476,12 +507,19 @@ export const LogisticsForm = () => {
               label={t('hotelCheckin')}
               required
               value={watch('hotelMakkahCheckIn')}
-              onChange={(val) =>
-                setValue('hotelMakkahCheckIn', val as string, { shouldValidate: true })
+              onChange={(val) => {
+                setValue('hotelMakkahCheckIn', val as string, { shouldValidate: true });
+                setShowHotelSyncWarning(false);
+              }}
+              errorMessage={
+                touchedFields.hotelMakkahCheckIn || isSubmitted
+                  ? errors.hotelMakkahCheckIn?.message
+                  : undefined
               }
-              errorMessage={errors.hotelMakkahCheckIn?.message}
               minDate={departureFlightEta || getTodayRiyadh().toISOString()}
               maxDate={returnFlightEtd}
+              disabled={!isFlightFilled}
+              disabledTooltip="Isi data penerbangan terlebih dahulu"
               isAutoDetected={isAutoDetected['hotelMakkahCheckIn']}
               confidence={isAutoDetected['hotelMakkahCheckIn'] ? watch('ocrConfidence') : undefined}
             />
@@ -492,16 +530,23 @@ export const LogisticsForm = () => {
               label={t('hotelCheckout')}
               required
               value={watch('hotelMakkahCheckOut')}
-              onChange={(val) =>
-                setValue('hotelMakkahCheckOut', val as string, { shouldValidate: true })
+              onChange={(val) => {
+                setValue('hotelMakkahCheckOut', val as string, { shouldValidate: true });
+                setShowHotelSyncWarning(false);
+              }}
+              errorMessage={
+                touchedFields.hotelMakkahCheckOut || isSubmitted
+                  ? errors.hotelMakkahCheckOut?.message
+                  : undefined
               }
-              errorMessage={errors.hotelMakkahCheckOut?.message}
               minDate={
                 watch('hotelMakkahCheckIn') ||
                 departureFlightEta ||
                 getTodayRiyadh().toISOString()
               }
               maxDate={returnFlightEtd}
+              disabled={!isFlightFilled}
+              disabledTooltip="Isi data penerbangan terlebih dahulu"
               isAutoDetected={isAutoDetected['hotelMakkahCheckOut']}
               confidence={
                 isAutoDetected['hotelMakkahCheckOut'] ? watch('ocrConfidence') : undefined
@@ -512,16 +557,24 @@ export const LogisticsForm = () => {
       </div>
 
       <div className="p-6 border border-gray-100 rounded-[32px] bg-gray-50/30 space-y-6">
-        <div className="flex items-center gap-3">
-          <div className="size-8 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500">
-            <Building2 className="size-4" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="size-8 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500">
+              <Building2 className="size-4" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-foreground">{t('hotelMadinahSection')}</p>
+              <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                {t('madinahHotelDesc')}
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm font-bold text-foreground">{t('hotelMadinahSection')}</p>
-            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
-              {t('madinahHotelDesc')}
-            </p>
-          </div>
+          {showHotelSyncWarning && (
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 border border-orange-100 text-[10px] font-bold text-orange-600 animate-pulse">
+              <AlertTriangle className="size-3" />
+              Data penerbangan berubah, silakan sesuaikan kembali tanggal hotel.
+            </div>
+          )}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           <div className="lg:col-span-1">
@@ -585,12 +638,19 @@ export const LogisticsForm = () => {
               label={t('hotelCheckin')}
               required
               value={watch('hotelMadinahCheckIn')}
-              onChange={(val) =>
-                setValue('hotelMadinahCheckIn', val as string, { shouldValidate: true })
+              onChange={(val) => {
+                setValue('hotelMadinahCheckIn', val as string, { shouldValidate: true });
+                setShowHotelSyncWarning(false);
+              }}
+              errorMessage={
+                touchedFields.hotelMadinahCheckIn || isSubmitted
+                  ? errors.hotelMadinahCheckIn?.message
+                  : undefined
               }
-              errorMessage={errors.hotelMadinahCheckIn?.message}
               minDate={departureFlightEta || getTodayRiyadh().toISOString()}
               maxDate={returnFlightEtd}
+              disabled={!isFlightFilled}
+              disabledTooltip="Isi data penerbangan terlebih dahulu"
             />
             <DatePicker
               useLabelInside
@@ -599,16 +659,23 @@ export const LogisticsForm = () => {
               label={t('hotelCheckout')}
               required
               value={watch('hotelMadinahCheckOut')}
-              onChange={(val) =>
-                setValue('hotelMadinahCheckOut', val as string, { shouldValidate: true })
+              onChange={(val) => {
+                setValue('hotelMadinahCheckOut', val as string, { shouldValidate: true });
+                setShowHotelSyncWarning(false);
+              }}
+              errorMessage={
+                touchedFields.hotelMadinahCheckOut || isSubmitted
+                  ? errors.hotelMadinahCheckOut?.message
+                  : undefined
               }
-              errorMessage={errors.hotelMadinahCheckOut?.message}
               minDate={
                 watch('hotelMadinahCheckIn') ||
                 departureFlightEta ||
                 getTodayRiyadh().toISOString()
               }
               maxDate={returnFlightEtd}
+              disabled={!isFlightFilled}
+              disabledTooltip="Isi data penerbangan terlebih dahulu"
             />
           </div>
         </div>
