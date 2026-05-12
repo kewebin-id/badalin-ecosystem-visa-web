@@ -1,6 +1,6 @@
 import { ROUTES } from '@/shared/constants';
 import { RestAPI } from '@/shared/utils/rest-api';
-import { dateUtil, isBase64 } from '@/shared/utils';
+import { dateRiyadh as dateUtil, isBase64 } from '@/shared/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
@@ -25,7 +25,7 @@ const api = new RestAPI();
 const repository = new TransactionRepository(api);
 const useCase = new TransactionUseCase(repository);
 
-const getWizardSchema = (t: (key: string) => string) =>
+const getWizardSchema = (t: (key: string, values?: Record<string, string | number | boolean>) => string) =>
   z
     .object({
       pilgrimIds: z.array(z.string()).min(1, t('form.validationRequired')),
@@ -136,7 +136,84 @@ const getWizardSchema = (t: (key: string) => string) =>
         message: 'Return (ETA) harus minimal dari waktu keberangkatan return (ETD)',
         path: ['returnFlightEta'],
       },
-    );
+    )
+    .superRefine((data, ctx) => {
+      if (data.departureFlightEta && data.hotelMakkahCheckIn) {
+        const landing = dateUtil(data.departureFlightEta).startOf('day');
+        const checkIn = dateUtil(data.hotelMakkahCheckIn).startOf('day');
+        if (checkIn.isBefore(landing)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t('form.hotelCheckinBeforeLanding', {
+              date: dateUtil(data.departureFlightEta).format('DD MMM YYYY'),
+            }),
+            path: ['hotelMakkahCheckIn'],
+          });
+        }
+      }
+
+      if (data.departureFlightEta && data.hotelMadinahCheckIn) {
+        const landing = dateUtil(data.departureFlightEta).startOf('day');
+        const checkIn = dateUtil(data.hotelMadinahCheckIn).startOf('day');
+        if (checkIn.isBefore(landing)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t('form.hotelCheckinBeforeLanding', {
+              date: dateUtil(data.departureFlightEta).format('DD MMM YYYY'),
+            }),
+            path: ['hotelMadinahCheckIn'],
+          });
+        }
+      }
+
+      if (data.returnFlightEtd && data.hotelMakkahCheckOut) {
+        const takeoff = dateUtil(data.returnFlightEtd).startOf('day');
+        const checkOut = dateUtil(data.hotelMakkahCheckOut).startOf('day');
+        if (checkOut.isAfter(takeoff)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t('form.hotelCheckoutAfterTakeoff', {
+              date: dateUtil(data.returnFlightEtd).format('DD MMM YYYY'),
+            }),
+            path: ['hotelMakkahCheckOut'],
+          });
+        }
+      }
+
+      if (data.returnFlightEtd && data.hotelMadinahCheckOut) {
+        const takeoff = dateUtil(data.returnFlightEtd).startOf('day');
+        const checkOut = dateUtil(data.hotelMadinahCheckOut).startOf('day');
+        if (checkOut.isAfter(takeoff)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t('form.hotelCheckoutAfterTakeoff', {
+              date: dateUtil(data.returnFlightEtd).format('DD MMM YYYY'),
+            }),
+            path: ['hotelMadinahCheckOut'],
+          });
+        }
+      }
+
+      if (
+        data.departureFlightEta &&
+        data.returnFlightEtd &&
+        data.transportations &&
+        data.transportations.length > 0
+      ) {
+        const landing = dateUtil(data.departureFlightEta).startOf('day');
+        const takeoff = dateUtil(data.returnFlightEtd).startOf('day');
+        data.transportations.forEach((item, index) => {
+          const date = dateUtil(item.date).startOf('day');
+          if (date.isBefore(landing) || date.isAfter(takeoff)) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: t('form.transportDateOutOfRange'),
+              path: ['transportations', index, 'date'],
+            });
+          }
+        });
+      }
+    });
 
 export type TWizardForm = z.infer<ReturnType<typeof getWizardSchema>>;
 

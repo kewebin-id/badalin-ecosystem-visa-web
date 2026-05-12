@@ -14,7 +14,7 @@ import { isBase64 } from '@/shared/utils/validator';
 import { AlertTriangle, Building2, History as HistoryIcon, Plane } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { Path, useFormContext } from 'react-hook-form';
+import { Path, useFormContext, useWatch } from 'react-hook-form';
 
 const ROOM_TYPE_OPTIONS = [
   { label: 'Double (DBL)', value: 'DBL' },
@@ -26,6 +26,7 @@ const ROOM_TYPE_OPTIONS = [
 export const LogisticsForm = () => {
   const t = useTranslations('VisaTransaction.form');
   const {
+    control,
     watch,
     setValue,
     register,
@@ -164,8 +165,8 @@ export const LogisticsForm = () => {
     return () => subscription.unsubscribe();
   }, [watch, isAutoDetected]);
 
-  const departureFlightEta = watch('departureFlightEta');
-  const returnFlightEtd = watch('returnFlightEtd');
+  const departureFlightEta = useWatch({ control, name: 'departureFlightEta' });
+  const returnFlightEtd = useWatch({ control, name: 'returnFlightEtd' });
   const isFlightFilled = !!departureFlightEta && !!returnFlightEtd;
 
   useEffect(() => {
@@ -175,19 +176,21 @@ export const LogisticsForm = () => {
       'hotelMadinahCheckIn',
       'hotelMadinahCheckOut',
     ];
-    
-    let hasValuesBeforeReset = false;
+
+    let hasResetted = false;
     fieldsToReset.forEach((field) => {
-      if (watch(field)) {
-        hasValuesBeforeReset = true;
+      const currentVal = watch(field);
+      if (currentVal) {
+        // Reset if flight dates are gone or if they changed (to be safe)
         setValue(field, '', { shouldValidate: true });
+        hasResetted = true;
       }
     });
 
-    if (hasValuesBeforeReset) {
+    if (hasResetted) {
       setShowHotelSyncWarning(true);
     }
-  }, [departureFlightEta, returnFlightEtd]);
+  }, [departureFlightEta, returnFlightEtd, setValue, watch]);
 
   useEffect(() => {
     const fieldsToRevalidate: Path<TWizardForm>[] = [
@@ -540,9 +543,7 @@ export const LogisticsForm = () => {
                   : undefined
               }
               minDate={
-                watch('hotelMakkahCheckIn') ||
-                departureFlightEta ||
-                getTodayRiyadh().toISOString()
+                watch('hotelMakkahCheckIn') || departureFlightEta || getTodayRiyadh().toISOString()
               }
               maxDate={returnFlightEtd}
               disabled={!isFlightFilled}
@@ -669,9 +670,7 @@ export const LogisticsForm = () => {
                   : undefined
               }
               minDate={
-                watch('hotelMadinahCheckIn') ||
-                departureFlightEta ||
-                getTodayRiyadh().toISOString()
+                watch('hotelMadinahCheckIn') || departureFlightEta || getTodayRiyadh().toISOString()
               }
               maxDate={returnFlightEtd}
               disabled={!isFlightFilled}

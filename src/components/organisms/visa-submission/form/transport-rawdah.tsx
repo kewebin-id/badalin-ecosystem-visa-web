@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { Path, useFieldArray, useFormContext } from 'react-hook-form';
+import { Path, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 const TRANSPORT_TYPE_OPTIONS = [
   { label: 'Bus', value: 'BUS' },
@@ -61,26 +61,26 @@ export const TransportRawdahForm = () => {
   });
   const { trigger } = useFormContext<TWizardForm>();
 
-  const departureFlightEta = watch('departureFlightEta');
-  const returnFlightEtd = watch('returnFlightEtd');
+  const departureFlightEta = useWatch({ control, name: 'departureFlightEta' });
+  const returnFlightEtd = useWatch({ control, name: 'returnFlightEtd' });
   const isFlightFilled = !!departureFlightEta && !!returnFlightEtd;
 
   useEffect(() => {
     const transportFields = fields.map((_, index) => `transportations.${index}.date` as Path<TWizardForm>);
     const rawdahFields: Path<TWizardForm>[] = ['rawdahMenTime', 'rawdahWomenTime'];
 
-    let hasValuesBeforeReset = false;
+    let hasResetted = false;
     [...transportFields, ...rawdahFields].forEach((field) => {
       if (watch(field)) {
-        hasValuesBeforeReset = true;
         setValue(field, '', { shouldValidate: true });
+        hasResetted = true;
       }
     });
 
-    if (hasValuesBeforeReset) {
+    if (hasResetted) {
       setShowTransportSyncWarning(true);
     }
-  }, [departureFlightEta, returnFlightEtd]);
+  }, [departureFlightEta, returnFlightEtd, setValue, watch]);
 
   useEffect(() => {
     const transportFields = fields.map((_, index) => `transportations.${index}.date` as Path<TWizardForm>);
