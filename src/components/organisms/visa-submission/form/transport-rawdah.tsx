@@ -63,6 +63,9 @@ export const TransportRawdahForm = () => {
 
   const departureFlightEta = useWatch({ control, name: 'departureFlightEta' });
   const returnFlightEtd = useWatch({ control, name: 'returnFlightEtd' });
+  const rawdahMenTime = useWatch({ control, name: 'rawdahMenTime' });
+  const rawdahWomenTime = useWatch({ control, name: 'rawdahWomenTime' });
+  const transportations = useWatch({ control, name: 'transportations' });
   const isFlightFilled = !!departureFlightEta && !!returnFlightEtd;
 
   useEffect(() => {
@@ -275,7 +278,7 @@ export const TransportRawdahForm = () => {
                     label={t('form.dateAndTime')}
                     showTime={true}
                     required
-                    value={watch(`transportations.${index}.date`)}
+                    value={transportations?.[index]?.date}
                     onChange={(val) => {
                       const isoString = val as string;
                       setValue(`transportations.${index}.date`, isoString, {
@@ -286,8 +289,8 @@ export const TransportRawdahForm = () => {
                       });
                       setShowTransportSyncWarning(false);
                     }}
-                    minDate={watch('departureFlightEta') || getTodayRiyadh().toISOString()}
-                    maxDate={watch('returnFlightEtd')}
+                    minDate={departureFlightEta || getTodayRiyadh().toISOString()}
+                    maxDate={returnFlightEtd}
                     disabled={!isFlightFilled}
                     disabledTooltip="Isi data penerbangan terlebih dahulu"
                     errorMessage={
@@ -335,13 +338,13 @@ export const TransportRawdahForm = () => {
             size="lg"
             label={t('form.rawdahMenTime')}
             showTime={true}
-            value={watch('rawdahMenTime')}
+            value={rawdahMenTime}
             onChange={(val) => {
               setValue('rawdahMenTime', val as string, { shouldValidate: true });
               setShowTransportSyncWarning(false);
             }}
-            minDate={watch('departureFlightEta') || getTodayRiyadh().toISOString()}
-            maxDate={watch('returnFlightEtd')}
+            minDate={departureFlightEta || getTodayRiyadh().toISOString()}
+            maxDate={returnFlightEtd}
             disabled={!isFlightFilled}
             disabledTooltip="Isi data penerbangan terlebih dahulu"
             errorMessage={
@@ -354,13 +357,13 @@ export const TransportRawdahForm = () => {
             size="lg"
             label={t('form.rawdahWomenTime')}
             showTime={true}
-            value={watch('rawdahWomenTime')}
+            value={rawdahWomenTime}
             onChange={(val) => {
               setValue('rawdahWomenTime', val as string, { shouldValidate: true });
               setShowTransportSyncWarning(false);
             }}
-            minDate={watch('departureFlightEta') || getTodayRiyadh().toISOString()}
-            maxDate={watch('returnFlightEtd')}
+            minDate={departureFlightEta || getTodayRiyadh().toISOString()}
+            maxDate={returnFlightEtd}
             disabled={!isFlightFilled}
             disabledTooltip="Isi data penerbangan terlebih dahulu"
             errorMessage={

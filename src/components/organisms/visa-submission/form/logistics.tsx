@@ -165,8 +165,14 @@ export const LogisticsForm = () => {
     return () => subscription.unsubscribe();
   }, [watch, isAutoDetected]);
 
+  const departureFlightEtd = useWatch({ control, name: 'departureFlightEtd' });
   const departureFlightEta = useWatch({ control, name: 'departureFlightEta' });
   const returnFlightEtd = useWatch({ control, name: 'returnFlightEtd' });
+  const returnFlightEta = useWatch({ control, name: 'returnFlightEta' });
+  const hotelMakkahCheckIn = useWatch({ control, name: 'hotelMakkahCheckIn' });
+  const hotelMakkahCheckOut = useWatch({ control, name: 'hotelMakkahCheckOut' });
+  const hotelMadinahCheckIn = useWatch({ control, name: 'hotelMadinahCheckIn' });
+  const hotelMadinahCheckOut = useWatch({ control, name: 'hotelMadinahCheckOut' });
   const isFlightFilled = !!departureFlightEta && !!returnFlightEtd;
 
   useEffect(() => {
@@ -289,14 +295,16 @@ export const LogisticsForm = () => {
               label={t('flightEtd')}
               required
               showTime={true}
-              value={watch('departureFlightEtd')}
+              value={departureFlightEtd}
               onChange={(val) =>
                 setValue('departureFlightEtd', val as string, { shouldValidate: true })
               }
               errorMessage={errors.departureFlightEtd?.message}
               minDate={getTodayJakarta().toISOString()}
               isAutoDetected={isAutoDetected['departureFlightEtd']}
-              confidence={isAutoDetected['departureFlightEtd'] ? watch('ocrConfidence') : undefined}
+              confidence={
+                isAutoDetected['departureFlightEtd'] ? watch('ocrConfidence') : undefined
+              }
             />
             <DatePicker
               useLabelInside
@@ -305,14 +313,16 @@ export const LogisticsForm = () => {
               label={t('flightEta')}
               required
               showTime={true}
-              value={watch('departureFlightEta')}
+              value={departureFlightEta}
               onChange={(val) =>
                 setValue('departureFlightEta', val as string, { shouldValidate: true })
               }
               errorMessage={errors.departureFlightEta?.message}
-              minDate={watch('departureFlightEtd') || getTodayRiyadh().toISOString()}
+              minDate={departureFlightEtd || getTodayJakarta().toISOString()}
               isAutoDetected={isAutoDetected['departureFlightEta']}
-              confidence={isAutoDetected['departureFlightEta'] ? watch('ocrConfidence') : undefined}
+              confidence={
+                isAutoDetected['departureFlightEta'] ? watch('ocrConfidence') : undefined
+              }
             />
           </div>
         </div>
@@ -402,12 +412,12 @@ export const LogisticsForm = () => {
               label={t('flightEtd')}
               required
               showTime={true}
-              value={watch('returnFlightEtd')}
+              value={returnFlightEtd}
               onChange={(val) =>
                 setValue('returnFlightEtd', val as string, { shouldValidate: true })
               }
               errorMessage={errors.returnFlightEtd?.message}
-              minDate={watch('departureFlightEta') || getTodayRiyadh().toISOString()}
+              minDate={departureFlightEta || getTodayRiyadh().toISOString()}
             />
             <DatePicker
               useLabelInside
@@ -416,12 +426,12 @@ export const LogisticsForm = () => {
               label={t('flightEta')}
               required
               showTime={true}
-              value={watch('returnFlightEta')}
+              value={returnFlightEta}
               onChange={(val) =>
                 setValue('returnFlightEta', val as string, { shouldValidate: true })
               }
               errorMessage={errors.returnFlightEta?.message}
-              minDate={watch('returnFlightEtd') || getTodayRiyadh().toISOString()}
+              minDate={returnFlightEtd || getTodayRiyadh().toISOString()}
             />
           </div>
         </div>
@@ -509,7 +519,7 @@ export const LogisticsForm = () => {
               size="lg"
               label={t('hotelCheckin')}
               required
-              value={watch('hotelMakkahCheckIn')}
+              value={hotelMakkahCheckIn}
               onChange={(val) => {
                 setValue('hotelMakkahCheckIn', val as string, { shouldValidate: true });
                 setShowHotelSyncWarning(false);
@@ -532,7 +542,7 @@ export const LogisticsForm = () => {
               size="lg"
               label={t('hotelCheckout')}
               required
-              value={watch('hotelMakkahCheckOut')}
+              value={hotelMakkahCheckOut}
               onChange={(val) => {
                 setValue('hotelMakkahCheckOut', val as string, { shouldValidate: true });
                 setShowHotelSyncWarning(false);
@@ -543,7 +553,7 @@ export const LogisticsForm = () => {
                   : undefined
               }
               minDate={
-                watch('hotelMakkahCheckIn') || departureFlightEta || getTodayRiyadh().toISOString()
+                hotelMakkahCheckIn || departureFlightEta || getTodayRiyadh().toISOString()
               }
               maxDate={returnFlightEtd}
               disabled={!isFlightFilled}
@@ -638,7 +648,7 @@ export const LogisticsForm = () => {
               size="lg"
               label={t('hotelCheckin')}
               required
-              value={watch('hotelMadinahCheckIn')}
+              value={hotelMadinahCheckIn}
               onChange={(val) => {
                 setValue('hotelMadinahCheckIn', val as string, { shouldValidate: true });
                 setShowHotelSyncWarning(false);
@@ -659,7 +669,7 @@ export const LogisticsForm = () => {
               size="lg"
               label={t('hotelCheckout')}
               required
-              value={watch('hotelMadinahCheckOut')}
+              value={hotelMadinahCheckOut}
               onChange={(val) => {
                 setValue('hotelMadinahCheckOut', val as string, { shouldValidate: true });
                 setShowHotelSyncWarning(false);
@@ -670,7 +680,7 @@ export const LogisticsForm = () => {
                   : undefined
               }
               minDate={
-                watch('hotelMadinahCheckIn') || departureFlightEta || getTodayRiyadh().toISOString()
+                hotelMadinahCheckIn || departureFlightEta || getTodayRiyadh().toISOString()
               }
               maxDate={returnFlightEtd}
               disabled={!isFlightFilled}
