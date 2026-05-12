@@ -29,8 +29,6 @@ const getWizardSchema = (t: (key: string, values?: Record<string, string | numbe
   z
     .object({
       pilgrimIds: z.array(z.string()).min(1, t('form.validationRequired')),
-
-      // Flight Departure
       departureFlightNo: z.string().min(1, t('form.validationRequired')),
       departureCarrier: z.string().min(1, t('form.validationRequired')),
       departureFlightFrom: z.string().min(1, t('form.validationRequired')),
@@ -38,8 +36,6 @@ const getWizardSchema = (t: (key: string, values?: Record<string, string | numbe
       departureFlightDate: z.string().optional(),
       departureFlightEta: z.string().min(1, t('form.validationRequired')),
       departureFlightEtd: z.string().min(1, t('form.validationRequired')),
-
-      // Flight Return
       returnFlightNo: z.string().min(1, t('form.validationRequired')),
       returnCarrier: z.string().min(1, t('form.validationRequired')),
       returnFlightFrom: z.string().min(1, t('form.validationRequired')),
@@ -47,23 +43,16 @@ const getWizardSchema = (t: (key: string, values?: Record<string, string | numbe
       returnFlightDate: z.string().optional(),
       returnFlightEta: z.string().min(1, t('form.validationRequired')),
       returnFlightEtd: z.string().min(1, t('form.validationRequired')),
-
-      // Hotel Makkah
       hotelMakkahName: z.string().min(1, t('form.validationRequired')),
       hotelMakkahResvNo: z.string().min(1, t('form.validationRequired')),
       hotelMakkahCheckIn: z.string().min(1, t('form.validationRequired')),
       hotelMakkahCheckOut: z.string().min(1, t('form.validationRequired')),
-
-      // Hotel Madinah
       hotelMadinahName: z.string().min(1, t('form.validationRequired')),
       hotelMadinahResvNo: z.string().min(1, t('form.validationRequired')),
       hotelMadinahCheckIn: z.string().min(1, t('form.validationRequired')),
       hotelMadinahCheckOut: z.string().min(1, t('form.validationRequired')),
-
       hotelMakkahRoomType: z.string().min(1, t('form.validationRequired')),
       hotelMadinahRoomType: z.string().min(1, t('form.validationRequired')),
-
-      // Transports
       transportations: z
         .array(
           z.object({
@@ -78,10 +67,8 @@ const getWizardSchema = (t: (key: string, values?: Record<string, string | numbe
           }),
         )
         .optional(),
-
       rawdahMenTime: z.string().optional(),
       rawdahWomenTime: z.string().optional(),
-
       notes: z.string().optional(),
       departureTicketUrls: z.array(z.string()).min(1, t('form.validationRequired')),
       returnTicketUrls: z.array(z.string()).min(1, t('form.validationRequired')),
@@ -138,79 +125,40 @@ const getWizardSchema = (t: (key: string, values?: Record<string, string | numbe
       },
     )
     .superRefine((data, ctx) => {
-      if (data.departureFlightEta && data.hotelMakkahCheckIn) {
-        const landing = dateUtil(data.departureFlightEta).startOf('day');
-        const checkIn = dateUtil(data.hotelMakkahCheckIn).startOf('day');
-        if (checkIn.isBefore(landing)) {
+      const landing = data.departureFlightEta ? dateUtil(data.departureFlightEta).startOf('day') : null;
+      const takeoff = data.returnFlightEtd ? dateUtil(data.returnFlightEtd).startOf('day') : null;
+
+      const validateBoundary = (fieldDate: string | undefined, path: (string | number)[]) => {
+        if (!fieldDate) return;
+        const date = dateUtil(fieldDate).startOf('day');
+        if (landing && date.isBefore(landing)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: t('form.hotelCheckinBeforeLanding', {
-              date: dateUtil(data.departureFlightEta).format('DD MMM YYYY'),
+              date: landing.format('DD MMM YYYY'),
             }),
-            path: ['hotelMakkahCheckIn'],
+            path,
           });
         }
-      }
-
-      if (data.departureFlightEta && data.hotelMadinahCheckIn) {
-        const landing = dateUtil(data.departureFlightEta).startOf('day');
-        const checkIn = dateUtil(data.hotelMadinahCheckIn).startOf('day');
-        if (checkIn.isBefore(landing)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: t('form.hotelCheckinBeforeLanding', {
-              date: dateUtil(data.departureFlightEta).format('DD MMM YYYY'),
-            }),
-            path: ['hotelMadinahCheckIn'],
-          });
-        }
-      }
-
-      if (data.returnFlightEtd && data.hotelMakkahCheckOut) {
-        const takeoff = dateUtil(data.returnFlightEtd).startOf('day');
-        const checkOut = dateUtil(data.hotelMakkahCheckOut).startOf('day');
-        if (checkOut.isAfter(takeoff)) {
+        if (takeoff && date.isAfter(takeoff)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: t('form.hotelCheckoutAfterTakeoff', {
-              date: dateUtil(data.returnFlightEtd).format('DD MMM YYYY'),
+              date: takeoff.format('DD MMM YYYY'),
             }),
-            path: ['hotelMakkahCheckOut'],
+            path,
           });
         }
-      }
+      };
 
-      if (data.returnFlightEtd && data.hotelMadinahCheckOut) {
-        const takeoff = dateUtil(data.returnFlightEtd).startOf('day');
-        const checkOut = dateUtil(data.hotelMadinahCheckOut).startOf('day');
-        if (checkOut.isAfter(takeoff)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: t('form.hotelCheckoutAfterTakeoff', {
-              date: dateUtil(data.returnFlightEtd).format('DD MMM YYYY'),
-            }),
-            path: ['hotelMadinahCheckOut'],
-          });
-        }
-      }
+      validateBoundary(data.hotelMakkahCheckIn, ['hotelMakkahCheckIn']);
+      validateBoundary(data.hotelMakkahCheckOut, ['hotelMakkahCheckOut']);
+      validateBoundary(data.hotelMadinahCheckIn, ['hotelMadinahCheckIn']);
+      validateBoundary(data.hotelMadinahCheckOut, ['hotelMadinahCheckOut']);
 
-      if (
-        data.departureFlightEta &&
-        data.returnFlightEtd &&
-        data.transportations &&
-        data.transportations.length > 0
-      ) {
-        const landing = dateUtil(data.departureFlightEta).startOf('day');
-        const takeoff = dateUtil(data.returnFlightEtd).startOf('day');
+      if (data.transportations) {
         data.transportations.forEach((item, index) => {
-          const date = dateUtil(item.date).startOf('day');
-          if (date.isBefore(landing) || date.isAfter(takeoff)) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: t('form.transportDateOutOfRange'),
-              path: ['transportations', index, 'date'],
-            });
-          }
+          validateBoundary(item.date, ['transportations', index, 'date']);
         });
       }
     });
@@ -220,8 +168,8 @@ export type TWizardForm = z.infer<ReturnType<typeof getWizardSchema>>;
 export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest => {
   return {
     pilgrimIds: data.pilgrimIds,
-    rawdahMenTime: data.rawdahMenTime,
-    rawdahWomenTime: data.rawdahWomenTime,
+    rawdahMenTime: data.rawdahMenTime ? dateUtil(data.rawdahMenTime).toISOString() : '',
+    rawdahWomenTime: data.rawdahWomenTime ? dateUtil(data.rawdahWomenTime).toISOString() : '',
     flights: [
       {
         type: 'DEPARTURE',
@@ -232,8 +180,8 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
         flightDate: data.departureFlightEta
           ? dateUtil(data.departureFlightEta).format('YYYY-MM-DD')
           : '',
-        eta: data.departureFlightEta,
-        etd: data.departureFlightEtd,
+        eta: data.departureFlightEta ? dateUtil(data.departureFlightEta).toISOString() : '',
+        etd: data.departureFlightEtd ? dateUtil(data.departureFlightEtd).toISOString() : '',
         imageUrls: data.departureTicketUrls,
       },
       {
@@ -245,8 +193,8 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
         flightDate: data.returnFlightEtd
           ? dateUtil(data.returnFlightEtd).format('YYYY-MM-DD')
           : '',
-        eta: data.returnFlightEta,
-        etd: data.returnFlightEtd,
+        eta: data.returnFlightEta ? dateUtil(data.returnFlightEta).toISOString() : '',
+        etd: data.returnFlightEtd ? dateUtil(data.returnFlightEtd).toISOString() : '',
         imageUrls: data.returnTicketUrls,
       },
     ],
@@ -254,8 +202,8 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
       {
         name: data.hotelMakkahName,
         resvNo: data.hotelMakkahResvNo,
-        checkIn: data.hotelMakkahCheckIn,
-        checkOut: data.hotelMakkahCheckOut,
+        checkIn: data.hotelMakkahCheckIn ? dateUtil(data.hotelMakkahCheckIn).toISOString() : '',
+        checkOut: data.hotelMakkahCheckOut ? dateUtil(data.hotelMakkahCheckOut).toISOString() : '',
         city: 'MAKKAH',
         roomType: data.hotelMakkahRoomType,
         imageUrls: data.hotelMakkahVoucherUrls,
@@ -263,8 +211,8 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
       {
         name: data.hotelMadinahName,
         resvNo: data.hotelMadinahResvNo,
-        checkIn: data.hotelMadinahCheckIn,
-        checkOut: data.hotelMadinahCheckOut,
+        checkIn: data.hotelMadinahCheckIn ? dateUtil(data.hotelMadinahCheckIn).toISOString() : '',
+        checkOut: data.hotelMadinahCheckOut ? dateUtil(data.hotelMadinahCheckOut).toISOString() : '',
         city: 'MADINAH',
         roomType: data.hotelMadinahRoomType,
         imageUrls: data.hotelMadinahVoucherUrls,
@@ -274,8 +222,8 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
       data.transportations?.map((t) => ({
         type: t.type,
         company: t.company,
-        date: t.date,
-        time: t.time,
+        date: t.date ? dateUtil(t.date).toISOString() : '',
+        time: t.time ? dateUtil(t.time).toISOString() : '',
         from: t.from,
         to: t.to,
         totalVehicle: t.total,
@@ -303,7 +251,6 @@ export const useTransactionController = () => {
 
   const handleUploadImages = async (form: TWizardForm): Promise<TWizardForm> => {
     const uploadedForm = { ...form };
-
     const uploadList = async (urls: string[]) => {
       if (!urls) return [];
       return await Promise.all(
@@ -316,14 +263,10 @@ export const useTransactionController = () => {
         }),
       );
     };
-
-    // 1. Process top-level logistics images
     uploadedForm.departureTicketUrls = await uploadList(form.departureTicketUrls);
     uploadedForm.returnTicketUrls = await uploadList(form.returnTicketUrls);
     uploadedForm.hotelMakkahVoucherUrls = await uploadList(form.hotelMakkahVoucherUrls);
     uploadedForm.hotelMadinahVoucherUrls = await uploadList(form.hotelMadinahVoucherUrls);
-
-    // 2. Process transportation images
     if (form.transportations && form.transportations.length > 0) {
       uploadedForm.transportations = await Promise.all(
         form.transportations.map(async (t) => ({
@@ -332,7 +275,6 @@ export const useTransactionController = () => {
         })),
       );
     }
-
     return uploadedForm;
   };
 
@@ -459,7 +401,6 @@ export const useTransactionController = () => {
     useCreateTransaction: () => createTransactionMutation,
     useUpdateTransaction: () => updateTransactionMutation,
     useProcessOcr: (onOcrSuccess: (data: ILogisticsOcrResponse) => void) =>
-      // eslint-disable-next-line react-hooks/rules-of-hooks
       useMutation({
         mutationFn: ({ file, ocrType = 'LOGISTICS' }: { file: File; ocrType?: TOcrType }) =>
           useCase.processOcr(file, ocrType),
@@ -482,7 +423,7 @@ export const useTransactionForm = (initialData?: Partial<ITransaction>) => {
     resolver: zodResolver(wizardSchema),
     mode: 'all',
     values: useMemo(() => {
-      // Mapping API data back to flat form
+      
       const fDep = initialData?.flights?.find((f) => f.type === 'DEPARTURE');
       const fRet = initialData?.flights?.find((f) => f.type === 'RETURN');
       const hM = initialData?.hotels?.find((h) => h.city === 'MAKKAH');
@@ -490,7 +431,6 @@ export const useTransactionForm = (initialData?: Partial<ITransaction>) => {
 
       const initial: TWizardForm = {
         pilgrimIds: initialData?.pilgrimIds || [],
-
         departureFlightNo: fDep?.flightNo || '',
         departureCarrier: fDep?.carrier || '',
         departureFlightFrom: fDep?.from || '',
@@ -498,7 +438,6 @@ export const useTransactionForm = (initialData?: Partial<ITransaction>) => {
         departureFlightDate: fDep?.flightDate || '',
         departureFlightEta: fDep?.eta || '',
         departureFlightEtd: fDep?.etd || '',
-
         returnFlightNo: fRet?.flightNo || '',
         returnCarrier: fRet?.carrier || '',
         returnFlightFrom: fRet?.from || '',
@@ -506,20 +445,16 @@ export const useTransactionForm = (initialData?: Partial<ITransaction>) => {
         returnFlightDate: fRet?.flightDate || '',
         returnFlightEta: fRet?.eta || '',
         returnFlightEtd: fRet?.etd || '',
-
         hotelMakkahName: hM?.name || '',
         hotelMakkahResvNo: hM?.resvNo || '',
         hotelMakkahCheckIn: hM?.checkIn || '',
         hotelMakkahCheckOut: hM?.checkOut || '',
-
         hotelMadinahName: hD?.name || '',
         hotelMadinahResvNo: hD?.resvNo || '',
         hotelMadinahCheckIn: hD?.checkIn || '',
         hotelMadinahCheckOut: hD?.checkOut || '',
-
         hotelMakkahRoomType: hM?.roomType || '',
         hotelMadinahRoomType: hD?.roomType || '',
-
         transportations:
           initialData?.transportations?.map((trans) => ({
             type: trans.type,
@@ -530,10 +465,8 @@ export const useTransactionForm = (initialData?: Partial<ITransaction>) => {
             to: trans.to,
             total: (trans.totalVehicle as number) || 1,
           })) || [],
-
         rawdahMenTime: initialData?.rawdahMenTime || '',
         rawdahWomenTime: initialData?.rawdahWomenTime || '',
-
         notes: initialData?.notes || '',
         departureTicketUrls: fDep?.imageUrls || [],
         returnTicketUrls: fRet?.imageUrls || [],

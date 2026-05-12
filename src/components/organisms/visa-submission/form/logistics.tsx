@@ -96,7 +96,7 @@ export const LogisticsForm = () => {
     setIsAutoDetected(newAutoDetected);
   };
 
-  const departureTicketOcr = useProcessOcr((data) => {
+  const departureTicketOcr = useProcessOcr((data: ILogisticsOcrResponse) => {
     handleOcrSuccess(data);
     const field = 'departureTicketUrls' as Path<TWizardForm>;
     const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
@@ -110,7 +110,7 @@ export const LogisticsForm = () => {
     );
   });
 
-  const returnTicketOcr = useProcessOcr((data) => {
+  const returnTicketOcr = useProcessOcr((data: ILogisticsOcrResponse) => {
     handleOcrSuccess(data);
     const field = 'returnTicketUrls' as Path<TWizardForm>;
     const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
@@ -124,7 +124,7 @@ export const LogisticsForm = () => {
     );
   });
 
-  const makkahHotelOcr = useProcessOcr((data) => {
+  const makkahHotelOcr = useProcessOcr((data: ILogisticsOcrResponse) => {
     handleOcrSuccess(data);
     const field = 'hotelMakkahVoucherUrls' as Path<TWizardForm>;
     const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
@@ -138,7 +138,7 @@ export const LogisticsForm = () => {
     );
   });
 
-  const madinahHotelOcr = useProcessOcr((data) => {
+  const madinahHotelOcr = useProcessOcr((data: ILogisticsOcrResponse) => {
     handleOcrSuccess(data);
     const field = 'hotelMadinahVoucherUrls' as Path<TWizardForm>;
     const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
@@ -187,7 +187,6 @@ export const LogisticsForm = () => {
     fieldsToReset.forEach((field) => {
       const currentVal = watch(field);
       if (currentVal) {
-        // Reset if flight dates are gone or if they changed (to be safe)
         setValue(field, '', { shouldValidate: true });
         hasResetted = true;
       }
@@ -300,7 +299,7 @@ export const LogisticsForm = () => {
                 setValue('departureFlightEtd', val as string, { shouldValidate: true })
               }
               errorMessage={errors.departureFlightEtd?.message}
-              minDate={getTodayJakarta().toISOString()}
+              minDate={getTodayRiyadh().toISOString()}
               isAutoDetected={isAutoDetected['departureFlightEtd']}
               confidence={
                 isAutoDetected['departureFlightEtd'] ? watch('ocrConfidence') : undefined
@@ -318,7 +317,7 @@ export const LogisticsForm = () => {
                 setValue('departureFlightEta', val as string, { shouldValidate: true })
               }
               errorMessage={errors.departureFlightEta?.message}
-              minDate={departureFlightEtd || getTodayJakarta().toISOString()}
+              minDate={departureFlightEtd || getTodayRiyadh().toISOString()}
               isAutoDetected={isAutoDetected['departureFlightEta']}
               confidence={
                 isAutoDetected['departureFlightEta'] ? watch('ocrConfidence') : undefined
