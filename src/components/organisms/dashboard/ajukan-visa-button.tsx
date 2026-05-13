@@ -1,19 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
 import { Button } from '@/components/atoms/button';
+import { ROUTES } from '@/shared/constants';
 import { PlusIcon } from 'lucide-react';
-import { AjukanVisaWizard } from './ajukan-visa-wizard';
 import { useTranslations } from 'next-intl';
 
 export const AjukanVisaButton = () => {
   const t = useTranslations('VisaTransaction');
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
   return (
     <>
       <Button
-        onClick={() => setOpen(true)}
+        href={ROUTES.PILGRIM.TRANSACTION.FORM}
         className="w-full md:w-auto h-12 px-8 rounded-xl shadow-lg shadow-primary-default/20"
         size="lg"
       >
@@ -21,7 +20,7 @@ export const AjukanVisaButton = () => {
         {t('addTransaction')}
       </Button>
 
-      <AjukanVisaWizard open={open} onOpenChange={setOpen} />
+      {/* <AjukanVisaWizard open={open} onOpenChange={setOpen} /> */}
     </>
   );
 };

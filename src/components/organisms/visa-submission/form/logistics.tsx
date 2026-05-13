@@ -9,11 +9,11 @@ import {
   TWizardForm,
   useTransactionController,
 } from '@/packages/pilgrim/transaction/presentation/controller';
-import { getTodayJakarta, getTodayRiyadh } from '@/shared/utils';
+import { dateUtil, getTodayRiyadh } from '@/shared/utils';
 import { isBase64 } from '@/shared/utils/validator';
 import { AlertTriangle, Building2, History as HistoryIcon, Plane } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Path, useFormContext, useWatch } from 'react-hook-form';
 
 const ROOM_TYPE_OPTIONS = [
@@ -175,7 +175,41 @@ export const LogisticsForm = () => {
   const hotelMadinahCheckOut = useWatch({ control, name: 'hotelMadinahCheckOut' });
   const isFlightFilled = !!departureFlightEta && !!returnFlightEtd;
 
+  const makkahMinDate = useMemo(() => {
+    const base = departureFlightEta || getTodayRiyadh().toISOString();
+    if (hotelMadinahCheckIn && hotelMadinahCheckOut && hotelMakkahCheckIn) {
+      if (dateUtil(hotelMadinahCheckIn).isBefore(dateUtil(hotelMakkahCheckIn))) {
+        return hotelMadinahCheckOut;
+      }
+    }
+    return base;
+  }, [departureFlightEta, hotelMadinahCheckIn, hotelMadinahCheckOut, hotelMakkahCheckIn]);
+
+  const madinahMinDate = useMemo(() => {
+    const base = departureFlightEta || getTodayRiyadh().toISOString();
+    if (hotelMakkahCheckIn && hotelMakkahCheckOut && hotelMadinahCheckIn) {
+      if (dateUtil(hotelMakkahCheckIn).isBefore(dateUtil(hotelMadinahCheckIn))) {
+        return hotelMakkahCheckOut;
+      }
+    }
+    return base;
+  }, [departureFlightEta, hotelMakkahCheckIn, hotelMakkahCheckOut, hotelMadinahCheckIn]);
+
+  const prevFlightDates = useRef({ departureFlightEta, returnFlightEtd });
+  const isFirstMount = useRef(true);
+
   useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
+
+    const hasChanged =
+      prevFlightDates.current.departureFlightEta !== departureFlightEta ||
+      prevFlightDates.current.returnFlightEtd !== returnFlightEtd;
+
+    if (!hasChanged) return;
+
     const fieldsToReset: Path<TWizardForm>[] = [
       'hotelMakkahCheckIn',
       'hotelMakkahCheckOut',
@@ -185,8 +219,7 @@ export const LogisticsForm = () => {
 
     let hasResetted = false;
     fieldsToReset.forEach((field) => {
-      const currentVal = watch(field);
-      if (currentVal) {
+      if (watch(field)) {
         setValue(field, '', { shouldValidate: true });
         hasResetted = true;
       }
@@ -195,6 +228,8 @@ export const LogisticsForm = () => {
     if (hasResetted) {
       setShowHotelSyncWarning(true);
     }
+
+    prevFlightDates.current = { departureFlightEta, returnFlightEtd };
   }, [departureFlightEta, returnFlightEtd, setValue, watch]);
 
   useEffect(() => {
@@ -293,17 +328,16 @@ export const LogisticsForm = () => {
               size="lg"
               label={t('flightEtd')}
               required
-              showTime={true}
+              showTime
               value={departureFlightEtd}
-              onChange={(val) =>
-                setValue('departureFlightEtd', val as string, { shouldValidate: true })
-              }
+              onChange={(val) => {
+                setValue('departureFlightEtd', val as string, { shouldValidate: true });
+                setValue('departureFlightEta', '', { shouldValidate: true });
+              }}
               errorMessage={errors.departureFlightEtd?.message}
               minDate={getTodayRiyadh().toISOString()}
               isAutoDetected={isAutoDetected['departureFlightEtd']}
-              confidence={
-                isAutoDetected['departureFlightEtd'] ? watch('ocrConfidence') : undefined
-              }
+              confidence={isAutoDetected['departureFlightEtd'] ? watch('ocrConfidence') : undefined}
             />
             <DatePicker
               useLabelInside
@@ -311,7 +345,7 @@ export const LogisticsForm = () => {
               size="lg"
               label={t('flightEta')}
               required
-              showTime={true}
+              showTime
               value={departureFlightEta}
               onChange={(val) =>
                 setValue('departureFlightEta', val as string, { shouldValidate: true })
@@ -319,9 +353,7 @@ export const LogisticsForm = () => {
               errorMessage={errors.departureFlightEta?.message}
               minDate={departureFlightEtd || getTodayRiyadh().toISOString()}
               isAutoDetected={isAutoDetected['departureFlightEta']}
-              confidence={
-                isAutoDetected['departureFlightEta'] ? watch('ocrConfidence') : undefined
-              }
+              confidence={isAutoDetected['departureFlightEta'] ? watch('ocrConfidence') : undefined}
             />
           </div>
         </div>
@@ -410,11 +442,12 @@ export const LogisticsForm = () => {
               size="lg"
               label={t('flightEtd')}
               required
-              showTime={true}
+              showTime
               value={returnFlightEtd}
-              onChange={(val) =>
-                setValue('returnFlightEtd', val as string, { shouldValidate: true })
-              }
+              onChange={(val) => {
+                setValue('returnFlightEtd', val as string, { shouldValidate: true });
+                setValue('returnFlightEta', '', { shouldValidate: true });
+              }}
               errorMessage={errors.returnFlightEtd?.message}
               minDate={departureFlightEta || getTodayRiyadh().toISOString()}
             />
@@ -424,7 +457,7 @@ export const LogisticsForm = () => {
               size="lg"
               label={t('flightEta')}
               required
-              showTime={true}
+              showTime
               value={returnFlightEta}
               onChange={(val) =>
                 setValue('returnFlightEta', val as string, { shouldValidate: true })
@@ -528,7 +561,7 @@ export const LogisticsForm = () => {
                   ? errors.hotelMakkahCheckIn?.message
                   : undefined
               }
-              minDate={departureFlightEta || getTodayRiyadh().toISOString()}
+              minDate={makkahMinDate}
               maxDate={returnFlightEtd}
               disabled={!isFlightFilled}
               disabledTooltip="Isi data penerbangan terlebih dahulu"
@@ -551,9 +584,7 @@ export const LogisticsForm = () => {
                   ? errors.hotelMakkahCheckOut?.message
                   : undefined
               }
-              minDate={
-                hotelMakkahCheckIn || departureFlightEta || getTodayRiyadh().toISOString()
-              }
+              minDate={hotelMakkahCheckIn || makkahMinDate}
               maxDate={returnFlightEtd}
               disabled={!isFlightFilled}
               disabledTooltip="Isi data penerbangan terlebih dahulu"
@@ -657,7 +688,7 @@ export const LogisticsForm = () => {
                   ? errors.hotelMadinahCheckIn?.message
                   : undefined
               }
-              minDate={departureFlightEta || getTodayRiyadh().toISOString()}
+              minDate={madinahMinDate}
               maxDate={returnFlightEtd}
               disabled={!isFlightFilled}
               disabledTooltip="Isi data penerbangan terlebih dahulu"
@@ -678,9 +709,7 @@ export const LogisticsForm = () => {
                   ? errors.hotelMadinahCheckOut?.message
                   : undefined
               }
-              minDate={
-                hotelMadinahCheckIn || departureFlightEta || getTodayRiyadh().toISOString()
-              }
+              minDate={hotelMadinahCheckIn || madinahMinDate}
               maxDate={returnFlightEtd}
               disabled={!isFlightFilled}
               disabledTooltip="Isi data penerbangan terlebih dahulu"

@@ -1,13 +1,14 @@
 import { Skeleton } from '@/components/atoms/skeleton';
 import { InputFile } from '@/components/molecules/input/file';
 import { InputTextarea } from '@/components/molecules/input/text/area';
+import { useManagementController } from '@/packages/pilgrim/management/presentation/controller';
 import { TWizardForm } from '@/packages/pilgrim/transaction/presentation/controller';
 import { cn } from '@/shared/utils';
 import { formatDate } from '@/shared/utils/formattor';
 import { motion } from 'framer-motion';
 import { Calendar, Car, ChevronDown, Hotel, Info, Plane } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 interface SummaryFormProps {
@@ -26,8 +27,16 @@ export const SummaryForm = ({ totalAmount, breakdown, isLoading }: SummaryFormPr
   } = useFormContext<TWizardForm>();
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const { useMembers } = useManagementController();
+  const { members } = useMembers({ page: 1, limit: 100 });
+
   const formValues = watch();
-  const selectedMembersCount = (formValues.pilgrimIds || []).length;
+  const selectedIds = watch('pilgrimIds') || [];
+  const selectedMembersCount = selectedIds.length;
+
+  const selectedMembers = useMemo(() => {
+    return members.filter((m) => selectedIds.includes(m.id));
+  }, [members, selectedIds]);
 
   const DetailRow = ({
     icon: Icon,
@@ -78,7 +87,6 @@ export const SummaryForm = ({ totalAmount, breakdown, isLoading }: SummaryFormPr
       />
 
       <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-300">
-        {/* Header - Always Visible */}
         <div className="p-5 border-b border-gray-50 flex justify-between items-center bg-gray-50/30">
           <div className="flex items-center gap-2">
             <div className="p-2 bg-primary-default rounded-xl shadow-lg shadow-primary-default/20">
@@ -96,7 +104,6 @@ export const SummaryForm = ({ totalAmount, breakdown, isLoading }: SummaryFormPr
           </div>
         </div>
 
-        {/* Dynamic Content Section */}
         <div className="relative">
           {isLoading ? (
             <div className="p-6 space-y-4">
@@ -121,7 +128,6 @@ export const SummaryForm = ({ totalAmount, breakdown, isLoading }: SummaryFormPr
                 )}
               >
                 <div className="p-5 space-y-4">
-                  {/* Flight Details */}
                   <div className="space-y-1">
                     <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest px-2">
                       {t('form.flightLogistics')}
@@ -140,7 +146,6 @@ export const SummaryForm = ({ totalAmount, breakdown, isLoading }: SummaryFormPr
                     </div>
                   </div>
 
-                  {/* Hotel Details */}
                   <div className="space-y-1 pt-2">
                     <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest px-2">
                       {t('form.hotelAccommodation')}
@@ -159,7 +164,6 @@ export const SummaryForm = ({ totalAmount, breakdown, isLoading }: SummaryFormPr
                     </div>
                   </div>
 
-                  {/* Transport Details */}
                   {formValues.transportations && formValues.transportations.length > 0 && (
                     <div className="space-y-1 pt-2">
                       <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest px-2">
@@ -170,7 +174,7 @@ export const SummaryForm = ({ totalAmount, breakdown, isLoading }: SummaryFormPr
                           <DetailRow
                             key={idx}
                             icon={Car}
-                            label={`${t(`form.transportTypeOptions.${trans.type}`)} - ${trans.from} ➔ ${trans.to}`}
+                            label={`${t(`form.transportTypeOptions.${trans.type}`)} - ${trans.from} \u2794 ${trans.to}`}
                             value={`${trans.company} (${trans.total} ${t('form.vehicles')}) - ${formatDate(trans.date, displayDateFormat, false)}`}
                           />
                         ))}
@@ -178,7 +182,6 @@ export const SummaryForm = ({ totalAmount, breakdown, isLoading }: SummaryFormPr
                     </div>
                   )}
 
-                  {/* Rawdah Details */}
                   {(formValues.rawdahMenTime || formValues.rawdahWomenTime) && (
                     <div className="space-y-1 pt-2">
                       <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest px-2">
@@ -203,7 +206,30 @@ export const SummaryForm = ({ totalAmount, breakdown, isLoading }: SummaryFormPr
                     </div>
                   )}
 
-                  {/* Uploaded Documents */}
+                  <div className="space-y-1 pt-2">
+                    <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest px-2">
+                      {t('detail.pilgrimList')}
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {selectedMembers.map((m) => (
+                        <div
+                          key={m.id}
+                          className="flex items-center gap-3 p-3 bg-white border border-gray-100 rounded-2xl"
+                        >
+                          <div className="size-8 rounded-full bg-primary-default/10 flex items-center justify-center text-primary-default font-bold text-xs">
+                            {m.fullName.charAt(0)}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-bold text-foreground truncate">{m.fullName}</p>
+                            <p className="text-[10px] text-muted-foreground font-medium">
+                              {m.passportNumber} • {tDashboard(`relations.${m.relation}`)}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
                   <div className="space-y-4 pt-4 border-t border-gray-50">
                     <p className="text-[10px] font-black text-primary-default uppercase tracking-widest px-2">
                       {t('form.uploadedDocuments')}
@@ -232,7 +258,6 @@ export const SummaryForm = ({ totalAmount, breakdown, isLoading }: SummaryFormPr
                 </div>
               </motion.div>
 
-              {/* Toggle Button */}
               <div className="flex justify-center -mt-4 relative z-10">
                 <motion.button
                   type="button"
@@ -250,7 +275,6 @@ export const SummaryForm = ({ totalAmount, breakdown, isLoading }: SummaryFormPr
                 </motion.button>
               </div>
 
-              {/* Footer - Always Visible Highlight */}
               <div className="p-6 bg-linear-to-br from-primary-600 to-primary-700 text-white mt-4 border-t-4 border-white/20">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                   <div className="text-center md:text-left space-y-0.5">

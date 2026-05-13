@@ -1,17 +1,16 @@
 import { ROUTES } from '@/shared/constants';
-import { RestAPI } from '@/shared/utils/rest-api';
 import { dateRiyadh as dateUtil, isBase64 } from '@/shared/utils';
+import { RestAPI } from '@/shared/utils/rest-api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { saveAs } from 'file-saver';
+import JSZip from 'jszip';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
-import { useState } from 'react';
 import {
   ICreateTransactionRequest,
   ILogisticsOcrResponse,
@@ -25,7 +24,9 @@ const api = new RestAPI();
 const repository = new TransactionRepository(api);
 const useCase = new TransactionUseCase(repository);
 
-const getWizardSchema = (t: (key: string, values?: Record<string, string | number | boolean>) => string) =>
+const getWizardSchema = (
+  t: (key: string, values?: Record<string, string | number | boolean>) => string,
+) =>
   z
     .object({
       pilgrimIds: z.array(z.string()).min(1, t('form.validationRequired')),
@@ -34,15 +35,29 @@ const getWizardSchema = (t: (key: string, values?: Record<string, string | numbe
       departureFlightFrom: z.string().min(1, t('form.validationRequired')),
       departureFlightTo: z.string().min(1, t('form.validationRequired')),
       departureFlightDate: z.string().optional(),
-      departureFlightEta: z.string().min(1, t('form.validationRequired')),
-      departureFlightEtd: z.string().min(1, t('form.validationRequired')),
+      departureFlightEta: z
+        .string()
+        .min(1, 'Tanggal kedatangan tidak boleh kosong / Arrival date cannot be empty'),
+      departureFlightEtd: z
+        .string()
+        .min(1, 'Tanggal keberangkatan tidak boleh kosong / Departure date cannot be empty'),
       returnFlightNo: z.string().min(1, t('form.validationRequired')),
       returnCarrier: z.string().min(1, t('form.validationRequired')),
       returnFlightFrom: z.string().min(1, t('form.validationRequired')),
       returnFlightTo: z.string().min(1, t('form.validationRequired')),
       returnFlightDate: z.string().optional(),
-      returnFlightEta: z.string().min(1, t('form.validationRequired')),
-      returnFlightEtd: z.string().min(1, t('form.validationRequired')),
+      returnFlightEta: z
+        .string()
+        .min(
+          1,
+          'Tanggal kedatangan kepulangan tidak boleh kosong / Return arrival date cannot be empty',
+        ),
+      returnFlightEtd: z
+        .string()
+        .min(
+          1,
+          'Tanggal keberangkatan kepulangan tidak boleh kosong / Return departure date cannot be empty',
+        ),
       hotelMakkahName: z.string().min(1, t('form.validationRequired')),
       hotelMakkahResvNo: z.string().min(1, t('form.validationRequired')),
       hotelMakkahCheckIn: z.string().min(1, t('form.validationRequired')),
@@ -91,41 +106,46 @@ const getWizardSchema = (t: (key: string, values?: Record<string, string | numbe
     .refine(
       (data) => {
         if (data.departureFlightEtd && data.departureFlightEta) {
-          return !dateUtil(data.departureFlightEta).isBefore(dateUtil(data.departureFlightEtd));
+          return dateUtil(data.departureFlightEta).isAfter(dateUtil(data.departureFlightEtd));
         }
         return true;
       },
       {
-        message: 'Kedatangan (ETA) harus minimal dari waktu keberangkatan (ETD)',
+        message:
+          'Waktu tiba (ETA) tidak boleh sebelum waktu keberangkatan (ETD) / ETA cannot be before ETD.',
         path: ['departureFlightEta'],
       },
     )
     .refine(
       (data) => {
         if (data.departureFlightEta && data.returnFlightEtd) {
-          return !dateUtil(data.returnFlightEtd).isBefore(dateUtil(data.departureFlightEta));
+          return dateUtil(data.returnFlightEtd).isAfter(dateUtil(data.departureFlightEta));
         }
         return true;
       },
       {
-        message: 'Return (ETD) harus minimal dari waktu kedatangan keberangkatan (ETA)',
+        message:
+          'Tanggal kepulangan harus setelah tanggal tiba di tujuan / Return flight must be after departure landing.',
         path: ['returnFlightEtd'],
       },
     )
     .refine(
       (data) => {
         if (data.returnFlightEtd && data.returnFlightEta) {
-          return !dateUtil(data.returnFlightEta).isBefore(dateUtil(data.returnFlightEtd));
+          return dateUtil(data.returnFlightEta).isAfter(dateUtil(data.returnFlightEtd));
         }
         return true;
       },
       {
-        message: 'Return (ETA) harus minimal dari waktu keberangkatan return (ETD)',
+        message:
+          'Waktu tiba kepulangan (ETA) tidak boleh sebelum waktu keberangkatan kepulangan (ETD) / Return ETA cannot be before Return ETD.',
         path: ['returnFlightEta'],
       },
     )
     .superRefine((data, ctx) => {
-      const landing = data.departureFlightEta ? dateUtil(data.departureFlightEta).startOf('day') : null;
+      const landing = data.departureFlightEta
+        ? dateUtil(data.departureFlightEta).startOf('day')
+        : null;
       const takeoff = data.returnFlightEtd ? dateUtil(data.returnFlightEtd).startOf('day') : null;
 
       const validateBoundary = (fieldDate: string | undefined, path: (string | number)[]) => {
@@ -155,6 +175,37 @@ const getWizardSchema = (t: (key: string, values?: Record<string, string | numbe
       validateBoundary(data.hotelMakkahCheckOut, ['hotelMakkahCheckOut']);
       validateBoundary(data.hotelMadinahCheckIn, ['hotelMadinahCheckIn']);
       validateBoundary(data.hotelMadinahCheckOut, ['hotelMadinahCheckOut']);
+
+      if (data.hotelMakkahCheckIn && data.hotelMadinahCheckIn) {
+        const makkahIn = dateUtil(data.hotelMakkahCheckIn).startOf('day');
+        const madinahIn = dateUtil(data.hotelMadinahCheckIn).startOf('day');
+
+        if (makkahIn.isBefore(madinahIn)) {
+          if (
+            data.hotelMakkahCheckOut &&
+            madinahIn.isBefore(dateUtil(data.hotelMakkahCheckOut).startOf('day'))
+          ) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message:
+                "Tanggal check-in harus setelah atau sama dengan tanggal check-out hotel sebelumnya / Check-in date must be on or after the previous hotel's check-out date.",
+              path: ['hotelMadinahCheckIn'],
+            });
+          }
+        } else if (madinahIn.isBefore(makkahIn)) {
+          if (
+            data.hotelMadinahCheckOut &&
+            makkahIn.isBefore(dateUtil(data.hotelMadinahCheckOut).startOf('day'))
+          ) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message:
+                "Tanggal check-in harus setelah atau sama dengan tanggal check-out hotel sebelumnya / Check-in date must be on or after the previous hotel's check-out date.",
+              path: ['hotelMakkahCheckIn'],
+            });
+          }
+        }
+      }
 
       if (data.transportations) {
         data.transportations.forEach((item, index) => {
@@ -190,9 +241,7 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
         carrier: data.returnCarrier,
         from: data.returnFlightFrom,
         to: data.returnFlightTo,
-        flightDate: data.returnFlightEtd
-          ? dateUtil(data.returnFlightEtd).format('YYYY-MM-DD')
-          : '',
+        flightDate: data.returnFlightEtd ? dateUtil(data.returnFlightEtd).format('YYYY-MM-DD') : '',
         eta: data.returnFlightEta ? dateUtil(data.returnFlightEta).toISOString() : '',
         etd: data.returnFlightEtd ? dateUtil(data.returnFlightEtd).toISOString() : '',
         imageUrls: data.returnTicketUrls,
@@ -212,7 +261,9 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
         name: data.hotelMadinahName,
         resvNo: data.hotelMadinahResvNo,
         checkIn: data.hotelMadinahCheckIn ? dateUtil(data.hotelMadinahCheckIn).toISOString() : '',
-        checkOut: data.hotelMadinahCheckOut ? dateUtil(data.hotelMadinahCheckOut).toISOString() : '',
+        checkOut: data.hotelMadinahCheckOut
+          ? dateUtil(data.hotelMadinahCheckOut).toISOString()
+          : '',
         city: 'MADINAH',
         roomType: data.hotelMadinahRoomType,
         imageUrls: data.hotelMadinahVoucherUrls,
@@ -423,7 +474,6 @@ export const useTransactionForm = (initialData?: Partial<ITransaction>) => {
     resolver: zodResolver(wizardSchema),
     mode: 'all',
     values: useMemo(() => {
-      
       const fDep = initialData?.flights?.find((f) => f.type === 'DEPARTURE');
       const fRet = initialData?.flights?.find((f) => f.type === 'RETURN');
       const hM = initialData?.hotels?.find((h) => h.city === 'MAKKAH');

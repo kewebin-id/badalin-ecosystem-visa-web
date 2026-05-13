@@ -7,7 +7,7 @@
     "dev:force": "lsof -ti tcp:4011 | xargs kill -9 && npm run dev",
     "build": "next build",
     "start": "next start",
-    "start:dev": "rm -rf .next && npm run build && PORT=4011 npm start",
+    "start:dev": "rm -rf .next && npm run build && next start -p 4011",
     "lint": "eslint src/ --config eslint.config.mjs",
     "check:lint": "eslint src/ --config eslint.config.mjs",
     "check:prettier": "prettier --write src",

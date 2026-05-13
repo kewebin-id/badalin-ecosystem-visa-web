@@ -18,30 +18,65 @@ export const SelectMembersForm = () => {
 
   const { useMembers } = useManagementController();
   const { members, pageCount, isLoading } = useMembers({ page, limit });
-  const completeMembers = useMemo(() => members.filter((m) => m.isComplete), [members]);
 
   const { watch, setValue, getValues } = useFormContext<TWizardForm>();
   const selectedIds = watch('pilgrimIds') || [];
 
+  const allCompleteIds = useMemo(
+    () => members.filter((m) => m.isComplete).map((m) => m.id),
+    [members],
+  );
+
+  const isAllSelected = useMemo(() => {
+    if (allCompleteIds.length === 0) return false;
+    return allCompleteIds.every((id) => selectedIds.includes(id));
+  }, [allCompleteIds, selectedIds]);
+
+  const handleSelectAll = (checked: boolean) => {
+    const current = getValues('pilgrimIds') || [];
+    if (checked) {
+      const newIds = Array.from(new Set([...current, ...allCompleteIds]));
+      setValue('pilgrimIds', newIds, { shouldValidate: true });
+    } else {
+      const filtered = current.filter((id) => !allCompleteIds.includes(id));
+      setValue('pilgrimIds', filtered, { shouldValidate: true });
+    }
+  };
+
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground font-medium">{t('form.memberHelper')}</p>
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground font-medium">{t('form.memberHelper')}</p>
+        {!isLoading && members.length > 0 && (
+          <label className="flex items-center gap-2 cursor-pointer group">
+            <Checkbox checked={isAllSelected} onCheckedChange={handleSelectAll} />
+            <span className="text-xs font-bold text-foreground group-hover:text-primary-default transition-colors">
+              Pilih Semua (Yang Lengkap)
+            </span>
+          </label>
+        )}
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {isLoading ? (
           Array.from({ length: limit }).map((_, i) => (
             <Skeleton key={i} className="h-20 w-full rounded-2xl" />
           ))
-        ) : completeMembers.length > 0 ? (
-          completeMembers.map((m) => (
+        ) : members.length > 0 ? (
+          members.map((m) => (
             <label
               key={m.id}
-              className={`flex items-center gap-4 p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
-                selectedIds.includes(m.id)
-                  ? 'border-primary-default bg-primary-default/5 shadow-sm'
-                  : 'border-gray-100 hover:border-gray-200 bg-white'
+              title={!m.isComplete ? 'Data jamaah belum lengkap / Pilgrim data is incomplete' : ''}
+              className={`flex items-center gap-4 p-4 rounded-2xl border transition-all relative overflow-hidden ${
+                !m.isComplete
+                  ? 'bg-gray-50 border-gray-100 opacity-60 cursor-not-allowed'
+                  : selectedIds.includes(m.id)
+                    ? 'border-primary-default bg-primary-default/5 shadow-sm cursor-pointer'
+                    : 'border-gray-100 hover:border-gray-200 bg-white cursor-pointer'
               }`}
             >
               <Checkbox
+                disabled={!m.isComplete}
                 checked={selectedIds.includes(m.id)}
                 onCheckedChange={(checked) => {
                   const current = getValues('pilgrimIds') || [];
@@ -57,7 +92,10 @@ export const SelectMembersForm = () => {
                 }}
               />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-foreground truncate">{m.fullName}</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-bold text-foreground truncate">{m.fullName}</p>
+                  {!m.isComplete && <Badge variant="destructive">Incomplete</Badge>}
+                </div>
                 <p className="text-xs text-muted-foreground font-medium">
                   {m.passportNumber} •{' '}
                   {tDashboard(`relations.${String(m.relation).toUpperCase() as 'SELF'}`)}

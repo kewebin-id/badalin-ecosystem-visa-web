@@ -98,7 +98,7 @@ export const DatePicker: FC<DatePickerProps> = ({
         .minute(parseInt(minutes))
         .second(0)
         .millisecond(0);
-      
+
       setDate(d.toDate());
       onChange(d.format());
       if (!showTime) {
@@ -162,10 +162,11 @@ export const DatePicker: FC<DatePickerProps> = ({
         <InputText
           readonly
           type="text"
-          name={name}
           label={label}
           required={required}
-          value={date ? dateUtil(date).format(showTime ? 'DD MMMM YYYY HH:mm' : 'DD MMMM YYYY') : ''}
+          value={
+            date ? dateUtil(date).format(showTime ? 'DD MMMM YYYY HH:mm' : 'DD MMMM YYYY') : ''
+          }
           placeholder={placeholder}
           onFocus={() => !disabled && setOpened(true)}
           icon={

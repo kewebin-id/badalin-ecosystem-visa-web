@@ -68,39 +68,30 @@ const InputTextRoot = ({
   watchedValue,
   onChange: onChangeProp,
 }: InputTextProps & { watchedValue?: unknown }) => {
-  const [inputState, setInputState] = useState<string | number | undefined>(value);
+  const externalValue = value !== undefined ? value : watchedValue;
+
+  const [inputState, setInputState] = useState<string | number | undefined>(
+    externalValue as string | number | undefined,
+  );
+
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const tuningRegister = register && name && register(name);
 
   useEffect(() => {
-    if (value === undefined || value === null || value === '') {
-      setInputState(undefined);
-    } else {
-      const displayValue = type === 'price' ? formatRupiah(Number(value)) : value;
-      setInputState(displayValue);
+    if (externalValue === undefined || externalValue === null || externalValue === '') {
+      setInputState('');
+      return;
     }
-  }, [value, type]);
 
-  useEffect(() => {
-    if (tuningRegister && value) {
-      const displayValue = type === 'price' ? formatRupiah(Number(value)) : value;
-      setInputState(displayValue);
-    }
-  }, [tuningRegister, value, type]);
+    const displayValue =
+      type === 'price' ? formatRupiah(Number(externalValue)) : String(externalValue);
 
-  useEffect(() => {
-    if (watchedValue !== undefined && watchedValue !== inputState) {
-      const displayValue =
-        type === 'price'
-          ? formatRupiah(Number(watchedValue))
-          : (watchedValue as string | number | undefined);
-      setInputState(displayValue ?? undefined);
-    }
-  }, [watchedValue, inputState, type]);
+    setInputState(displayValue);
+  }, [externalValue, type]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    let val = e.target.value;
+    const val = e.target.value;
 
     if (type === 'price') {
       const numericValue = unformatRupiah(val);
@@ -143,6 +134,9 @@ const InputTextRoot = ({
   };
 
   const handleIsFocused = isFocusedProp || isFocused;
+  const isLabelActive = [inputState, value, watchedValue].some(
+    (v) => v !== undefined && v !== null && v !== '',
+  );
 
   return (
     <div className={cn('relative w-full', label && !useLabelInside && 'flex flex-col gap-2')}>
@@ -158,83 +152,41 @@ const InputTextRoot = ({
         </label>
       )}
       <span className="relative block w-full">
-        {type === 'price' ? (
-          <input
-            {...(tuningRegister || {})}
-            onChange={onChange}
-            onBlur={handleBlur}
-            onFocus={handleFocus}
-            onKeyDown={handleKeyDown}
-            value={inputState || ''}
-            type="text"
-            placeholder={!useLabelInside ? placeholder : ''}
-            readOnly={readonly}
-            disabled={disabled}
-            maxLength={maxLength}
-            autoComplete={autoComplete}
-            required={required}
-            className={cn(
-              styles[size],
-              className,
-              'bg-white! text-black',
-              errorMessage ? styles['form-input-error'] : styles['form-input'],
-              disabled && 'cursor-not-allowed bg-gray-100! border-gray-200!',
-              useLabelInside &&
-                styles[
-                  `form-input-inside${[inputState, value, watchedValue].some((v) => v !== undefined && v !== null && v !== '') ? '-active' : ''}`
-                ],
-              (iconPosition === 'left' || (icon && !iconPosition)) && 'pl-10',
-              iconPosition === 'right' && 'pr-10',
-              handleIsFocused && 'input-focused',
-            )}
-          />
-        ) : (
-          <input
-            {...(tuningRegister || {})}
-            onChange={onChange}
-            onBlur={handleBlur}
-            onFocus={handleFocus}
-            onKeyDown={handleKeyDown}
-            value={inputState ?? ''}
-            type={type}
-            placeholder={!useLabelInside ? placeholder : ''}
-            readOnly={readonly}
-            disabled={disabled}
-            maxLength={maxLength}
-            autoComplete={autoComplete}
-            required={required}
-            className={cn(
-              styles[size],
-              className,
-              'bg-white! text-black',
-              errorMessage ? styles['form-input-error'] : styles['form-input'],
-              disabled && 'cursor-not-allowed bg-gray-100! border-gray-200!',
-              useLabelInside &&
-                styles[
-                  `form-input-inside${[inputState, value, watchedValue].some((v) => v !== undefined && v !== null && v !== '') ? '-active' : ''}`
-                ],
-              (iconPosition === 'left' || (icon && !iconPosition)) && 'pl-10',
-              iconPosition === 'right' && 'pr-10',
-              handleIsFocused && 'input-focused',
-            )}
-          />
-        )}
+        <input
+          {...(tuningRegister || {})}
+          onChange={onChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
+          onKeyDown={handleKeyDown}
+          value={inputState ?? ''}
+          type={type === 'price' ? 'text' : type}
+          placeholder={!useLabelInside ? placeholder : ''}
+          readOnly={readonly}
+          disabled={disabled}
+          maxLength={maxLength}
+          autoComplete={autoComplete}
+          required={required}
+          className={cn(
+            styles[size],
+            className,
+            'bg-white! text-black',
+            errorMessage ? styles['form-input-error'] : styles['form-input'],
+            disabled && 'cursor-not-allowed bg-gray-100! border-gray-200!',
+            useLabelInside && styles[`form-input-inside${isLabelActive ? '-active' : ''}`],
+            (iconPosition === 'left' || (icon && !iconPosition)) && 'pl-10',
+            iconPosition === 'right' && 'pr-10',
+            handleIsFocused && 'input-focused',
+          )}
+        />
         {label && useLabelInside && (
           <label
             className={cn(
-              styles[
-                `form-label-inside${[inputState, value, watchedValue].some((v) => v !== undefined && v !== null && v !== '') ? '-active' : ''}`
-              ],
-              handleIsFocused ||
-                [inputState, value, watchedValue].some(
-                  (v) => v !== undefined && v !== null && v !== '',
-                )
-                ? 'text-gray-500'
-                : 'text-gray-400',
+              styles[`form-label-inside${isLabelActive ? '-active' : ''}`],
+              handleIsFocused || isLabelActive ? 'text-gray-500' : 'text-gray-400',
             )}
           >
             <span className="text-nowrap">{label}</span>
-            {required && (handleIsFocused || inputState || value || !!watchedValue) && (
+            {required && (handleIsFocused || isLabelActive) && (
               <span className="text-danger-500">*</span>
             )}
           </label>

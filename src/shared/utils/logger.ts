@@ -54,18 +54,22 @@ const logMessage = (level: LogLevel, message: Error | unknown, options: LogOptio
 
 const Logger = {
   log: (message: Error | unknown, options: LogOptions = {}) => {
+    if (process.env.NODE_ENV === 'development') return;
     console.log(logMessage('log', message, options));
   },
 
   info: (message: Error | unknown, options: LogOptions = {}) => {
+    if (process.env.NODE_ENV === 'development') return;
     console.info(logMessage('info', message, options));
   },
 
   warn: (message: Error | unknown, options: LogOptions = {}) => {
+    if (process.env.NODE_ENV === 'development') return;
     console.warn(logMessage('warn', message, options));
   },
 
   error: (message: Error | unknown, options: LogOptions = {}) => {
+    if (process.env.NODE_ENV === 'development') return;
     console.error(logMessage('error', message, options));
   },
 };
