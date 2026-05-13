@@ -95,7 +95,7 @@ export const DetailLogisticsTab = ({ transaction }: DetailLogisticsTabProps) => 
                 key={member.id}
                 onClick={() => setSelectedMember(member)}
                 className={`bg-white border shadow-sm rounded-3xl overflow-hidden transition-all hover:shadow-md group cursor-pointer active:scale-95 flex flex-col ${
-                  member.isEligible === false
+                  member.isEligible === false && transaction.paymentStatus === 'COMPLETED'
                     ? 'border-danger-500'
                     : 'border-gray-100 hover:border-primary-default/20'
                 }`}
@@ -118,7 +118,7 @@ export const DetailLogisticsTab = ({ transaction }: DetailLogisticsTabProps) => 
                   </div>
                 </div>
 
-                {member.isEligible === false && (
+                {member.isEligible === false && transaction.paymentStatus === 'COMPLETED' && (
                   <div className="bg-danger-50 border-t border-danger-100 p-3 px-5 flex items-center gap-3">
                     <XCircle className="size-4 text-danger-500 shrink-0" />
                     <p className="text-[10px] font-bold text-danger-600 truncate flex-1 uppercase tracking-tight">
@@ -157,7 +157,7 @@ export const DetailLogisticsTab = ({ transaction }: DetailLogisticsTabProps) => 
 
               <div className="p-6 space-y-8">
                 {/* Rejection Alert */}
-                {selectedMember?.isEligible === false && (
+                {selectedMember?.isEligible === false && transaction.paymentStatus === 'COMPLETED' && (
                   <div className="bg-danger-50 border border-danger-100 rounded-3xl p-5 space-y-4">
                     <div className="flex items-start gap-3 text-danger-600">
                       <AlertCircle className="size-5 mt-0.5 shrink-0" />
