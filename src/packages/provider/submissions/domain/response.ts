@@ -21,6 +21,7 @@ export interface IMember {
   ktpUrl?: string;
   passportUrl?: string;
   visaUrl?: string;
+  employmentCertificateUrl?: string;
 }
 
 export interface ISubmissionListItem {

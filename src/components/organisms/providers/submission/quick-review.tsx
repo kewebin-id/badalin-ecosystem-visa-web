@@ -273,7 +273,13 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
                   <td className="p-4">
                     <ImageThumbnailList
                       images={
-                        [m.photoUrl, m.passportUrl, m.ktpUrl, m.visaUrl].filter(Boolean) as string[]
+                        [
+                          m.photoUrl,
+                          m.passportUrl,
+                          m.ktpUrl,
+                          m.visaUrl,
+                          m.employmentCertificateUrl,
+                        ].filter(Boolean) as string[]
                       }
                       onPreview={onPreview}
                       altPrefix={m.fullName || 'Jamaah'}

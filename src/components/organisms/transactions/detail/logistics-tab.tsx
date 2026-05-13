@@ -280,6 +280,20 @@ export const DetailLogisticsTab = ({ transaction }: DetailLogisticsTabProps) => 
                         maxSize={1}
                       />
                     )}
+                    {selectedMember?.employmentCertificateUrl && (
+                      <InputFile
+                        disabled
+                        label={tPilgrim('employmentCertificate')}
+                        value={[
+                          {
+                            name: tPilgrim('employmentCertificate'),
+                            base64: selectedMember.employmentCertificateUrl,
+                          },
+                        ]}
+                        onChange={() => {}}
+                        maxSize={1}
+                      />
+                    )}
                   </div>
                 </div>
               </div>

@@ -138,6 +138,8 @@
     "identitySection": "Detail Identitas",
     "passportPhoto": "Foto Paspor",
     "ktpPhoto": "Foto KTP",
+    "employmentCertificate": "Surat Keterangan Kerja / Usaha / IRT",
+    "additionalDocumentOptional": "Dokumen Tambahan (Opsional)",
     "namePlaceholder": "Sesuai Paspor/KTP",
     "passportPlaceholder": "A1234567",
     "passportExpiry": "Masa Berlaku Paspor",
@@ -639,6 +641,7 @@
         "docs": {
           "passport": "Lihat Paspor",
           "ktp": "Lihat KTP",
+          "sk": "Lihat SK",
           "photo": "Lihat Foto"
         }
       },

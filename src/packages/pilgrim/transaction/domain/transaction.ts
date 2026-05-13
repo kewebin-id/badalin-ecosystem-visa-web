@@ -90,6 +90,7 @@ export interface ITransaction {
     ktpUrl?: string;
     passportUrl?: string;
     visaUrl?: string;
+    employmentCertificateUrl?: string;
     nik?: string;
     gender?: string;
     maritalStatus?: string;

@@ -138,6 +138,8 @@
     "identitySection": "Identity Details",
     "passportPhoto": "Passport Photo",
     "ktpPhoto": "KTP Photo",
+    "employmentCertificate": "Employment / Business Certificate",
+    "additionalDocumentOptional": "Additional Documents (Optional)",
     "namePlaceholder": "As per Passport/KTP",
     "passportPlaceholder": "A1234567",
     "passportExpiry": "Passport Expiry Date",
@@ -639,6 +641,7 @@
         "docs": {
           "passport": "View Passport",
           "ktp": "View KTP",
+          "sk": "View Certificate",
           "photo": "View Photo"
         }
       },

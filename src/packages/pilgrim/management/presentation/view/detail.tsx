@@ -182,6 +182,22 @@ export const MemberDetailView = ({ member, isLoading, isOpen, onClose }: MemberD
                       </div>
                     </div>
                   )}
+                  {member.employmentCertificateUrl && (
+                    <div className="aspect-3/2 rounded-xl overflow-hidden border border-gray-200 bg-gray-50 relative">
+                      <Image
+                        src={member.employmentCertificateUrl}
+                        alt={t('employmentCertificate')}
+                        width={200}
+                        height={133}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute bottom-0 inset-x-0 bg-black/50 py-1 text-center">
+                        <span className="text-[8px] text-white font-bold uppercase">
+                          {t('employmentCertificate')}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </>

@@ -473,11 +473,11 @@ export const MemberFormView = () => {
           {/* Employment Certificate Section */}
           <section className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-6">
             <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-              Dokumen Tambahan (Opsional)
+              {t('additionalDocumentOptional')}
             </h3>
             <div className="grid md:grid-cols-2 gap-6">
               <InputFile
-                label="Surat Keterangan Kerja / Usaha / IRT"
+                label={t('employmentCertificate')}
                 maxFiles={1}
                 allowedTypes={['.png', '.jpeg', '.jpg', '.pdf']}
                 value={

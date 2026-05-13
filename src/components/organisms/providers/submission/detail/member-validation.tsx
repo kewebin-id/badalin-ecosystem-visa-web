@@ -141,12 +141,22 @@ export const DetailMemberValidation = ({
                         }
                       />
                       <ActionButton
+                        image={member.employmentCertificateUrl}
+                        title={t('docs.sk')}
+                        onClick={() =>
+                          onPreview({
+                            src: member.employmentCertificateUrl || '',
+                            alt: `${t('docs.sk')} ${member.fullName}`,
+                          })
+                        }
+                      />
+                      <ActionButton
                         image={member.photoUrl}
                         title={t('docs.photo')}
                         onClick={() =>
                           onPreview({
                             src: member.photoUrl || '',
-                            alt: `Foto ${member.fullName}`,
+                            alt: `${t('docs.photo')} ${member.fullName}`,
                           })
                         }
                       />
@@ -301,7 +311,7 @@ export const DetailMemberValidation = ({
                   </div>
                 )}
 
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 gap-3">
                   <ActionButton
                     icon={Book}
                     label="PASPOR"
@@ -329,6 +339,16 @@ export const DetailMemberValidation = ({
                       onPreview({
                         src: member.photoUrl || '',
                         alt: `Foto ${member.fullName}`,
+                      })
+                    }
+                  />
+                  <ActionButton
+                    image={member.employmentCertificateUrl}
+                    label={t('docs.sk')}
+                    onClick={() =>
+                      onPreview({
+                        src: member.employmentCertificateUrl || '',
+                        alt: `${t('docs.sk')} ${member.fullName}`,
                       })
                     }
                   />
