@@ -1,8 +1,8 @@
 'use client';
 
 import { Button, Image } from '@/components/atoms';
-import { Minimize2, X, ZoomIn, ZoomOut } from 'lucide-react';
 import { cn } from '@/shared/utils';
+import { Minimize2, X, ZoomIn, ZoomOut } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 export interface ImagePreviewModalProps {
@@ -19,8 +19,7 @@ export const ImagePreviewModal = ({
   imageSrc,
   imageAlt = 'Preview',
 }: ImagePreviewModalProps) => {
-  const isPdf =
-    imageSrc.startsWith('data:application/pdf') || imageSrc.toLowerCase().endsWith('.pdf');
+  const isPdf = typeof imageSrc === 'string' && imageSrc.toLowerCase().includes('.pdf');
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);

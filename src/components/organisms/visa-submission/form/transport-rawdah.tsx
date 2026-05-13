@@ -19,8 +19,8 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
-import { Path, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import { useEffect, useRef, useState } from 'react';
+import { Controller, Path, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 const TRANSPORT_TYPE_OPTIONS = [
   { label: 'Bus', value: 'BUS' },
@@ -63,27 +63,36 @@ export const TransportRawdahForm = () => {
 
   const departureFlightEta = useWatch({ control, name: 'departureFlightEta' });
   const returnFlightEtd = useWatch({ control, name: 'returnFlightEtd' });
-  const rawdahMenTime = useWatch({ control, name: 'rawdahMenTime' });
-  const rawdahWomenTime = useWatch({ control, name: 'rawdahWomenTime' });
-  const transportations = useWatch({ control, name: 'transportations' });
   const isFlightFilled = !!departureFlightEta && !!returnFlightEtd;
 
+  const prevDepartureRef = useRef(departureFlightEta);
+  const prevReturnRef = useRef(returnFlightEtd);
+
   useEffect(() => {
-    const transportFields = fields.map((_, index) => `transportations.${index}.date` as Path<TWizardForm>);
-    const rawdahFields: Path<TWizardForm>[] = ['rawdahMenTime', 'rawdahWomenTime'];
+    const hasChanged = 
+      (prevDepartureRef.current !== departureFlightEta && prevDepartureRef.current !== undefined) || 
+      (prevReturnRef.current !== returnFlightEtd && prevReturnRef.current !== undefined);
 
-    let hasResetted = false;
-    [...transportFields, ...rawdahFields].forEach((field) => {
-      if (watch(field)) {
-        setValue(field, '', { shouldValidate: true });
-        hasResetted = true;
+    if (hasChanged) {
+      const transportFields = fields.map((_, index) => `transportations.${index}.date` as Path<TWizardForm>);
+      const rawdahFields: Path<TWizardForm>[] = ['rawdahMenTime', 'rawdahWomenTime'];
+
+      let hasResetted = false;
+      [...transportFields, ...rawdahFields].forEach((field) => {
+        if (watch(field)) {
+          setValue(field, '', { shouldValidate: true });
+          hasResetted = true;
+        }
+      });
+
+      if (hasResetted) {
+        setShowTransportSyncWarning(true);
       }
-    });
-
-    if (hasResetted) {
-      setShowTransportSyncWarning(true);
     }
-  }, [departureFlightEta, returnFlightEtd, setValue, watch]);
+    
+    prevDepartureRef.current = departureFlightEta;
+    prevReturnRef.current = returnFlightEtd;
+  }, [departureFlightEta, returnFlightEtd, setValue, watch, fields]);
 
   useEffect(() => {
     const transportFields = fields.map((_, index) => `transportations.${index}.date` as Path<TWizardForm>);
@@ -271,36 +280,40 @@ export const TransportRawdahForm = () => {
                     }
                   />
 
-                  <DatePicker
-                    useLabelInside
+                  <Controller
+                    control={control}
                     name={`transportations.${index}.date`}
-                    size="lg"
-                    label={t('form.dateAndTime')}
-                    showTime={true}
-                    required
-                    value={transportations?.[index]?.date}
-                    onChange={(val) => {
-                      const isoString = val as string;
-                      setValue(`transportations.${index}.date`, isoString, {
-                        shouldValidate: true,
-                      });
-                      setValue(`transportations.${index}.time`, isoString, {
-                        shouldValidate: true,
-                      });
-                      setShowTransportSyncWarning(false);
-                    }}
-                    minDate={departureFlightEta || getTodayRiyadh().toISOString()}
-                    maxDate={returnFlightEtd}
-                    disabled={!isFlightFilled}
-                    disabledTooltip="Isi data penerbangan terlebih dahulu"
-                    errorMessage={
-                      touchedFields.transportations?.[index]?.date || isSubmitted
-                        ? (errors.transportations?.[index] as Record<string, { message?: string }>)
-                            ?.date?.message ||
-                          (errors.transportations?.[index] as Record<string, { message?: string }>)
-                            ?.time?.message
-                        : undefined
-                    }
+                    render={({ field }) => (
+                      <DatePicker
+                        {...field}
+                        useLabelInside
+                        size="lg"
+                        label={t('form.dateAndTime')}
+                        showTime={true}
+                        required
+                        value={field.value}
+                        onChange={(val) => {
+                          const isoString = val as string;
+                          field.onChange(isoString);
+                          setValue(`transportations.${index}.time`, isoString, {
+                            shouldValidate: true,
+                          });
+                          setShowTransportSyncWarning(false);
+                        }}
+                        minDate={departureFlightEta || getTodayRiyadh().toISOString()}
+                        maxDate={returnFlightEtd}
+                        disabled={!isFlightFilled}
+                        disabledTooltip="Isi data penerbangan terlebih dahulu"
+                        errorMessage={
+                          touchedFields.transportations?.[index]?.date || isSubmitted
+                            ? (errors.transportations?.[index] as Record<string, { message?: string }>)
+                                ?.date?.message ||
+                              (errors.transportations?.[index] as Record<string, { message?: string }>)
+                                ?.time?.message
+                            : undefined
+                        }
+                      />
+                    )}
                   />
                 </div>
               </div>
@@ -332,45 +345,57 @@ export const TransportRawdahForm = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <DatePicker
-            useLabelInside
+          <Controller
+            control={control}
             name="rawdahMenTime"
-            size="lg"
-            label={t('form.rawdahMenTime')}
-            showTime={true}
-            value={rawdahMenTime}
-            onChange={(val) => {
-              setValue('rawdahMenTime', val as string, { shouldValidate: true });
-              setShowTransportSyncWarning(false);
-            }}
-            minDate={departureFlightEta || getTodayRiyadh().toISOString()}
-            maxDate={returnFlightEtd}
-            disabled={!isFlightFilled}
-            disabledTooltip="Isi data penerbangan terlebih dahulu"
-            errorMessage={
-              touchedFields.rawdahMenTime || isSubmitted ? errors.rawdahMenTime?.message : undefined
-            }
+            render={({ field }) => (
+              <DatePicker
+                {...field}
+                useLabelInside
+                size="lg"
+                label={t('form.rawdahMenTime')}
+                showTime={true}
+                value={field.value}
+                onChange={(val) => {
+                  field.onChange(val as string);
+                  setShowTransportSyncWarning(false);
+                }}
+                minDate={departureFlightEta || getTodayRiyadh().toISOString()}
+                maxDate={returnFlightEtd}
+                disabled={!isFlightFilled}
+                disabledTooltip="Isi data penerbangan terlebih dahulu"
+                errorMessage={
+                  touchedFields.rawdahMenTime || isSubmitted ? errors.rawdahMenTime?.message : undefined
+                }
+              />
+            )}
           />
-          <DatePicker
-            useLabelInside
+          <Controller
+            control={control}
             name="rawdahWomenTime"
-            size="lg"
-            label={t('form.rawdahWomenTime')}
-            showTime={true}
-            value={rawdahWomenTime}
-            onChange={(val) => {
-              setValue('rawdahWomenTime', val as string, { shouldValidate: true });
-              setShowTransportSyncWarning(false);
-            }}
-            minDate={departureFlightEta || getTodayRiyadh().toISOString()}
-            maxDate={returnFlightEtd}
-            disabled={!isFlightFilled}
-            disabledTooltip="Isi data penerbangan terlebih dahulu"
-            errorMessage={
-              touchedFields.rawdahWomenTime || isSubmitted
-                ? errors.rawdahWomenTime?.message
-                : undefined
-            }
+            render={({ field }) => (
+              <DatePicker
+                {...field}
+                useLabelInside
+                size="lg"
+                label={t('form.rawdahWomenTime')}
+                showTime={true}
+                value={field.value}
+                onChange={(val) => {
+                  field.onChange(val as string);
+                  setShowTransportSyncWarning(false);
+                }}
+                minDate={departureFlightEta || getTodayRiyadh().toISOString()}
+                maxDate={returnFlightEtd}
+                disabled={!isFlightFilled}
+                disabledTooltip="Isi data penerbangan terlebih dahulu"
+                errorMessage={
+                  touchedFields.rawdahWomenTime || isSubmitted
+                    ? errors.rawdahWomenTime?.message
+                    : undefined
+                }
+              />
+            )}
           />
         </div>
       </div>

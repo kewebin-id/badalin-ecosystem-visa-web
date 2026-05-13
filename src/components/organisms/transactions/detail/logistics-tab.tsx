@@ -157,36 +157,37 @@ export const DetailLogisticsTab = ({ transaction }: DetailLogisticsTabProps) => 
 
               <div className="p-6 space-y-8">
                 {/* Rejection Alert */}
-                {selectedMember?.isEligible === false && transaction.paymentStatus === 'COMPLETED' && (
-                  <div className="bg-danger-50 border border-danger-100 rounded-3xl p-5 space-y-4">
-                    <div className="flex items-start gap-3 text-danger-600">
-                      <AlertCircle className="size-5 mt-0.5 shrink-0" />
-                      <div className="space-y-1">
-                        <p className="text-xs font-black uppercase tracking-wider">
-                          {t('detail.rejectionTitle')}
-                        </p>
-                        <p className="text-sm font-medium leading-relaxed">
-                          {selectedMember.rejectionReason || t('detail.rejectionDefaultReason')}
-                        </p>
+                {selectedMember?.isEligible === false &&
+                  transaction.paymentStatus === 'COMPLETED' && (
+                    <div className="bg-danger-50 border border-danger-100 rounded-3xl p-5 space-y-4">
+                      <div className="flex items-start gap-3 text-danger-600">
+                        <AlertCircle className="size-5 mt-0.5 shrink-0" />
+                        <div className="space-y-1">
+                          <p className="text-xs font-black uppercase tracking-wider">
+                            {t('detail.rejectionTitle')}
+                          </p>
+                          <p className="text-sm font-medium leading-relaxed">
+                            {selectedMember.rejectionReason || t('detail.rejectionDefaultReason')}
+                          </p>
+                        </div>
                       </div>
-                    </div>
 
-                    <Button
-                      className="w-full bg-danger-600 hover:bg-danger-700 text-white rounded-2xl h-12 flex items-center gap-2"
-                      onClick={() => {
-                        const phone = transaction.agency?.phoneNumber || BADALIN_CS_NUMBER;
-                        const message = `Halo, saya ${selectedMember.fullName}. Saya mendapatkan informasi bahwa pengajuan visa saya ditolak dengan alasan: ${selectedMember.rejectionReason || '-'}. Mohon bantuannya untuk proses perbaikan dokumen. Terima kasih.`;
-                        window.open(
-                          `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
-                          '_blank',
-                        );
-                      }}
-                    >
-                      <MessageCircle className="size-4" />
-                      {t('detail.contactSupport')}
-                    </Button>
-                  </div>
-                )}
+                      <Button
+                        className="w-full bg-danger-600 hover:bg-danger-700 text-white rounded-2xl h-12 flex items-center gap-2"
+                        onClick={() => {
+                          const phone = transaction.agency?.phoneNumber || BADALIN_CS_NUMBER;
+                          const message = `Halo, saya ${selectedMember.fullName}. Saya mendapatkan informasi bahwa pengajuan visa saya ditolak dengan alasan: ${selectedMember.rejectionReason || '-'}. Mohon bantuannya untuk proses perbaikan dokumen. Terima kasih.`;
+                          window.open(
+                            `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
+                            '_blank',
+                          );
+                        }}
+                      >
+                        <MessageCircle className="size-4" />
+                        {t('detail.contactSupport')}
+                      </Button>
+                    </div>
+                  )}
 
                 {/* Personal Info */}
                 <div className="space-y-4">

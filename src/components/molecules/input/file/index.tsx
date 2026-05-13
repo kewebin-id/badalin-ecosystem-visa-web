@@ -51,8 +51,7 @@ export const InputFile = ({
   isReadingOcr,
   dropzoneText,
 }: GlobalUploadProps) => {
-  const isPdf = (src: string) =>
-    src.startsWith('data:application/pdf') || src.toLowerCase().endsWith('.pdf');
+  const isPdf = (src: string) => typeof src === 'string' && src.toLowerCase().includes('.pdf');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [previewImage, setPreviewImage] = useState<{

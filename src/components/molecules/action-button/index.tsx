@@ -22,6 +22,14 @@ export const ActionButton = ({
   label,
   iconClassName,
 }: ActionButtonProps) => {
+  const isPdf = (src?: string) =>
+    typeof src === 'string' &&
+    (src.toLowerCase().includes('.pdf') || src.startsWith('data:application/pdf'));
+
+  const pdfPlaceholder = '/assets/images/icon-pdf.webp';
+
+  const resolvedImgSrc = (isPdf(image) ? pdfPlaceholder : image) || '';
+
   return (
     <button
       onClick={onClick}
@@ -38,7 +46,7 @@ export const ActionButton = ({
     >
       {image ? (
         <div className="h-full w-full relative group-hover:scale-110 transition-transform">
-          <Image src={image} alt="thumbnail" fill className="object-cover" />
+          <Image src={resolvedImgSrc} alt="thumbnail" fill className="object-cover" />
         </div>
       ) : (
         Icon && <Icon className={cn('h-5 w-5', iconClassName)} />
