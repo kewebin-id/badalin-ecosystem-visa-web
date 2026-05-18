@@ -111,7 +111,11 @@ export const useManagementController = () => {
         mutationFn: ({ file, type }: { file: File; type: 'passport' | 'ktp' }) =>
           useCase.processOcr(file, type),
         onSuccess: (res) => {
-          if (res.data) onOcrSuccess(res.data);
+          if (res.data) {
+            onOcrSuccess(res.data);
+          } else {
+            toast.error(res.message || t('ocrReadError'));
+          }
         },
         onError: () => toast.error(t('ocrReadError')),
       }),

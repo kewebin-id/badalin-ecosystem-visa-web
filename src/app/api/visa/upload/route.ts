@@ -60,6 +60,18 @@ export const POST = async (req: NextRequest) => {
       location: 'api/visa/upload/route.ts - POST',
     });
 
+    const code = Number(res?.code || res?.statusCode || res?.status || 200);
+    if (code === 200) {
+      const data = res.data as { ocr?: { nusuk_compatibility?: { status?: string; message?: string } } };
+      if (data?.ocr?.nusuk_compatibility?.status === 'REJECTED') {
+        const ocrMessage = data.ocr.nusuk_compatibility.message || 'Image rejected by business rules';
+        return response[400]({
+          code: 400,
+          message: ocrMessage,
+        });
+      }
+    }
+
     return response.handler(res);
   } catch (error: unknown) {
     Logger.error(error, {

@@ -1,5 +1,5 @@
 import { ROUTES } from '@/shared/constants';
-import { dateRiyadh as dateUtil, isBase64 } from '@/shared/utils';
+import { dateRiyadh as dateUtil, isBase64, dayjs } from '@/shared/utils';
 import { RestAPI } from '@/shared/utils/rest-api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -23,6 +23,19 @@ import { TransactionUseCase } from '../usecase';
 const api = new RestAPI();
 const repository = new TransactionRepository(api);
 const useCase = new TransactionUseCase(repository);
+
+const toLocalYYYYMMDD = (val?: string | dayjs.Dayjs | Date | null) => {
+  if (!val) return '';
+  if (typeof val === 'string') {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+    if (val.includes('T')) {
+      const parts = val.split('T')[0];
+      if (/^\d{4}-\d{2}-\d{2}$/.test(parts)) return parts;
+    }
+  }
+  const d = dateUtil(val);
+  return `${d.year()}-${String(d.month() + 1).padStart(2, '0')}-${String(d.date()).padStart(2, '0')}`;
+};
 
 const getWizardSchema = (
   t: (key: string, values?: Record<string, string | number | boolean>) => string,
@@ -148,23 +161,26 @@ const getWizardSchema = (
         : null;
       const takeoff = data.returnFlightEtd ? dateUtil(data.returnFlightEtd).startOf('day') : null;
 
+      const landingStr = toLocalYYYYMMDD(data.departureFlightEta);
+      const takeoffStr = toLocalYYYYMMDD(data.returnFlightEtd);
+
       const validateBoundary = (fieldDate: string | undefined, path: (string | number)[]) => {
         if (!fieldDate) return;
-        const date = dateUtil(fieldDate).startOf('day');
-        if (landing && date.isBefore(landing)) {
+        const dateStr = toLocalYYYYMMDD(fieldDate);
+        if (landingStr && dateStr < landingStr) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: t('form.hotelCheckinBeforeLanding', {
-              date: landing.format('DD MMM YYYY'),
+              date: landing ? landing.format('DD MMM YYYY') : '',
             }),
             path,
           });
         }
-        if (takeoff && date.isAfter(takeoff)) {
+        if (takeoffStr && dateStr > takeoffStr) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: t('form.hotelCheckoutAfterTakeoff', {
-              date: takeoff.format('DD MMM YYYY'),
+              date: takeoff ? takeoff.format('DD MMM YYYY') : '',
             }),
             path,
           });
@@ -177,13 +193,13 @@ const getWizardSchema = (
       validateBoundary(data.hotelMadinahCheckOut, ['hotelMadinahCheckOut']);
 
       if (data.hotelMakkahCheckIn && data.hotelMadinahCheckIn) {
-        const makkahIn = dateUtil(data.hotelMakkahCheckIn).startOf('day');
-        const madinahIn = dateUtil(data.hotelMadinahCheckIn).startOf('day');
+        const makkahInStr = toLocalYYYYMMDD(data.hotelMakkahCheckIn);
+        const madinahInStr = toLocalYYYYMMDD(data.hotelMadinahCheckIn);
 
-        if (makkahIn.isBefore(madinahIn)) {
+        if (makkahInStr < madinahInStr) {
           if (
             data.hotelMakkahCheckOut &&
-            madinahIn.isBefore(dateUtil(data.hotelMakkahCheckOut).startOf('day'))
+            madinahInStr < toLocalYYYYMMDD(data.hotelMakkahCheckOut)
           ) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
@@ -192,10 +208,10 @@ const getWizardSchema = (
               path: ['hotelMadinahCheckIn'],
             });
           }
-        } else if (madinahIn.isBefore(makkahIn)) {
+        } else if (madinahInStr < makkahInStr) {
           if (
             data.hotelMadinahCheckOut &&
-            makkahIn.isBefore(dateUtil(data.hotelMadinahCheckOut).startOf('day'))
+            makkahInStr < toLocalYYYYMMDD(data.hotelMadinahCheckOut)
           ) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
@@ -456,7 +472,11 @@ export const useTransactionController = () => {
         mutationFn: ({ file, ocrType = 'LOGISTICS' }: { file: File; ocrType?: TOcrType }) =>
           useCase.processOcr(file, ocrType),
         onSuccess: (res) => {
-          if (res.data) onOcrSuccess(res.data);
+          if (res.data) {
+            onOcrSuccess(res.data);
+          } else {
+            toast.error(res.message || 'Gagal memproses OCR dokumen logistik');
+          }
         },
         onError: () => toast.error('Gagal memproses OCR dokumen logistik'),
       }),
