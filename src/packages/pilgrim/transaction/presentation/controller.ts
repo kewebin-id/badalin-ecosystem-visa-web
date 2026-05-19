@@ -230,13 +230,35 @@ const getWizardSchema = (
       }
     });
 
+const saudiTimezone = 'Asia/Riyadh';
+
+const parseToSaudi = (val?: string | null, includeTime: boolean = false) => {
+  if (!val) return '';
+  let localStr = '';
+  if (typeof val === 'string') {
+    if (val.includes('T')) {
+      localStr = val.substring(0, includeTime ? 19 : 10);
+    } else {
+      localStr = dayjs(val).format(includeTime ? 'YYYY-MM-DDTHH:mm:ss' : 'YYYY-MM-DD');
+    }
+  } else {
+    localStr = dayjs(val).format(includeTime ? 'YYYY-MM-DDTHH:mm:ss' : 'YYYY-MM-DD');
+  }
+  
+  if (!includeTime && !localStr.includes('T')) {
+    localStr += 'T00:00:00';
+  }
+  
+  return dayjs.tz(localStr, saudiTimezone).toISOString();
+};
+
 export type TWizardForm = z.infer<ReturnType<typeof getWizardSchema>>;
 
 export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest => {
   return {
     pilgrimIds: data.pilgrimIds,
-    rawdahMenTime: data.rawdahMenTime ? dateUtil(data.rawdahMenTime).toISOString() : '',
-    rawdahWomenTime: data.rawdahWomenTime ? dateUtil(data.rawdahWomenTime).toISOString() : '',
+    rawdahMenTime: data.rawdahMenTime ? parseToSaudi(data.rawdahMenTime, true) : '',
+    rawdahWomenTime: data.rawdahWomenTime ? parseToSaudi(data.rawdahWomenTime, true) : '',
     flights: [
       {
         type: 'DEPARTURE',
@@ -245,10 +267,10 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
         from: data.departureFlightFrom,
         to: data.departureFlightTo,
         flightDate: data.departureFlightEta
-          ? dateUtil(data.departureFlightEta).format('YYYY-MM-DD')
+          ? dayjs(parseToSaudi(data.departureFlightEta)).format('YYYY-MM-DD')
           : '',
-        eta: data.departureFlightEta ? dateUtil(data.departureFlightEta).toISOString() : '',
-        etd: data.departureFlightEtd ? dateUtil(data.departureFlightEtd).toISOString() : '',
+        eta: data.departureFlightEta ? parseToSaudi(data.departureFlightEta, true) : '',
+        etd: data.departureFlightEtd ? dayjs(data.departureFlightEtd).toISOString() : '',
         imageUrls: data.departureTicketUrls,
       },
       {
@@ -257,9 +279,11 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
         carrier: data.returnCarrier,
         from: data.returnFlightFrom,
         to: data.returnFlightTo,
-        flightDate: data.returnFlightEtd ? dateUtil(data.returnFlightEtd).format('YYYY-MM-DD') : '',
-        eta: data.returnFlightEta ? dateUtil(data.returnFlightEta).toISOString() : '',
-        etd: data.returnFlightEtd ? dateUtil(data.returnFlightEtd).toISOString() : '',
+        flightDate: data.returnFlightEtd
+          ? dayjs(parseToSaudi(data.returnFlightEtd)).format('YYYY-MM-DD')
+          : '',
+        eta: data.returnFlightEta ? dayjs(data.returnFlightEta).toISOString() : '',
+        etd: data.returnFlightEtd ? parseToSaudi(data.returnFlightEtd, true) : '',
         imageUrls: data.returnTicketUrls,
       },
     ],
@@ -267,8 +291,8 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
       {
         name: data.hotelMakkahName,
         resvNo: data.hotelMakkahResvNo,
-        checkIn: data.hotelMakkahCheckIn ? dateUtil(data.hotelMakkahCheckIn).toISOString() : '',
-        checkOut: data.hotelMakkahCheckOut ? dateUtil(data.hotelMakkahCheckOut).toISOString() : '',
+        checkIn: data.hotelMakkahCheckIn ? parseToSaudi(data.hotelMakkahCheckIn) : '',
+        checkOut: data.hotelMakkahCheckOut ? parseToSaudi(data.hotelMakkahCheckOut) : '',
         city: 'MAKKAH',
         roomType: data.hotelMakkahRoomType,
         imageUrls: data.hotelMakkahVoucherUrls,
@@ -276,10 +300,8 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
       {
         name: data.hotelMadinahName,
         resvNo: data.hotelMadinahResvNo,
-        checkIn: data.hotelMadinahCheckIn ? dateUtil(data.hotelMadinahCheckIn).toISOString() : '',
-        checkOut: data.hotelMadinahCheckOut
-          ? dateUtil(data.hotelMadinahCheckOut).toISOString()
-          : '',
+        checkIn: data.hotelMadinahCheckIn ? parseToSaudi(data.hotelMadinahCheckIn) : '',
+        checkOut: data.hotelMadinahCheckOut ? parseToSaudi(data.hotelMadinahCheckOut) : '',
         city: 'MADINAH',
         roomType: data.hotelMadinahRoomType,
         imageUrls: data.hotelMadinahVoucherUrls,
@@ -289,8 +311,8 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
       data.transportations?.map((t) => ({
         type: t.type,
         company: t.company,
-        date: t.date ? dateUtil(t.date).toISOString() : '',
-        time: t.time ? dateUtil(t.time).toISOString() : '',
+        date: t.date ? parseToSaudi(t.date, true) : '',
+        time: t.time ? parseToSaudi(t.time, true) : '',
         from: t.from,
         to: t.to,
         totalVehicle: t.total,
