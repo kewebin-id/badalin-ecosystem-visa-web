@@ -192,6 +192,7 @@ export const InputFile = ({
   };
 
   const handleClick = () => {
+    if (disabled) return;
     fileInputRef.current?.click();
   };
 
@@ -211,11 +212,13 @@ export const InputFile = ({
           onDrop={handleDrop}
           onClick={handleClick}
           className={cn(
-            'relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed transition-colors cursor-pointer',
+            'relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed transition-colors',
             label && 'mt-2',
-            isDragging
+            isDragging && !disabled
               ? 'border-primary-500 bg-primary-50'
-              : 'border-gray-300 bg-gray-50 hover:border-gray-400 hover:bg-gray-100',
+              : 'border-gray-300 bg-gray-50',
+            !disabled && 'hover:border-gray-400 hover:bg-gray-100 cursor-pointer',
+            disabled && 'opacity-50 cursor-not-allowed pointer-events-none',
             errorMessage && 'border-danger-500',
           )}
           style={{ minHeight: '200px', padding: '2rem' }}

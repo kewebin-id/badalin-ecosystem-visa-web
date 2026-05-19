@@ -7,7 +7,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { IFamilyMember, INusukCompatibility, IPaginationParams, TRelation } from '../domain/member';
+import { IFamilyMember, INusukCompatibility, IPaginationParams, TRelation, MARITAL_STATUS_MAP } from '../domain/member';
 import {
   getFormSchema,
   ICreateMemberRequest,
@@ -105,33 +105,44 @@ export const useManagementController = () => {
           nusuk_compatibility?: INusukCompatibility;
         },
       ) => void,
+      onOcrError?: (type: 'passport' | 'ktp') => void,
     ) =>
       // eslint-disable-next-line react-hooks/rules-of-hooks
       useMutation({
         mutationFn: ({ file, type }: { file: File; type: 'passport' | 'ktp' }) =>
           useCase.processOcr(file, type),
-        onSuccess: (res) => {
+        onSuccess: (res, variables) => {
           if (res.data) {
             onOcrSuccess(res.data);
           } else {
             toast.error(res.message || t('ocrReadError'));
+            onOcrError?.(variables.type);
           }
         },
-        onError: () => toast.error(t('ocrReadError')),
+        onError: (_err, variables) => {
+          toast.error(t('ocrReadError'));
+          onOcrError?.(variables.type);
+        },
       }),
     formSchema,
   };
 };
 
-export const useManagementForm = (initialData?: Partial<IFamilyMember>) => {
+export const useManagementForm = (
+  initialData?: Partial<IFamilyMember>,
+  options?: { mode?: 'all' | 'onChange' | 'onBlur' | 'onSubmit' | 'onTouched' },
+) => {
   const t = useTranslations('PilgrimManagement');
   const formSchema = useMemo(() => getFormSchema(t), [t]);
 
   const form = useForm<TManagementForm>({
     resolver: zodResolver(formSchema),
-    mode: 'all',
+    mode: options?.mode ?? (initialData ? 'all' : undefined),
     values: useMemo(() => {
       const normalizedRelation = initialData?.relation as TRelation;
+      const normalizedMaritalStatus = initialData?.maritalStatus
+        ? MARITAL_STATUS_MAP[initialData.maritalStatus] || initialData.maritalStatus
+        : '';
       return {
         fullName: initialData?.fullName || '',
         passportNumber: initialData?.passportNumber || '',
@@ -139,7 +150,7 @@ export const useManagementForm = (initialData?: Partial<IFamilyMember>) => {
         dob: initialData?.dob || '',
         nik: initialData?.nik || '',
         gender: (initialData?.gender as 'Male' | 'Female') || 'Male',
-        maritalStatus: initialData?.maritalStatus || '',
+        maritalStatus: normalizedMaritalStatus,
         relation: normalizedRelation || 'SELF',
         ocrConfidence: initialData?.ocrConfidence || 0,
         selfieUrl: initialData?.selfieUrl || '',

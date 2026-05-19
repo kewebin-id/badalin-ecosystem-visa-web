@@ -12,12 +12,12 @@ export const getFormSchema = (t: (key: string) => string) =>
     maritalStatus: z.string().min(1, t('validation.required')),
     relation: z.enum(['SELF', 'SPOUSE', 'FATHER', 'MOTHER', 'CHILD', 'SIBLING']),
     ocrConfidence: z.number().optional(),
-    selfieUrl: z.string().optional(),
+    selfieUrl: z.string().optional().nullable(),
     ktpUrl: z.string().optional(),
     passportUrl: z.string().optional(),
     bukuNikahUrl: z.string().optional(),
     akteKelahiranUrl: z.string().optional(),
-    employmentCertificateUrl: z.string().optional(),
+    employmentCertificateUrl: z.string().optional().nullable(),
   });
 
 export type TManagementForm = z.infer<ReturnType<typeof getFormSchema>>;

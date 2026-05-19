@@ -163,6 +163,8 @@
     "delete": "Hapus",
     "saveChanges": "Simpan Perubahan",
     "processingOcr": "Memproses OCR...",
+    "ocrLoadingTitle": "Sedang memindai dokumen Anda",
+    "ocrLoadingSubtitle": "Mohon tunggu sebentar...",
     "upload": "Unggah {label}",
     "relations": {
       "SELF": "Saya Sendiri",

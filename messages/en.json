@@ -163,6 +163,8 @@
     "delete": "Delete",
     "saveChanges": "Save Changes",
     "processingOcr": "Processing OCR...",
+    "ocrLoadingTitle": "Scanning your document",
+    "ocrLoadingSubtitle": "Please wait a moment...",
     "upload": "Upload {label}",
     "relations": {
       "SELF": "Myself",

@@ -20,6 +20,7 @@ export interface IFamilyMember {
   akteKelahiranUrl?: string;
   employmentCertificateUrl?: string;
   ocrConfidence?: number;
+  hasActiveSubmission?: boolean;
 }
 
 export interface IPaginatedPilgrims {
@@ -93,6 +94,7 @@ export interface IApiFamilyMember {
   ocrConfidence?: number;
   createdAt?: string;
   updatedAt?: string;
+  hasActiveSubmission?: boolean;
 }
 
 export interface IApiPaginatedPilgrims {

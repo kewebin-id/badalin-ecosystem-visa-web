@@ -148,8 +148,9 @@ export const DocumentUploadField = ({
               value={passportValue}
               onChange={(files, rawFiles) => {
                 onChange(files, rawFiles);
+                setIsDrawerOpen(false);
               }}
-              disabled={isReadingOcr}
+              disabled={isReadingOcr || passportValue.length >= 1}
               isReadingOcr={isReadingOcr}
               isTouched={true}
               className="border-none p-0"

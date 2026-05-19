@@ -182,6 +182,7 @@ export class ManagementUseCase implements IManagementUseCase {
       akteKelahiranUrl: data.akteKelahiranUrl,
       employmentCertificateUrl: data.employmentCertificateUrl,
       ocrConfidence: data.ocrConfidence,
+      hasActiveSubmission: data.hasActiveSubmission || false,
     };
   }
 
