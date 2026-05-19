@@ -51,6 +51,7 @@ export const TransactionFormView = () => {
   const [apiErrors, setApiErrors] = useState<string[]>([]);
   const [apiWarnings, setApiWarnings] = useState<string[]>([]);
   const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [currency, setCurrency] = useState<string>('IDR');
   const [breakdown, setBreakdown] = useState<string>('');
 
   const { useCreateTransaction, useUpdateTransaction, useTransactionDetail, usePreviewSubmission } =
@@ -206,6 +207,7 @@ export const TransactionFormView = () => {
 
       if (res.data?.totalAmount !== undefined) {
         setTotalAmount(res.data.totalAmount);
+        setCurrency((res.data as unknown as { currency?: string }).currency || 'IDR');
         setBreakdown(res.data.breakdown || '');
       }
 
@@ -344,6 +346,7 @@ export const TransactionFormView = () => {
             {step === 3 && (
               <SummaryForm
                 totalAmount={totalAmount}
+                currency={currency}
                 breakdown={breakdown}
                 isLoading={previewMutation.isPending}
               />

@@ -2,7 +2,7 @@
 
 import { Image } from '@/components/atoms';
 import styles from '@/shared/styles/components/input.module.css';
-import { cn, formatRupiah, unformatRupiah } from '@/shared/utils';
+import { cn, formatRupiah, unformatRupiah, formatCurrency } from '@/shared/utils';
 import { AlertTriangle, Check, Sparkles } from 'lucide-react';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
@@ -66,6 +66,7 @@ const InputTextRoot = ({
   isReadingOcr,
   disabled,
   watchedValue,
+  currency,
   onChange: onChangeProp,
 }: InputTextProps & { watchedValue?: unknown }) => {
   const externalValue = value !== undefined ? value : watchedValue;
@@ -85,17 +86,17 @@ const InputTextRoot = ({
     }
 
     const displayValue =
-      type === 'price' ? formatRupiah(Number(externalValue)) : String(externalValue);
+      type === 'price' ? formatCurrency(Number(externalValue), currency) : String(externalValue);
 
     setInputState(displayValue);
-  }, [externalValue, type]);
+  }, [externalValue, type, currency]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
 
     if (type === 'price') {
       const numericValue = unformatRupiah(val);
-      const formattedValue = formatRupiah(Number(numericValue));
+      const formattedValue = formatCurrency(Number(numericValue), currency);
 
       setInputState(formattedValue);
 

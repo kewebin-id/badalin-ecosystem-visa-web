@@ -28,3 +28,30 @@ export const unformatRupiah = (price: string) => {
     return '0';
   }
 };
+
+export const formatCurrency = (amount: number, currency?: string): string => {
+  const code = currency?.toUpperCase() || 'IDR';
+  if (code === 'USD') {
+    if (!amount) return '$ 0';
+    const parts = amount.toFixed(0).toString().split('').reverse().join('');
+    let usd = '';
+    for (let i = 0; i < parts.length; i++) {
+      if (i % 3 === 0) {
+        usd += parts.substr(i, 3) + ',';
+      }
+    }
+    return '$ ' + usd.split('', usd.length - 1).reverse().join('');
+  } else if (code === 'SAR') {
+    if (!amount) return 'SR 0';
+    const parts = amount.toFixed(0).toString().split('').reverse().join('');
+    let sar = '';
+    for (let i = 0; i < parts.length; i++) {
+      if (i % 3 === 0) {
+        sar += parts.substr(i, 3) + '.';
+      }
+    }
+    return 'SR ' + sar.split('', sar.length - 1).reverse().join('');
+  } else {
+    return formatRupiah(amount);
+  }
+};

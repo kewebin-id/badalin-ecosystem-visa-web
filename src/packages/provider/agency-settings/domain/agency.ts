@@ -4,6 +4,7 @@ export interface IAgency {
   name: string;
   slug: string;
   visaPrice: string | number;
+  visaCurrency?: string;
   bankName: string | null;
   bankAccountName: string | null;
   bankAccountNumber: string | null;

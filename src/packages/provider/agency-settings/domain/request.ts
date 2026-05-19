@@ -4,6 +4,7 @@ export interface IUpdateAgencyRequest {
   name?: string;
   slug?: string;
   visaPrice?: number;
+  visaCurrency?: string;
   bankName?: string;
   bankAccountName?: string;
   bankAccountNumber?: string;
@@ -18,6 +19,7 @@ export const getAgencySchema = (t: (key: string) => string) =>
       .max(50)
       .regex(/^[a-z0-9-]+$/, { message: t('validation.slugRegex') }),
     visaPrice: z.number().min(0),
+    visaCurrency: z.string().optional(),
     bankName: z.string().min(1, { message: t('validation.required') }),
     bankAccountName: z.string().min(1, { message: t('validation.required') }),
     bankAccountNumber: z.string().min(1, { message: t('validation.required') }),

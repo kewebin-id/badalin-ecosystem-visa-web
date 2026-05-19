@@ -5,6 +5,7 @@ import { Card } from '@/components/atoms/card';
 import { Skeleton } from '@/components/atoms/skeleton';
 import { HeaderPageContent, LoadingOverlay } from '@/components/molecules';
 import { InputText } from '@/components/molecules/input/text';
+import { InputSelect } from '@/components/molecules/input/select';
 import { unformatRupiah } from '@/shared/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Building2, Clock, CreditCard, DollarSign, Globe, Info, Save } from 'lucide-react';
@@ -45,6 +46,7 @@ export const AgencySettingsView = () => {
       name: '',
       slug: '',
       visaPrice: 0,
+      visaCurrency: 'IDR',
       bankName: '',
       bankAccountName: '',
       bankAccountNumber: '',
@@ -56,7 +58,10 @@ export const AgencySettingsView = () => {
     handleSubmit,
     reset,
     formState: { errors, isDirty },
+    watch,
   } = methods;
+
+  const visaCurrency = watch('visaCurrency');
 
   useEffect(() => {
     if (agency) {
@@ -64,6 +69,7 @@ export const AgencySettingsView = () => {
         name: agency.name || '',
         slug: agency.slug || '',
         visaPrice: Number(agency.visaPrice) || 0,
+        visaCurrency: agency.visaCurrency || 'IDR',
         bankName: agency.bankName || '',
         bankAccountName: agency.bankAccountName || '',
         bankAccountNumber: agency.bankAccountNumber || '',
@@ -176,24 +182,43 @@ export const AgencySettingsView = () => {
                   <h3 className="text-base font-bold text-gray-900">{t('sections.pricing')}</h3>
                 </div>
                 <div className="space-y-4">
-                  <InputText
-                    useLabelInside
-                    type="price"
-                    size="lg"
-                    label={t('fields.visaPrice')}
-                    placeholder={t('placeholders.visaPrice')}
-                    register={register}
-                    name="visaPrice"
-                    errorMessage={errors.visaPrice?.message}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      const val = e.target.value;
-                      const numeric = unformatRupiah(val);
-                      methods.setValue('visaPrice', numeric ? Number(numeric) : 0, {
-                        shouldDirty: true,
-                        shouldValidate: true,
-                      });
-                    }}
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="md:col-span-2">
+                      <InputText
+                        useLabelInside
+                        type="price"
+                        size="lg"
+                        label={t('fields.visaPrice')}
+                        placeholder={t('placeholders.visaPrice')}
+                        register={register}
+                        name="visaPrice"
+                        currency={visaCurrency}
+                        errorMessage={errors.visaPrice?.message}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          const val = e.target.value;
+                          const numeric = unformatRupiah(val);
+                          methods.setValue('visaPrice', numeric ? Number(numeric) : 0, {
+                            shouldDirty: true,
+                            shouldValidate: true,
+                          });
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <InputSelect
+                        useLabelInside
+                        size="lg"
+                        label={t('fields.visaCurrency')}
+                        register={register}
+                        name="visaCurrency"
+                        errorMessage={errors.visaCurrency?.message}
+                        options={[
+                          { label: 'IDR', value: 'IDR' },
+                          { label: 'USD', value: 'USD' },
+                        ]}
+                      />
+                    </div>
+                  </div>
                   <div className="flex items-start gap-2.5 rounded-xl bg-orange-50/60 border border-orange-100 px-4 py-3">
                     <Info size={16} className="text-orange-500 shrink-0 mt-0.5" />
                     <p className="text-xs font-medium text-orange-800 leading-relaxed">

@@ -787,7 +787,8 @@
     "fields": {
       "name": "Agency Name",
       "slug": "Agency Slug (URL)",
-      "visaPrice": "Visa Price (IDR)",
+      "visaPrice": "Visa Price",
+      "visaCurrency": "Currency",
       "bankName": "Bank Name",
       "bankAccountName": "Account Holder Name",
       "bankAccountNumber": "Account Number"

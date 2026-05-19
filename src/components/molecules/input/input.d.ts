@@ -41,6 +41,7 @@ export interface InputTextProps extends IInputTextType {
   name?: string;
   label?: string;
   placeholder?: string;
+  currency?: string;
   labelClassName?: string;
   required?: boolean;
   iconOnClick?: () => void;

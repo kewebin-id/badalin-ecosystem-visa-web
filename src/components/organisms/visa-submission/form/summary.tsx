@@ -13,11 +13,12 @@ import { useFormContext } from 'react-hook-form';
 
 interface SummaryFormProps {
   totalAmount?: number;
+  currency?: string;
   breakdown?: string;
   isLoading?: boolean;
 }
 
-export const SummaryForm = ({ totalAmount, breakdown, isLoading }: SummaryFormProps) => {
+export const SummaryForm = ({ totalAmount, currency = 'IDR', breakdown, isLoading }: SummaryFormProps) => {
   const t = useTranslations('VisaTransaction');
   const tDashboard = useTranslations('PilgrimManagement');
   const {
@@ -282,11 +283,14 @@ export const SummaryForm = ({ totalAmount, breakdown, isLoading }: SummaryFormPr
                       {t('form.estimatedTotal')}
                     </p>
                     <h2 className="text-3xl font-black tracking-tight">
-                      {new Intl.NumberFormat('id-ID', {
-                        style: 'currency',
-                        currency: 'IDR',
-                        minimumFractionDigits: 0,
-                      }).format(totalAmount || 0)}
+                      {new Intl.NumberFormat(
+                        currency.toUpperCase() === 'USD' ? 'en-US' : currency.toUpperCase() === 'SAR' ? 'ar-SA' : 'id-ID',
+                        {
+                          style: 'currency',
+                          currency: currency.toUpperCase(),
+                          minimumFractionDigits: 0,
+                        }
+                      ).format(totalAmount || 0)}
                     </h2>
                   </div>
                   {breakdown && (

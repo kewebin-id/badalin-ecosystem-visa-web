@@ -787,7 +787,8 @@
     "fields": {
       "name": "Nama Agensi",
       "slug": "Slug Agensi (URL)",
-      "visaPrice": "Harga Visa (IDR)",
+      "visaPrice": "Harga Visa",
+      "visaCurrency": "Mata Uang",
       "bankName": "Nama Bank",
       "bankAccountName": "Nama Pemilik Rekening",
       "bankAccountNumber": "Nomor Rekening"
