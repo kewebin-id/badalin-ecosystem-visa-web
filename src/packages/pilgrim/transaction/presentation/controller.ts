@@ -269,7 +269,7 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
         flightDate: data.departureFlightEta
           ? dayjs(parseToSaudi(data.departureFlightEta)).format('YYYY-MM-DD')
           : '',
-        eta: data.departureFlightEta ? parseToSaudi(data.departureFlightEta, true) : '',
+        eta: data.departureFlightEta ? dayjs(data.departureFlightEta).toISOString() : '',
         etd: data.departureFlightEtd ? dayjs(data.departureFlightEtd).toISOString() : '',
         imageUrls: data.departureTicketUrls,
       },
@@ -283,7 +283,7 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
           ? dayjs(parseToSaudi(data.returnFlightEtd)).format('YYYY-MM-DD')
           : '',
         eta: data.returnFlightEta ? dayjs(data.returnFlightEta).toISOString() : '',
-        etd: data.returnFlightEtd ? parseToSaudi(data.returnFlightEtd, true) : '',
+        etd: data.returnFlightEtd ? dayjs(data.returnFlightEtd).toISOString() : '',
         imageUrls: data.returnTicketUrls,
       },
     ],
