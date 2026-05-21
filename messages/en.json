@@ -419,7 +419,8 @@
       "Expired": "Expired",
       "IN_REVIEW": "In Review",
       "VERIFIED": "Processing",
-      "REJECTED": "Rejected"
+      "REJECTED": "Rejected",
+      "AUTO_CANCELED": "Auto Canceled"
     },
     "payment": {
       "PENDING": "Pending",

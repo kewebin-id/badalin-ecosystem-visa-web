@@ -2,7 +2,7 @@
 
 import { Image } from '@/components/atoms';
 import styles from '@/shared/styles/components/input.module.css';
-import { cn, formatRupiah, unformatRupiah, formatCurrency } from '@/shared/utils';
+import { cn, formatCurrency, unformatRupiah } from '@/shared/utils';
 import { AlertTriangle, Check, Sparkles } from 'lucide-react';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
@@ -89,7 +89,7 @@ const InputTextRoot = ({
       type === 'price' ? formatCurrency(Number(externalValue), currency) : String(externalValue);
 
     setInputState(displayValue);
-  }, [externalValue, type, currency]);
+  }, [externalValue, currency]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;

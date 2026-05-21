@@ -270,7 +270,6 @@ export const LoginContent: FC<{ providerSlug?: string }> = () => {
             <Button
               type="submit"
               size="lg"
-              // className="w-full rounded-xl h-14 text-base font-bold bg-primary-default hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/20 active:scale-[0.98]"
               disabled={
                 isLoading ||
                 (step === 'input' && (!watch('identifier') || !!errors.identifier)) ||

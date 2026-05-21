@@ -419,7 +419,8 @@
       "Expired": "Kedaluwarsa",
       "IN_REVIEW": "Dalam Tinjauan",
       "VERIFIED": "Diproses",
-      "REJECTED": "Ditolak"
+      "REJECTED": "Ditolak",
+      "AUTO_CANCELED": "Otomatis Dibatalkan"
     },
     "payment": {
       "PENDING": "Menunggu",
