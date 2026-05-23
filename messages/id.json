@@ -520,7 +520,8 @@
       "inReview": "Dalam Tinjauan",
       "verified": "Sedang diajukan visanya",
       "rejected": "Ditolak",
-      "issued": "Selesai"
+      "issued": "Selesai",
+      "autoCanceled": "Batal Otomatis"
     },
     "manifest": {
       "title": "Logistik & Manifest",
@@ -701,7 +702,8 @@
           "action": "Selesaikan refund untuk memulihkan akses."
         }
       }
-    }
+    },
+    "showingData": "Menampilkan {count} dari {total} data"
   },
   "ProviderSidebar": {
     "dashboard": "Dashboard",

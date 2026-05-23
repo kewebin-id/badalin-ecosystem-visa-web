@@ -14,7 +14,10 @@ import {
   DialogDrawer,
   HeaderPageContent,
   ImagePreviewModal,
+  InputSelect,
+  InputTextSearch,
   LoadingOverlay,
+  Pagination,
   PaymentStatusBadge,
   ReviewStatusBadge,
 } from '@/components/molecules';
@@ -22,10 +25,10 @@ import { SubmissionQuickReview } from '@/components/organisms/providers/submissi
 import { EmptyState } from '@/components/templates';
 import { ROUTES } from '@/shared/constants';
 import { useScreenSize } from '@/shared/hooks';
-import { Eye, FileSpreadsheet, Inbox, Loader2, Users } from 'lucide-react';
+import { Eye, FileSpreadsheet, Inbox, Loader2, Users, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { ProviderSubmission } from '../../domain/entities';
 import { ISubmissionListItem } from '../../domain/response';
@@ -36,9 +39,41 @@ export const SubmissionsMonitoring = () => {
   const t = useTranslations('ProviderSubmissions');
   const { isMobile } = useScreenSize();
 
-  const { useSubmissions, useExportSubmission, fetchSubmissionDetail } =
+  const [search, setSearch] = useState<string | undefined>();
+  const [paymentStatuses, setPaymentStatuses] = useState<string[]>([]);
+  const [reviewStatuses, setReviewStatuses] = useState<string[]>([]);
+  const [page, setPage] = useState<number>(1);
+
+  React.useEffect(() => {
+    setPage(1);
+  }, [search, paymentStatuses, reviewStatuses]);
+
+  const { useSubmissions, useExportSubmission, fetchSubmissionDetail, useLOV } =
     useProviderSubmissionsController();
-  const { data: res, isPending } = useSubmissions({ page: 1, limit: 50 });
+
+  const { data: paymentLov } = useLOV('payment-status');
+  const { data: reviewLov } = useLOV('review-status');
+
+  const paymentOptions = paymentLov?.data
+    ? paymentLov.data
+    : [{ label: 'Semua Payment', value: 'ALL' }];
+  const reviewOptions = reviewLov?.data
+    ? reviewLov.data
+    : [{ label: 'Semua Review', value: 'ALL' }];
+
+  const {
+    data: res,
+    isPending,
+    isFetching,
+  } = useSubmissions({
+    page,
+    limit: 10,
+    search,
+    paymentStatuses: paymentStatuses.length > 0 ? paymentStatuses : undefined,
+    reviewStatuses: reviewStatuses.length > 0 ? reviewStatuses : undefined,
+  });
+
+  const totalPages = res?.data?.totalPages || 1;
   const { mutateAsync: exportSubmission, isPending: isExporting } = useExportSubmission();
 
   const [reviewData, setReviewData] = useState<ISubmissionListItem | null>(null);
@@ -112,72 +147,152 @@ export const SubmissionsMonitoring = () => {
             </div>
             <div>
               <h3 className="text-lg font-bold text-gray-900 tracking-tight">
-                {t('cardTitle', { count: submissions.length })}
+                {t('cardTitle', { count: res?.data?.totalItems || 0 })}
               </h3>
               <p className="text-xs text-gray-400 font-medium">{t('cardSubtitle')}</p>
             </div>
           </div>
+          <div className="flex items-center justify-between gap-3 mt-4">
+            <div className="w-full max-w-sm">
+              <InputTextSearch
+                search={search || ''}
+                setSearch={setSearch}
+                placeholder="Cari ID atau Leader..."
+                delayDebounce={500}
+              />
+            </div>
+            <div className="flex justify-end gap-2 items-center">
+              <div className="w-48 relative group">
+                <InputSelect
+                  placeholder="Payment Status"
+                  options={paymentOptions}
+                  value={paymentStatuses[0] || 'ALL'}
+                  setValue={(val) => setPaymentStatuses(val === 'ALL' ? [] : [val])}
+                  size="md"
+                  className="h-11 pr-14"
+                />
+                {paymentStatuses.length > 0 && paymentStatuses[0] !== 'ALL' && (
+                  <button
+                    onClick={() => setPaymentStatuses([])}
+                    className="absolute right-8 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 z-10"
+                  >
+                    <X className="w-3.5 h-3.5 text-gray-500" />
+                  </button>
+                )}
+              </div>
+              <div className="w-48 relative group">
+                <InputSelect
+                  placeholder="Review Status"
+                  options={reviewOptions}
+                  value={reviewStatuses[0] || 'ALL'}
+                  setValue={(val) => setReviewStatuses(val === 'ALL' ? [] : [val])}
+                  size="md"
+                  className="h-11 pr-14"
+                />
+                {reviewStatuses.length > 0 && reviewStatuses[0] !== 'ALL' && (
+                  <button
+                    onClick={() => setReviewStatuses([])}
+                    className="absolute right-8 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 z-10"
+                  >
+                    <X className="w-3.5 h-3.5 text-gray-500" />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="px-6 pb-6">
+        <div className="px-6 pb-6 relative min-h-[300px]">
+          {isFetching && !isPending && (
+            <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-20 flex items-center justify-center rounded-b-xl">
+              <Loader2 className="w-8 h-8 text-primary animate-spin" />
+            </div>
+          )}
           {submissions.length === 0 ? (
             <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
           ) : !isMobile ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('table.id')}</TableHead>
-                  <TableHead>{t('table.leader')}</TableHead>
-                  <TableHead className="text-center">{t('table.members')}</TableHead>
-                  <TableHead>{t('table.payment')}</TableHead>
-                  <TableHead>{t('table.review')}</TableHead>
-                  <TableHead className="text-right">{t('table.action')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {submissions.map((s) => (
-                  <TableRow key={s.id}>
-                    <TableCell className="font-mono text-xs">{s.id}</TableCell>
-                    <TableCell className="font-medium">{s.leaderName}</TableCell>
-                    <TableCell className="text-center">{s.totalMembers}</TableCell>
-                    <TableCell>
-                      <PaymentStatusBadge status={s.paymentStatus} />
-                    </TableCell>
-                    <TableCell>
-                      <ReviewStatusBadge status={s.reviewStatus} />
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-1">
-                        <Button
-                          variant="transparent"
-                          size="sm"
-                          className="cursor-pointer"
-                          onClick={() => handleOpenReview(s.id)}
-                          title="Quick Review"
-                          disabled={!!isFetchingDetail}
-                        >
-                          {isFetchingDetail === s.id ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Eye className="h-4 w-4" />
-                          )}
-                        </Button>
-                        {s.paymentStatus === 'COMPLETED' && s.reviewStatus === 'VERIFIED' && (
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            className="cursor-pointer gap-2"
-                            onClick={() => handleExport(s.id)}
-                          >
-                            <FileSpreadsheet className="h-4 w-4" />
-                            <span>Export</span>
-                          </Button>
-                        )}
-                      </div>
-                    </TableCell>
+            <>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('table.id')}</TableHead>
+                    <TableHead>{t('table.leader')}</TableHead>
+                    <TableHead className="text-center">{t('table.members')}</TableHead>
+                    <TableHead>{t('table.payment')}</TableHead>
+                    <TableHead>{t('table.review')}</TableHead>
+                    <TableHead className="text-right">{t('table.action')}</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {submissions.map((s) => (
+                    <TableRow key={s.id}>
+                      <TableCell className="font-mono text-xs">{s.id}</TableCell>
+                      <TableCell className="font-medium">{s.leaderName}</TableCell>
+                      <TableCell className="text-center">{s.totalMembers}</TableCell>
+                      <TableCell>
+                        {s.reviewStatus === 'AUTO_CANCELED' ? (
+                          <ReviewStatusBadge status={s.reviewStatus} />
+                        ) : (
+                          <PaymentStatusBadge status={s.paymentStatus} />
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <ReviewStatusBadge status={s.reviewStatus} />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {s.reviewStatus !== 'AUTO_CANCELED' && s.paymentStatus !== 'PENDING' ? (
+                          <div className="flex justify-end gap-1">
+                            <Button
+                              variant="transparent"
+                              size="sm"
+                              className="cursor-pointer"
+                              onClick={() => {
+                                if (s.reviewStatus === 'IN_REVIEW') {
+                                  navigate(ROUTES.PROVIDER.DETAIL(slug as string, s.id));
+                                } else {
+                                  handleOpenReview(s.id);
+                                }
+                              }}
+                              title="Detail"
+                              disabled={!!isFetchingDetail && s.reviewStatus !== 'IN_REVIEW'}
+                            >
+                              {isFetchingDetail === s.id && s.reviewStatus !== 'IN_REVIEW' ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
+                            </Button>
+                            {s.paymentStatus === 'COMPLETED' && s.reviewStatus === 'VERIFIED' && (
+                              <Button
+                                variant="primary"
+                                size="sm"
+                                className="cursor-pointer gap-2"
+                                onClick={() => handleExport(s.id)}
+                              >
+                                <FileSpreadsheet className="h-4 w-4" />
+                                <span>Export</span>
+                              </Button>
+                            )}
+                          </div>
+                        ) : null}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <div className="mt-6 flex justify-between items-center">
+                <span className="text-sm text-gray-500">
+                  {t('showingData', {
+                    count: submissions.length,
+                    total: res?.data?.totalItems || 0,
+                  })}
+                </span>
+                <Pagination
+                  currentPage={page}
+                  totalPages={totalPages}
+                  onPageChange={(p) => setPage(p)}
+                />
+              </div>
+            </>
           ) : (
             <div className="space-y-6">
               {submissions.map((s) => (
@@ -212,33 +327,48 @@ export const SubmissionsMonitoring = () => {
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => handleOpenReview(s.id)}
-                          disabled={!!isFetchingDetail}
-                          className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-gray-900 transition-all active:scale-90 cursor-pointer border border-gray-100"
-                        >
-                          {isFetchingDetail === s.id ? (
-                            <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                          ) : (
-                            <Eye className="h-6 w-6" />
-                          )}
-                        </button>
-
-                        {s.paymentStatus === 'COMPLETED' && s.reviewStatus === 'VERIFIED' && (
+                      {s.reviewStatus !== 'AUTO_CANCELED' && s.paymentStatus !== 'PENDING' && (
+                        <div className="flex items-center gap-2">
                           <button
-                            onClick={() => handleExport(s.id)}
-                            className="flex-1 flex h-12 px-4 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all active:scale-90 cursor-pointer border border-emerald-100 gap-2 font-bold text-sm"
+                            onClick={() => {
+                              if (s.reviewStatus === 'IN_REVIEW') {
+                                navigate(ROUTES.PROVIDER.DETAIL(slug as string, s.id));
+                              } else {
+                                handleOpenReview(s.id);
+                              }
+                            }}
+                            disabled={!!isFetchingDetail && s.reviewStatus !== 'IN_REVIEW'}
+                            className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-gray-900 transition-all active:scale-90 cursor-pointer border border-gray-100"
                           >
-                            <FileSpreadsheet className="h-5 w-5" />
-                            <span>Export</span>
+                            {isFetchingDetail === s.id && s.reviewStatus !== 'IN_REVIEW' ? (
+                              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                            ) : (
+                              <Eye className="h-6 w-6" />
+                            )}
                           </button>
-                        )}
-                      </div>
+
+                          {s.paymentStatus === 'COMPLETED' && s.reviewStatus === 'VERIFIED' && (
+                            <button
+                              onClick={() => handleExport(s.id)}
+                              className="flex-1 flex h-12 px-4 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all active:scale-90 cursor-pointer border border-emerald-100 gap-2 font-bold text-sm"
+                            >
+                              <FileSpreadsheet className="h-5 w-5" />
+                              <span>Export</span>
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
               ))}
+              <div className="pt-4 flex justify-center">
+                <Pagination
+                  currentPage={page}
+                  totalPages={totalPages}
+                  onPageChange={(p) => setPage(p)}
+                />
+              </div>
             </div>
           )}
         </div>

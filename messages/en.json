@@ -520,7 +520,8 @@
       "inReview": "In Review",
       "verified": "Visa is being applied for",
       "rejected": "Rejected",
-      "issued": "Issued"
+      "issued": "Issued",
+      "autoCanceled": "Auto Canceled"
     },
     "manifest": {
       "title": "Logistics & Manifest",
@@ -701,7 +702,8 @@
           "action": "Complete the refund to restore access."
         }
       }
-    }
+    },
+    "showingData": "Showing {count} of {total} data"
   },
   "ProviderSidebar": {
     "dashboard": "Dashboard",

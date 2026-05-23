@@ -1,4 +1,3 @@
-import { endpoints } from '@/shared/constants/endpoints';
 import { getAuthTokenFromRequest } from '@/shared/hooks/use-auth-server';
 import Logger from '@/shared/utils/logger';
 import { RestAPI } from '@/shared/utils/rest-api';
@@ -7,8 +6,9 @@ import { NextRequest } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-export const GET = async (req: NextRequest) => {
+export const GET = async (req: NextRequest, { params }: { params: Promise<{ type: string }> }) => {
   try {
+    const resolvedParams = await params;
     const session = await getAuthTokenFromRequest(req);
     const agencySlug = req.cookies.get('agency_slug')?.value || session?.user?.agency?.slug;
     const apiKey = process.env.API_KEY;
@@ -16,24 +16,9 @@ export const GET = async (req: NextRequest) => {
     if (!session?.token) return response[401]({ message: 'Unauthorized' });
     if (!apiKey) return response[500]({ message: 'Internal server error' });
 
-    const searchParams = req.nextUrl.searchParams;
-    const query: Record<string, any> = {};
-    searchParams.forEach((value, key) => {
-      if (key === 'paymentStatuses' || key === 'reviewStatuses') {
-        if (!query[key]) query[key] = [];
-        query[key].push(value);
-      } else {
-        query[key] = value;
-      }
-    });
-
-    if (query.paymentStatuses) query.paymentStatuses = query.paymentStatuses.join(',');
-    if (query.reviewStatuses) query.reviewStatuses = query.reviewStatuses.join(',');
-
     const restApi = new RestAPI(undefined, session.token as string);
     const res = await restApi.get({
-      endpoint: endpoints.provider.submissions.base(agencySlug || 'p'),
-      queryParam: query,
+      endpoint: `/api/v1/${agencySlug || 'p'}/submissions/lov/${resolvedParams?.type}`,
       config: {
         headers: {
           'x-api-key': apiKey,
@@ -43,13 +28,13 @@ export const GET = async (req: NextRequest) => {
     });
 
     Logger.info(JSON.stringify(res), {
-      location: 'api/provider/submissions/route.ts - GET',
+      location: `api/provider/submissions/lov/${resolvedParams?.type}/route.ts - GET`,
     });
 
     return response.handler(res);
   } catch (error: unknown) {
     Logger.error(error, {
-      location: 'api/provider/submissions/route.ts - GET',
+      location: `api/provider/submissions/lov/route.ts - GET`,
     });
     return response[500]({ message: 'Internal server error' });
   }

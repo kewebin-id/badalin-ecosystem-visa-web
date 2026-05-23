@@ -2,6 +2,8 @@ export interface IGetSubmissionsQuery {
   page?: number;
   limit?: number;
   search?: string;
+  paymentStatuses?: string[];
+  reviewStatuses?: string[];
 }
 
 export interface IFlightManifestPayload {

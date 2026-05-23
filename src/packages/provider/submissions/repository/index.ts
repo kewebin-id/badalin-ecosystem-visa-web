@@ -109,4 +109,11 @@ export class ProviderSubmissionsRepository implements IProviderSubmissionsReposi
       isNextApi: true,
     });
   }
+
+  async getLOV(type: 'payment-status' | 'review-status'): Promise<ResponseREST<{ label: string; value: string }[]>> {
+    return this.api.get<{ label: string; value: string }[]>({
+      endpoint: endpoints.nextApi.provider.submissions.lov(type),
+      isNextApi: true,
+    });
+  }
 }

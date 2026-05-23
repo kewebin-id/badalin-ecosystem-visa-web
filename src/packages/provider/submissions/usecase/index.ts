@@ -181,4 +181,20 @@ export class ProviderSubmissionsUseCase implements IProviderSubmissionsUseCase {
       return { error: error as Error, message: 'Internal server error' };
     }
   }
+
+  async getLOV(type: 'payment-status' | 'review-status'): Promise<IUsecaseResponse<{ label: string; value: string }[]>> {
+    try {
+      const res = await this.repo.getLOV(type);
+      if (res.data) {
+        return { data: res.data, message: res.message };
+      }
+      return {
+        error: new Error(res.message || 'Failed to fetch LOV'),
+        message: res.message,
+      };
+    } catch (error) {
+      Logger.error(error, { location: 'ProviderSubmissionsUseCase.getLOV' });
+      return { error: error as Error, message: 'Internal server error' };
+    }
+  }
 }

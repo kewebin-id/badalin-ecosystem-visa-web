@@ -1,5 +1,5 @@
 import { Button, Card } from '@/components/atoms';
-import { ImageThumbnailList } from '@/components/molecules';
+import { ImageThumbnailList, ReviewStatusBadge } from '@/components/molecules';
 import { ISubmissionListItem } from '@/packages/provider/submissions/domain/response';
 import { ROUTES } from '@/shared/constants/routes';
 import { ExternalLink, FileText, Plane, Users } from 'lucide-react';
@@ -28,37 +28,29 @@ export const SubmissionQuickReview = ({ submission, onPreview }: SubmissionQuick
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card className="p-4 bg-blue-50 border-blue-100">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
-              <Users className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-blue-400 uppercase tracking-wider">
-                {t('totalJamaah')}
-              </p>
-              <p className="text-sm font-black text-blue-900">{membersToShow.length || '-'}</p>
-            </div>
+      {/* Summary Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 bg-white rounded-2xl border border-gray-100 shadow-sm transition-all hover:shadow-md">
+        <div className="flex items-center gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 border border-blue-100/50">
+            <Users className="h-6 w-6" />
           </div>
-        </Card>
-        <Card className="p-4 bg-orange-50 border-orange-100">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-orange-100 rounded-lg text-orange-600">
-              <FileText className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-orange-400 uppercase tracking-wider">
-                {t('visaStatus')}
-              </p>
-              <p className="text-sm font-black text-orange-900">{submission.reviewStatus || '-'}</p>
-            </div>
+          <div className="space-y-0.5">
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+              {t('totalJamaah')}
+            </p>
+            <p className="text-xl font-black text-gray-900 leading-none">
+              {membersToShow.length || '-'}{' '}
+              <span className="text-sm text-gray-500 font-bold">Orang</span>
+            </p>
           </div>
-        </Card>
+        </div>
+        <div className="w-full sm:w-auto flex justify-end">
+          <ReviewStatusBadge status={submission.reviewStatus} />
+        </div>
       </div>
 
       {/* Visa Upload CTA */}
-      {submission.reviewStatus !== 'ISSUED' && (
+      {submission.reviewStatus === 'VERIFIED' && (
         <Card className="p-4 bg-green-50 border-green-100 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-green-100 rounded-lg text-green-600">

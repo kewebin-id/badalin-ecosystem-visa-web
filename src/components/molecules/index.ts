@@ -21,3 +21,4 @@ export * from './pagination';
 export * from './time-picker';
 export * from './badge/provider-status';
 export * from './action-button';
+export * from './pagination';

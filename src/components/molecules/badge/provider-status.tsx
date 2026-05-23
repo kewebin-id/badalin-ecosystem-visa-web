@@ -12,7 +12,7 @@ interface BadgeConfig {
 export const PaymentStatusBadge = ({ status }: { status: ProviderSubmission['paymentStatus'] }) => {
   const t = useTranslations('ProviderSubmissions.status');
 
-  const config: Record<ProviderSubmission['paymentStatus'], BadgeConfig> = {
+  const config: Record<string, BadgeConfig> = {
     PENDING: {
       label: t('pending'),
       className: 'bg-slate-100 text-slate-600 border-slate-200',
@@ -30,7 +30,11 @@ export const PaymentStatusBadge = ({ status }: { status: ProviderSubmission['pay
     },
   };
 
-  const current = config[status];
+  const current = config[status as string] || {
+    label: status || 'UNKNOWN',
+    className: 'bg-gray-100 text-gray-600 border-gray-200',
+    dotClassName: 'bg-gray-400',
+  };
 
   return (
     <Badge
@@ -48,7 +52,7 @@ export const PaymentStatusBadge = ({ status }: { status: ProviderSubmission['pay
 export const ReviewStatusBadge = ({ status }: { status: ProviderSubmission['reviewStatus'] }) => {
   const t = useTranslations('ProviderSubmissions.status');
 
-  const config: Record<ProviderSubmission['reviewStatus'], BadgeConfig> = {
+  const config: Record<string, BadgeConfig> = {
     PENDING: {
       label: t('pending'),
       className: 'bg-slate-100 text-slate-600 border-slate-200',
@@ -69,6 +73,11 @@ export const ReviewStatusBadge = ({ status }: { status: ProviderSubmission['revi
       className: 'bg-rose-50 text-rose-600 border-rose-100',
       dotClassName: 'bg-rose-400',
     },
+    AUTO_CANCELED: {
+      label: t('autoCanceled') || 'Auto Canceled',
+      className: 'bg-gray-100 text-gray-500 border-gray-200',
+      dotClassName: 'bg-gray-400',
+    },
     ISSUED: {
       label: t('issued'),
       className: 'bg-emerald-50 text-emerald-600 border-emerald-100',
@@ -76,7 +85,11 @@ export const ReviewStatusBadge = ({ status }: { status: ProviderSubmission['revi
     },
   };
 
-  const current = config[status];
+  const current = config[status as string] || {
+    label: status || 'UNKNOWN',
+    className: 'bg-gray-100 text-gray-600 border-gray-200',
+    dotClassName: 'bg-gray-400',
+  };
 
   return (
     <Badge

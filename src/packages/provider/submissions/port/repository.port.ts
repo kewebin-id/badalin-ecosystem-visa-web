@@ -28,4 +28,5 @@ export interface IProviderSubmissionsRepository {
     visaFiles: Record<string, { name: string; base64: string }[]>,
   ): Promise<ResponseREST<Record<string, string>>>;
   submitVisas(id: string, visaUrls: Record<string, string>): Promise<ResponseREST<void>>;
+  getLOV(type: 'payment-status' | 'review-status'): Promise<ResponseREST<{ label: string; value: string }[]>>;
 }

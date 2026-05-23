@@ -1,6 +1,6 @@
 import { exportSubmissionToZip } from '@/shared/utils/manifest-export';
 import { RestAPI } from '@/shared/utils/rest-api';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   IFlightManifestPayload,
   IGetSubmissionsQuery,
@@ -21,6 +21,7 @@ export const useProviderSubmissionsController = () => {
     useQuery({
       queryKey: ['provider', 'submissions', query],
       queryFn: () => usecase.getSubmissions(query),
+      placeholderData: keepPreviousData,
     });
 
   const useSubmissionDetail = (id: string) =>
@@ -28,6 +29,12 @@ export const useProviderSubmissionsController = () => {
       queryKey: ['provider', 'submissions', id],
       queryFn: () => usecase.getSubmissionDetail(id),
       enabled: !!id,
+    });
+
+  const useLOV = (type: 'payment-status' | 'review-status') =>
+    useQuery({
+      queryKey: ['provider', 'submissions', 'lov', type],
+      queryFn: () => usecase.getLOV(type),
     });
 
   const useVerifyPayment = () =>
@@ -138,5 +145,6 @@ export const useProviderSubmissionsController = () => {
     useSubmitVisas,
     useExportSubmission,
     fetchSubmissionDetail,
+    useLOV,
   };
 };

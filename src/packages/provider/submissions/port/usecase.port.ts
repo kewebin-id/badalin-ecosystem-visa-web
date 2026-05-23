@@ -37,4 +37,5 @@ export interface IProviderSubmissionsUseCase {
     visaFiles: Record<string, { name: string; base64: string }[]>,
   ): Promise<IUsecaseResponse<Record<string, string>>>;
   submitVisas(id: string, visaUrls: Record<string, string>): Promise<IUsecaseResponse<boolean>>;
+  getLOV(type: 'payment-status' | 'review-status'): Promise<IUsecaseResponse<{ label: string; value: string }[]>>;
 }

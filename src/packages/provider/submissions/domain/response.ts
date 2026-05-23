@@ -28,7 +28,7 @@ export interface ISubmissionListItem {
   id: string;
   agencySlug: string;
   paymentStatus: 'PENDING' | 'CHECKING' | 'COMPLETED';
-  reviewStatus: 'PENDING' | 'IN_REVIEW' | 'VERIFIED' | 'REJECTED' | 'ISSUED';
+  reviewStatus: 'PENDING' | 'IN_REVIEW' | 'VERIFIED' | 'REJECTED' | 'ISSUED' | 'AUTO_CANCELED';
   totalAmount: number;
   createdAt: string;
   leader: ILeader;
