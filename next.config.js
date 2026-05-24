@@ -71,6 +71,14 @@ module.exports = withNextIntl(
         },
       ];
     },
+    async rewrites() {
+      return [
+        {
+          source: '/ws-api/:path*',
+          destination: `${process.env.BASE_API_URL}/:path*`,
+        },
+      ];
+    },
     /**
      * @param {import('webpack').Configuration} config
      * @returns {import('webpack').Configuration}

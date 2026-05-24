@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     'Badalin | Login Portal Umrah Mandiri & Tracker Visa Digital Terpercaya | Solusi Jamaah Indonesia',
   description:
     'Login ke dashboard Badalin. Platform nomor 1 untuk Umrah Mandiri, Tracker Visa Digital real-time, dan manajemen data jamaah berbasis OCR Paspor. Solusi aman, transparan, dan profesional untuk perjalanan ibadah Anda.',
-  metadataBase: new URL('https://badalin.visa.com'),
+  metadataBase: new URL('https://visa.serbaserbiumroh.id'),
   alternates: {
     canonical: '/auth/login',
   },
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: 'Badalin | Portal Umrah Mandiri & Tracker Visa Digital No.1 di Indonesia',
     description:
       'Pantau status visa Umrah Anda secara real-time. Kelola manifest jamaah dengan teknologi OCR Paspor. Solusi digital untuk Umrah Mandiri yang lebih mudah dan aman.',
-    url: 'https://badalin.visa.com/auth/login',
+    url: 'https://visa.serbaserbiumroh.id/auth/login',
     siteName: 'Badalin - Portal Umrah Mandiri Digital',
     images: [
       {

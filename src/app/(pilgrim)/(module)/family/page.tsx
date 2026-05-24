@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Manajemen Keluarga & Grup Jamaah | Badalin Portal',
   description:
     'Kelola data anggota keluarga dan grup jamaah Umrah Anda secara terpusat. Pantau status kelengkapan manifest, scan paspor via OCR, dan pastikan kesiapan dokumen administrasi ibadah Anda.',
-  metadataBase: new URL('https://badalin.visa.com'),
+  metadataBase: new URL('https://visa.serbaserbiumroh.id'),
   alternates: {
     canonical: '/family',
   },
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: 'Manajemen Keluarga & Grup Jamaah | Badalin Digital Portal',
     description:
       'Dashboard manajemen jamaah mandiri. Tambah anggota keluarga, lengkapi data manifest dengan OCR Paspor, dan kelola grup jamaah Umrah Anda dalam satu sistem digital yang aman.',
-    url: 'https://badalin.visa.com/family',
+    url: 'https://visa.serbaserbiumroh.id/family',
     siteName: 'Badalin - Portal Umrah Mandiri Digital',
     images: [
       {

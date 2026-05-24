@@ -1,3 +1,4 @@
+import { IUsecaseResponse } from '@/shared/domain/response.usecase';
 import Logger from '@/shared/utils/logger';
 import { INotificationPayload, INotificationRepository } from '../domain/types';
 
@@ -41,9 +42,72 @@ export class NotificationUseCase {
 
   private getRouteFromNotification(data: INotificationPayload): string | null {
     if (!data?.type || !data?.id) return null;
-
-    // TODO: Implement routing based on available ROUTES if needed
-    // The previous routes (booking, approval, trip, finance, carpool) were removed from constants/routes.ts
     return null;
+  }
+
+  async getNotifications(params?: {
+    page?: number;
+    limit?: number;
+  }): Promise<IUsecaseResponse<Record<string, unknown>>> {
+    try {
+      const res = await this.repository.getNotifications(params);
+      if (res.code !== 200) {
+        return {
+          message: res.message,
+          error: new Error(res.message || 'Gagal mengambil data notifikasi'),
+        };
+      }
+      if (!res.data) {
+        return {
+          error: new Error('Data tidak ditemukan'),
+        };
+      }
+      return {
+        message: res.message,
+        data: res.data,
+      };
+    } catch {
+      return { error: new Error('Terjadi kesalahan saat mengambil data notifikasi') };
+    }
+  }
+
+  async getUnreadCount(): Promise<IUsecaseResponse<{ count: number }>> {
+    try {
+      const res = await this.repository.getUnreadCount();
+      if (res.code !== 200) {
+        return {
+          message: res.message,
+          error: new Error(res.message || 'Gagal mengambil jumlah notifikasi'),
+        };
+      }
+      if (!res.data) {
+        return {
+          error: new Error('Data tidak ditemukan'),
+        };
+      }
+      return {
+        message: res.message,
+        data: res.data,
+      };
+    } catch {
+      return { error: new Error('Terjadi kesalahan saat mengambil jumlah notifikasi') };
+    }
+  }
+
+  async markAsRead(id: string): Promise<IUsecaseResponse<void>> {
+    try {
+      const res = await this.repository.markAsRead(id);
+      if (res.code !== 200) {
+        return {
+          message: res.message,
+          error: new Error(res.message || 'Gagal menandai notifikasi'),
+        };
+      }
+      return {
+        message: res.message,
+      };
+    } catch {
+      return { error: new Error('Terjadi kesalahan saat menandai notifikasi') };
+    }
   }
 }

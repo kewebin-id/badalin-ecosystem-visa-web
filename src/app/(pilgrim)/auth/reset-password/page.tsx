@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'Badalin | Atur Ulang Kata Sandi - Portal Umrah Mandiri',
   description:
     'Silakan masukkan kata sandi baru Anda untuk memulihkan akses ke portal Badalin dan sistem tracker visa digital.',
-  metadataBase: new URL('https://badalin.visa.com'),
+  metadataBase: new URL('https://visa.serbaserbiumroh.id'),
   alternates: {
     canonical: '/auth/reset-password',
   },
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     title: 'Badalin | Form Atur Ulang Kata Sandi Digital',
     description:
       'Halaman pengaturan ulang kata sandi portal Badalin. Pastikan akun Anda aman dengan kata sandi baru yang kuat.',
-    url: 'https://badalin.visa.com/auth/reset-password',
+    url: 'https://visa.serbaserbiumroh.id/auth/reset-password',
     siteName: 'Badalin - Portal Umrah Mandiri Digital',
     images: [
       {
