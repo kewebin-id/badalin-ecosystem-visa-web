@@ -2,6 +2,7 @@ export * from './layout/app-header';
 export * from './layout/app-sidebar';
 export * from './layout/navlink';
 export * from './layout/sidebar';
+export * from './layout/notification-dropdown';
 export * from './login/content';
 export * from './visa-submission/form/logistics';
 export * from './visa-submission/form/select-members';

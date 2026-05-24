@@ -5,12 +5,12 @@ export const metadata: Metadata = {
   title: 'Detail Pengajuan & Logistik Visa Umrah | Badalin Portal',
   description:
     'Lihat rincian lengkap pengajuan visa Umrah Anda. Pantau status logistik, rincian pembayaran, voucher hotel Makkah Madinah, serta jadwal penerbangan dalam detail transaksi yang transparan.',
-  metadataBase: new URL('https://badalin.visa.com'),
+  metadataBase: new URL('https://visa.serbaserbiumroh.id'),
   openGraph: {
     title: 'Detail Pengajuan & Logistik Visa Umrah | Badalin Digital',
     description:
       'Informasi lengkap manifest jamaah, detail logistik, dan status pembayaran visa Umrah. Pantau voucher hotel dan tiket pesawat Anda secara digital dan aman.',
-    url: 'https://badalin.visa.com/transactions',
+    url: 'https://visa.serbaserbiumroh.id/transactions',
     siteName: 'Badalin - Portal Umrah Mandiri Digital',
     images: [
       {

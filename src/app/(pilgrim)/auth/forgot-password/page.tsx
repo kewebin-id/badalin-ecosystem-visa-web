@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'Badalin | Lupa Kata Sandi Portal Umrah Mandiri & Tracker Visa Digital',
   description:
     'Lupa kata sandi Anda? Atur ulang kata sandi portal Badalin Anda di sini untuk kembali mengakses sistem tracker visa real-time dan manajemen jamaah digital.',
-  metadataBase: new URL('https://badalin.visa.com'),
+  metadataBase: new URL('https://visa.serbaserbiumroh.id'),
   alternates: {
     canonical: '/auth/forgot-password',
   },
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     title: 'Badalin | Atur Ulang Kata Sandi Portal Umrah Mandiri Digital',
     description:
       'Halaman pemulihan kata sandi portal Badalin. Masukkan detail Anda untuk mendapatkan akses kembali ke tracker visa Umrah dan manifest jamaah digital.',
-    url: 'https://badalin.visa.com/auth/forgot-password',
+    url: 'https://visa.serbaserbiumroh.id/auth/forgot-password',
     siteName: 'Badalin - Portal Umrah Mandiri Digital',
     images: [
       {

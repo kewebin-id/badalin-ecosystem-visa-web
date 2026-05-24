@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Registrasi & Tambah Data Jamaah | Badalin Portal',
   description:
     'Daftarkan anggota keluarga atau jamaah baru dengan mudah. Gunakan fitur OCR Paspor untuk input data otomatis yang cepat, akurat, dan aman. Pastikan identitas jamaah Anda terverifikasi lengkap.',
-  metadataBase: new URL('https://badalin.visa.com'),
+  metadataBase: new URL('https://visa.serbaserbiumroh.id'),
   alternates: {
     canonical: '/family/form',
   },
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: 'Registrasi & Tambah Data Jamaah | Badalin Digital Wizard',
     description:
       'Lengkapi database manifest jamaah Anda secara digital. Registrasi identitas, scan paspor otomatis, dan kelola profil keluarga jamaah dalam satu formulir profesional.',
-    url: 'https://badalin.visa.com/family/form',
+    url: 'https://visa.serbaserbiumroh.id/family/form',
     siteName: 'Badalin - Portal Umrah Mandiri Digital',
     images: [
       {

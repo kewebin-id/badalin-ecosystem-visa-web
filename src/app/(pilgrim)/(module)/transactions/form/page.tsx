@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Ajukan & Registrasi Visa Umrah Digital | Badalin Portal',
   description:
     'Langkah mudah registrasi visa Umrah secara digital. Badalin menyediakan form pengajuan cerdas dengan teknologi OCR Paspor otomatis, manajemen jamaah grup, dan pemesanan akomodasi Umrah DIY yang aman.',
-  metadataBase: new URL('https://badalin.visa.com'),
+  metadataBase: new URL('https://visa.serbaserbiumroh.id'),
   alternates: {
     canonical: '/transactions/form',
   },
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: 'Ajukan & Registrasi Visa Umrah Digital | Badalin Digital Wizard',
     description:
       'Form pengajuan visa Umrah Mandiri yang ringkas dan aman. Input data jamaah dengan OCR Paspor, kelola manifest grup, dan atur detail logistik perjalanan ibadah Anda dalam satu platform.',
-    url: 'https://badalin.visa.com/transactions/form',
+    url: 'https://visa.serbaserbiumroh.id/transactions/form',
     siteName: 'Badalin - Portal Umrah Mandiri Digital',
     images: [
       {

@@ -8,6 +8,7 @@ import { ReactNode, useState } from 'react';
 import { ToastClassnames } from 'sonner';
 import { StateProvider } from '../context';
 import { NotificationProvider } from './notification.provider';
+import { SocketProvider } from './socket-provider';
 
 const classNames: ToastClassnames = {
   success: 'bg-primary-default!',
@@ -30,7 +31,9 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         }}
       />
       <QueryClientProvider client={queryClientState}>
-        <NotificationProvider>{children}</NotificationProvider>
+        <SocketProvider>
+          <NotificationProvider>{children}</NotificationProvider>
+        </SocketProvider>
       </QueryClientProvider>
       {process.env.NEXT_PUBLIC_DEV_TOOLS === 'true' && <ReactQueryDevtools initialIsOpen={false} />}
     </StateProvider>

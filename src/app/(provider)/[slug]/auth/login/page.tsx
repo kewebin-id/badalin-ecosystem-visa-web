@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Portal Mitra Agensi Badalin | Tracking & Manajemen Visa Umrah Digital',
   description:
     'Portal khusus mitra agensi Badalin. Kelola pengajuan visa jamaah, verifikasi dokumen OCR, dan pantau status pembayaran secara real-time dalam satu dashboard profesional.',
-  metadataBase: new URL('https://badalin.visa.com'),
+  metadataBase: new URL('https://visa.serbaserbiumroh.id'),
   alternates: {
     canonical: '/p/auth/login',
   },
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: 'Portal Mitra Agensi Badalin | Solusi Digital Manajemen Visa Umrah',
     description:
       'Masuk ke portal agensi untuk mengelola manifest jamaah dan tracking visa. Sistem mandiri, transparan, dan profesional untuk mitra terpercaya.',
-    url: 'https://badalin.visa.com/p/auth/login',
+    url: 'https://visa.serbaserbiumroh.id/p/auth/login',
     siteName: 'Badalin - Portal Mitra Agensi',
     images: [
       {

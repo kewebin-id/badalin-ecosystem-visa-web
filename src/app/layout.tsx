@@ -29,12 +29,12 @@ export const metadata: Metadata = {
   },
   description:
     'Solusi cerdas Umrah Mandiri. Badalin menyediakan sistem tracker visa real-time, integrasi manifest digital, dan manajemen data jamaah berbasis OCR Paspor termurah dan terpercaya di Indonesia.',
-  metadataBase: new URL('https://badalin.visa.com'),
+  metadataBase: new URL('https://visa.serbaserbiumroh.id'),
   openGraph: {
     title: 'Badalin | Portal Umrah Mandiri & Tracker Visa Digital No.1 di Indonesia',
     description:
       'Digitalisasi Umrah Mandiri end-to-end. Pantau status visa real-time, upload dokumen via OCR, dan kelola manifest grup jamaah dalam satu dashboard profesional yang aman dan transparan.',
-    url: 'https://badalin.visa.com',
+    url: 'https://visa.serbaserbiumroh.id',
     siteName: 'Badalin - Digitalisasi Umrah Mandiri',
     images: [
       {

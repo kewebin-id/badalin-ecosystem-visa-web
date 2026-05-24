@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Riwayat Transaksi & Pengajuan Visa Umrah | Badalin Portal',
   description:
     'Pantau dan kelola semua pengajuan visa Umrah Anda secara real-time di Badalin. Platform nomor 1 untuk tracking status visa, riwayat transaksi transparan, dan manajemen manifest jamaah digital.',
-  metadataBase: new URL('https://badalin.visa.com'),
+  metadataBase: new URL('https://visa.serbaserbiumroh.id'),
   alternates: {
     canonical: '/transactions',
   },
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: 'Riwayat Transaksi & Pengajuan Visa Umrah | Badalin Digital Portal',
     description:
       'Kelola pengajuan visa Umrah Anda dengan sistem tracker real-time. Akses riwayat transaksi, cari data jamaah, dan pantau status dokumen dalam satu dashboard transparan.',
-    url: 'https://badalin.visa.com/transactions',
+    url: 'https://visa.serbaserbiumroh.id/transactions',
     siteName: 'Badalin - Portal Umrah Mandiri Digital',
     images: [
       {

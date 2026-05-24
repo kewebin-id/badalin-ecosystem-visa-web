@@ -19,6 +19,11 @@ export const endpoints = {
       respond: (inviteId: number) => `${PrefixEndpoint.VISA}/booking/carpool/${inviteId}/respond`,
     },
   },
+  notifications: {
+    list: '/ws-api/notifications',
+    unreadCount: '/ws-api/notifications/unread-count',
+    markAsRead: (id: string) => `/ws-api/notifications/${id}/read`,
+  },
   visa: {
     dashboard: {
       history: `${PrefixEndpoint.VISA}/dashboard/history`,
@@ -129,6 +134,11 @@ export const endpoints = {
         preview: '/api/visa/submissions/preview',
       },
       upload: '/api/visa/upload',
+      notifications: {
+        base: '/api/visa/notifications',
+        unreadCount: '/api/visa/notifications/unread-count',
+        markAsRead: (id: string) => `/api/visa/notifications/${id}/read`,
+      },
     },
   },
 };

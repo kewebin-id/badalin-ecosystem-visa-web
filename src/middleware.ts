@@ -118,6 +118,6 @@ export default withAuth(
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|assets|favicon.ico|manifest.json|sw.js|.*\\.(?:svg|png|jpg|jpeg|gif|webp)).*)',
+    '/((?!api|_next/static|_next/image|assets|favicon.ico|manifest.json|sw.js|OneSignalSDKWorker.js|.*\\.(?:svg|png|jpg|jpeg|gif|webp)).*)',
   ],
 };
