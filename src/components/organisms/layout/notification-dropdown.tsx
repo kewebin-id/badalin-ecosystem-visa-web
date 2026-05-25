@@ -10,6 +10,7 @@ import { Bell } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ROUTES } from '@/shared/constants/routes';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 dayjs.extend(relativeTime);
@@ -146,15 +147,13 @@ export const NotificationDropdown = () => {
                 </div>
               ))}
               {notifications.length > 10 && (
-                <button
-                  onClick={() => {
-                    setOpen(false);
-                    router.push(ROUTES.PILGRIM.NOTIFICATIONS);
-                  }}
-                  className="mt-2 text-sm text-center text-primary-default font-medium hover:underline py-2"
+                <Link
+                  href={ROUTES.PILGRIM.NOTIFICATIONS}
+                  onClick={() => setOpen(false)}
+                  className="mt-2 text-sm text-center text-primary-default font-medium hover:underline py-2 block w-full"
                 >
                   {t('viewAllNotifications')}
-                </button>
+                </Link>
               )}
             </div>
           )}

@@ -83,7 +83,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             position:
               typeof window !== 'undefined' && window.innerWidth < 768 ? 'top-center' : 'top-left',
             unstyled: true,
-            className: 'bg-transparent! border-none! shadow-none! p-0! flex! w-full!',
+            className: '!bg-transparent !border-none !shadow-none !p-0 flex w-full',
+            style: { background: 'transparent', border: 'none', boxShadow: 'none', padding: 0 },
           },
         );
       }, 3000);
@@ -148,7 +149,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
           position:
             typeof window !== 'undefined' && window.innerWidth < 768 ? 'top-center' : 'top-right',
           unstyled: true,
-          className: 'bg-transparent! border-none! shadow-! p-0! flex! w-full!',
+          className: '!bg-transparent !border-none !shadow-none !p-0 flex w-full',
+          style: { background: 'transparent', border: 'none', boxShadow: 'none', padding: 0 },
         },
       );
 
