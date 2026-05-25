@@ -19,7 +19,7 @@ export class NotificationRepository implements INotificationRepository {
         allowLocalhostAsSecureOrigin: oneSignalConfig.allowLocalhostAsSecureOrigin,
       });
       this.initialized = true;
-      Logger.info('OneSignal initialized', { location: 'NotificationRepository.initialize' });
+      console.log('OneSignal initialized');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       if (errorMessage.includes('Can only be used on:')) {

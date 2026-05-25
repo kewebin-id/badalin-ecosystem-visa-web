@@ -5,13 +5,14 @@ import { NotificationUseCase } from '@/packages/notification/usecase';
 import { useAuth } from '@/shared/hooks';
 import Logger from '@/shared/utils/logger';
 import { useRouter } from 'next/navigation';
-import { FC, ReactNode, useEffect, useRef } from 'react';
+import { FC, ReactNode, useEffect, useRef, useState } from 'react';
 
 export const NotificationProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { isLoggedIn, user } = useAuth();
   const router = useRouter();
   const useCaseRef = useRef<NotificationUseCase | null>(null);
   const initializedRef = useRef(false);
+  const [isReady, setIsReady] = useState(false);
 
   // Initialize OneSignal once on mount (client-side only)
   useEffect(() => {
@@ -27,17 +28,18 @@ export const NotificationProvider: FC<{ children: ReactNode }> = ({ children }) 
         router.push(url);
       });
       initializedRef.current = true;
+      setIsReady(true);
     });
   }, [router]);
 
-  // Sync user when authenticated
+  // Sync user when authenticated and OneSignal is ready
   useEffect(() => {
     const userId = user?.employeeId || user?.id;
-    if (!useCaseRef.current || !isLoggedIn || !userId) return;
+    if (!useCaseRef.current || !isLoggedIn || !userId || !isReady) return;
 
     Logger.info(`Syncing user: ${userId}`, { location: 'NotificationProvider' });
     useCaseRef.current.syncUser(userId);
-  }, [isLoggedIn, user?.employeeId, user?.id]);
+  }, [isLoggedIn, user?.employeeId, user?.id, isReady]);
 
   return <>{children}</>;
 };

@@ -2,11 +2,11 @@
 
 import { useAuth } from '@/shared/hooks/use-auth';
 import { useNotificationStore } from '@/shared/hooks/use-notification-store';
+import { Bell, Volume2, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { toast } from 'sonner';
-import { Bell, Volume2, X } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 
 interface SocketContextType {
   socket: Socket | null;
@@ -80,8 +80,11 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
           ),
           {
             duration: Number.POSITIVE_INFINITY,
-            position: typeof window !== 'undefined' && window.innerWidth < 768 ? 'bottom-center' : 'top-right',
-          }
+            position:
+              typeof window !== 'undefined' && window.innerWidth < 768 ? 'top-center' : 'top-left',
+            unstyled: true,
+            className: 'bg-transparent! border-none! shadow-none! p-0! flex! w-full!',
+          },
         );
       }, 3000);
       return () => clearTimeout(timer);
@@ -140,10 +143,13 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             </button>
           </div>
         ),
-        { 
+        {
           duration: 10000,
-          position: typeof window !== 'undefined' && window.innerWidth < 768 ? 'bottom-center' : 'top-right',
-        }
+          position:
+            typeof window !== 'undefined' && window.innerWidth < 768 ? 'top-center' : 'top-right',
+          unstyled: true,
+          className: 'bg-transparent! border-none! shadow-! p-0! flex! w-full!',
+        },
       );
 
       // Play notification sound
