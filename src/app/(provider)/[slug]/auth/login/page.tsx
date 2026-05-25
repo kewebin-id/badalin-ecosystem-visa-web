@@ -35,8 +35,8 @@ export const metadata: Metadata = {
   },
   authors: [
     {
-      name: 'Brilian Rachmad Nurwachidin',
-      url: 'https://brilianrachmad.vercel.app',
+      name: 'Kewebin Indonesia',
+      url: 'https://kewebin.id',
     },
   ],
   publisher: 'Badalin',

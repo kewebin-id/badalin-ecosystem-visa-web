@@ -35,8 +35,8 @@ export const metadata: Metadata = {
   },
   authors: [
     {
-      name: 'Brilian Rachmad Nurwachidin',
-      url: 'https://brilianrachmad.vercel.app',
+      name: 'Kewebin Indonesia',
+      url: 'https://kewebin.id',
     },
   ],
   publisher: 'Badalin',
@@ -191,7 +191,7 @@ export const metadata: Metadata = {
     nocache: true,
   },
   other: {
-    'article:author': 'Brilian Rachmad Nurwachidin',
+    'article:author': 'Kewebin Indonesia',
     'article:publisher': 'Badalin',
     'geo.region': 'ID-JI',
     'geo.placename': 'Sidoarjo, Jawa Timur, Indonesia',

@@ -60,3 +60,6 @@ public/workbox-*.js
 *output*
 
 scratch
+
+# others
+update-metadata.js
