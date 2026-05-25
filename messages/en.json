@@ -468,7 +468,14 @@
       "IN_REVIEW": "In Review",
       "VERIFIED": "Processing",
       "REJECTED": "Rejected"
-    }
+    },
+    "memberCount": "{count, plural, =1 {Just You} other {{count} People}}",
+    "departure": "Departure",
+    "flight": "Flight",
+    "airlineTba": "Airline Info TBA",
+    "accommodation": "Accommodation",
+    "days": "{count} Days",
+    "viewEVisa": "View E-Visa"
   },
   "VisaWizard": {
     "title": "New Visa Application",

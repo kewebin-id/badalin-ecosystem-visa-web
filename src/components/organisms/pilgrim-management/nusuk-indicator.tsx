@@ -67,7 +67,7 @@ export const NusukIndicator = ({
   variant = 'default',
 }: NusukIndicatorProps) => {
   const t = useTranslations('PilgrimManagement.nusuk');
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (compatibility?.status === 'REJECTED') {

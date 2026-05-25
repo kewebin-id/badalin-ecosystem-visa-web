@@ -30,7 +30,7 @@ export const TransactionDetailView = () => {
   const { data: detailRes, isLoading, refetch } = useTransactionDetail(id);
   const transaction = detailRes?.data || null;
 
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState<boolean>(false);
   const [lastUploadedData, setLastUploadedData] = useState<ITransaction | null>(null);
 
   const uploadMutation = useUploadProof();

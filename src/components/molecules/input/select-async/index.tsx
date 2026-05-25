@@ -67,10 +67,10 @@ export const InputSelectAsync: FC<InputSelectAsyncProps> = ({
   const [debouncedSearch] = useDebounce(searchQuery, 500);
   const [options, setOptions] = useState<IVendor[]>([]);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isInitialLoading, setIsInitialLoading] = useState(false);
-  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+  const [hasMore, setHasMore] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isInitialLoading, setIsInitialLoading] = useState<boolean>(false);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState<boolean>(false);
   const [selectedOptionLabel, setSelectedOptionLabel] = useState<string | undefined>(undefined);
 
   const restApi = useMemo(() => new RestAPI(), []);

@@ -1,5 +1,5 @@
 import { ROUTES } from '@/shared/constants';
-import { dateRiyadh as dateUtil, isBase64, dayjs } from '@/shared/utils';
+import { dateRiyadh as dateUtil, dayjs, isBase64 } from '@/shared/utils';
 import { RestAPI } from '@/shared/utils/rest-api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -244,11 +244,11 @@ const parseToSaudi = (val?: string | null, includeTime: boolean = false) => {
   } else {
     localStr = dayjs(val).format(includeTime ? 'YYYY-MM-DDTHH:mm:ss' : 'YYYY-MM-DD');
   }
-  
+
   if (!includeTime && !localStr.includes('T')) {
     localStr += 'T00:00:00';
   }
-  
+
   return dayjs.tz(localStr, saudiTimezone).toISOString();
 };
 
@@ -382,7 +382,7 @@ export const useTransactionController = () => {
     });
   };
 
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
 
   const handleDownloadAllVisas = async (transaction: ITransaction) => {
     try {

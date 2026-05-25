@@ -18,7 +18,12 @@ interface SummaryFormProps {
   isLoading?: boolean;
 }
 
-export const SummaryForm = ({ totalAmount, currency = 'IDR', breakdown, isLoading }: SummaryFormProps) => {
+export const SummaryForm = ({
+  totalAmount,
+  currency = 'IDR',
+  breakdown,
+  isLoading,
+}: SummaryFormProps) => {
   const t = useTranslations('VisaTransaction');
   const tDashboard = useTranslations('PilgrimManagement');
   const {
@@ -26,7 +31,7 @@ export const SummaryForm = ({ totalAmount, currency = 'IDR', breakdown, isLoadin
     register,
     formState: { errors },
   } = useFormContext<TWizardForm>();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const { useMembers } = useManagementController();
   const { members } = useMembers({ page: 1, limit: 100 });
@@ -221,7 +226,9 @@ export const SummaryForm = ({ totalAmount, currency = 'IDR', breakdown, isLoadin
                             {m.fullName.charAt(0)}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs font-bold text-foreground truncate">{m.fullName}</p>
+                            <p className="text-xs font-bold text-foreground truncate">
+                              {m.fullName}
+                            </p>
                             <p className="text-[10px] text-muted-foreground font-medium">
                               {m.passportNumber} • {tDashboard(`relations.${m.relation}`)}
                             </p>
@@ -284,12 +291,16 @@ export const SummaryForm = ({ totalAmount, currency = 'IDR', breakdown, isLoadin
                     </p>
                     <h2 className="text-3xl font-black tracking-tight">
                       {new Intl.NumberFormat(
-                        currency.toUpperCase() === 'USD' ? 'en-US' : currency.toUpperCase() === 'SAR' ? 'ar-SA' : 'id-ID',
+                        currency.toUpperCase() === 'USD'
+                          ? 'en-US'
+                          : currency.toUpperCase() === 'SAR'
+                            ? 'ar-SA'
+                            : 'id-ID',
                         {
                           style: 'currency',
                           currency: currency.toUpperCase(),
                           minimumFractionDigits: 0,
-                        }
+                        },
                       ).format(totalAmount || 0)}
                     </h2>
                   </div>

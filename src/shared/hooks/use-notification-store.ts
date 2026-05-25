@@ -1,8 +1,7 @@
 import { store } from '@/shared/context';
 import { ESetValue } from '@/shared/context/actions/actions.type';
 import { INotification } from '@/shared/context/reducers/reducer.d';
-import { useContext } from 'react';
-import { useNotificationController } from '@/packages/notification/presentation/controller';
+import { useCallback, useContext } from 'react';
 
 export { type INotification };
 
@@ -12,29 +11,41 @@ export const useNotificationStore = () => {
   const notifications = state.notifications;
   const unreadCount = state.unreadCount;
 
-  const setNotifications = (list: INotification[]) => {
-    dispatch({ type: ESetValue.SET_NOTIFICATIONS, payload: list });
-  };
+  const setNotifications = useCallback(
+    (list: INotification[]) => {
+      dispatch({ type: ESetValue.SET_NOTIFICATIONS, payload: list });
+    },
+    [dispatch],
+  );
 
-  const addNotification = (item: INotification) => {
-    dispatch({ type: ESetValue.ADD_NOTIFICATION, payload: item });
-  };
+  const addNotification = useCallback(
+    (item: INotification) => {
+      dispatch({ type: ESetValue.ADD_NOTIFICATION, payload: item });
+    },
+    [dispatch],
+  );
 
-  const setUnreadCount = (count: number) => {
-    dispatch({ type: ESetValue.SET_UNREAD_COUNT, payload: count });
-  };
+  const setUnreadCount = useCallback(
+    (count: number) => {
+      dispatch({ type: ESetValue.SET_UNREAD_COUNT, payload: count });
+    },
+    [dispatch],
+  );
 
-  const incrementUnreadCount = () => {
+  const incrementUnreadCount = useCallback(() => {
     dispatch({ type: ESetValue.INCREMENT_UNREAD_COUNT });
-  };
+  }, [dispatch]);
 
-  const decrementUnreadCount = () => {
+  const decrementUnreadCount = useCallback(() => {
     dispatch({ type: ESetValue.DECREMENT_UNREAD_COUNT });
-  };
+  }, [dispatch]);
 
-  const markAsReadLocal = (id: string) => {
-    dispatch({ type: ESetValue.MARK_NOTIFICATION_READ, payload: id });
-  };
+  const markAsReadLocal = useCallback(
+    (id: string) => {
+      dispatch({ type: ESetValue.MARK_NOTIFICATION_READ, payload: id });
+    },
+    [dispatch],
+  );
 
   return {
     notifications,

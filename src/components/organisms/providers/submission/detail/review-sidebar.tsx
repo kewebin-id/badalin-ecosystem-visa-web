@@ -38,7 +38,7 @@ export const DetailReviewSidebar = ({
   const tq = useTranslations('ProviderSubmissions.quickReview');
   const tr = useTranslations('ProviderSubmissions.quickReview.refund');
 
-  const [showConfirm, setShowConfirm] = useState(false);
+  const [showConfirm, setShowConfirm] = useState<boolean>(false);
 
   const totalMembers = submission.members?.length || 0;
   const validMembersCount = Object.values(memberStatuses).filter((s) => s.valid).length;

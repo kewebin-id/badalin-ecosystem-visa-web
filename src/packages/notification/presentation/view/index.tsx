@@ -34,10 +34,12 @@ export const NotificationCenterView = () => {
     refetch();
   }, [refetch]);
 
+  const pages = historyRes?.pages;
+
   useEffect(() => {
-    if (historyRes?.pages) {
+    if (pages) {
       const allNotifs: INotification[] = [];
-      historyRes.pages.forEach((page: unknown) => {
+      pages.forEach((page: unknown) => {
         const listData = (page as { data?: unknown })?.data;
         const pageArray = Array.isArray(listData)
           ? listData
@@ -48,7 +50,7 @@ export const NotificationCenterView = () => {
       });
       setNotifications(allNotifs);
     }
-  }, [historyRes, setNotifications]);
+  }, [pages, setNotifications]);
 
   const handleNotificationClick = (notification: INotification) => {
     if (!notification.isRead) {

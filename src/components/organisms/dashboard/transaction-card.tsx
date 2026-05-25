@@ -60,7 +60,7 @@ export const TransactionCard = ({ transaction }: TransactionCardProps) => {
           <div className="flex items-center gap-2 text-gray-400">
             <Users className="size-3" />
             <span className="text-[10px] font-bold uppercase tracking-wider">
-              {transaction.memberCount === 1 ? 'Hanya Anda' : `${transaction.memberCount} Orang`}
+              {t('memberCount', { count: transaction.memberCount })}
             </span>
           </div>
         </div>
@@ -77,7 +77,7 @@ export const TransactionCard = ({ transaction }: TransactionCardProps) => {
           </div>
           <div className="flex flex-col min-w-0">
             <span className="text-[10px] text-gray-400 uppercase font-black tracking-widest">
-              Keberangkatan
+              {t('departure')}
             </span>
             <span className="font-bold text-dark-900 text-sm truncate">{departureDateLong}</span>
           </div>
@@ -89,10 +89,10 @@ export const TransactionCard = ({ transaction }: TransactionCardProps) => {
           </div>
           <div className="flex flex-col min-w-0">
             <span className="text-[10px] text-gray-400 uppercase font-black tracking-widest">
-              Penerbangan
+              {t('flight')}
             </span>
             <span className="font-bold text-dark-900 text-sm truncate">
-              {transaction.airlineName || 'Informasi Maskapai Menyusul'}
+              {transaction.airlineName || t('airlineTba')}
             </span>
           </div>
         </div>
@@ -103,10 +103,10 @@ export const TransactionCard = ({ transaction }: TransactionCardProps) => {
           </div>
           <div className="flex flex-col min-w-0">
             <span className="text-[10px] text-gray-400 uppercase font-black tracking-widest">
-              Akomodasi
+              {t('accommodation')}
             </span>
             <span className="font-bold text-dark-900 text-sm truncate">
-              {transaction.hotelName || '-'} ({transaction.totalDays} Hari)
+              {transaction.hotelName || '-'} ({t('days', { count: transaction.totalDays })})
             </span>
           </div>
         </div>
@@ -132,7 +132,7 @@ export const TransactionCard = ({ transaction }: TransactionCardProps) => {
             size="lg"
             className="w-fit !rounded-2xl text-xs font-black active:scale-95 flex items-center gap-2 group/btn"
           >
-            {isIssued ? 'Lihat E-Visa' : t('detail')}
+            {isIssued ? t('viewEVisa') : t('detail')}
             {isIssued ? (
               <FileCheck className="size-4 group-hover/btn:scale-110 transition-transform" />
             ) : (

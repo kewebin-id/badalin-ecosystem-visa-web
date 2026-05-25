@@ -1,9 +1,9 @@
 'use client';
 
+import { Image } from '@/components/atoms';
 import styles from '@/shared/styles/components/input.module.css';
 import { cn } from '@/shared/utils';
 import { AlertTriangle } from 'lucide-react';
-import { Image } from '@/components/atoms';
 import { ChangeEvent, useState } from 'react';
 import { InputTextareaProps } from '../input';
 
@@ -32,7 +32,7 @@ export const InputTextarea = ({
   onEnter,
   size = 'lg',
 }: InputTextareaProps) => {
-  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
   const [inputState, setInputState] = useState<string>();
   const id = `textarea-${name || Math.random().toString(36).substr(2, 9)}`;
 

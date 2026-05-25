@@ -54,7 +54,7 @@ export const TransportRawdahForm = () => {
     setValue,
     formState: { errors, touchedFields, isSubmitted },
   } = useFormContext<TWizardForm>();
-  const [showTransportSyncWarning, setShowTransportSyncWarning] = useState(false);
+  const [showTransportSyncWarning, setShowTransportSyncWarning] = useState<boolean>(false);
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'transportations',
@@ -69,12 +69,14 @@ export const TransportRawdahForm = () => {
   const prevReturnRef = useRef(returnFlightEtd);
 
   useEffect(() => {
-    const hasChanged = 
-      (prevDepartureRef.current !== departureFlightEta && prevDepartureRef.current !== undefined) || 
+    const hasChanged =
+      (prevDepartureRef.current !== departureFlightEta && prevDepartureRef.current !== undefined) ||
       (prevReturnRef.current !== returnFlightEtd && prevReturnRef.current !== undefined);
 
     if (hasChanged) {
-      const transportFields = fields.map((_, index) => `transportations.${index}.date` as Path<TWizardForm>);
+      const transportFields = fields.map(
+        (_, index) => `transportations.${index}.date` as Path<TWizardForm>,
+      );
       const rawdahFields: Path<TWizardForm>[] = ['rawdahMenTime', 'rawdahWomenTime'];
 
       let hasResetted = false;
@@ -89,13 +91,15 @@ export const TransportRawdahForm = () => {
         setShowTransportSyncWarning(true);
       }
     }
-    
+
     prevDepartureRef.current = departureFlightEta;
     prevReturnRef.current = returnFlightEtd;
   }, [departureFlightEta, returnFlightEtd, setValue, watch, fields]);
 
   useEffect(() => {
-    const transportFields = fields.map((_, index) => `transportations.${index}.date` as Path<TWizardForm>);
+    const transportFields = fields.map(
+      (_, index) => `transportations.${index}.date` as Path<TWizardForm>,
+    );
     const rawdahFields: Path<TWizardForm>[] = ['rawdahMenTime', 'rawdahWomenTime'];
     trigger([...transportFields, ...rawdahFields]);
   }, [departureFlightEta, returnFlightEtd, fields.length, trigger]);
@@ -138,198 +142,206 @@ export const TransportRawdahForm = () => {
 
         <div className="flex items-center gap-2">
           {TRANSPORT_TYPE_OPTIONS.map((opt) => (
-              <Button
-                key={opt.value}
-                type="button"
-                variant="primaryOutline"
-                size="sm"
-                onClick={() =>
-                  handleAddTransport(opt.value as 'BUS' | 'TRAIN' | 'TAXI' | 'MPV' | 'OTHER')
-                }
-                className="rounded-full h-8 px-4 text-[10px]!"
-              >
-                <Plus className="size-3 mr-1" /> {t(`form.transportTypeOptions.${opt.value}`)}
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          {fields.map((field, index) => (
-            <Card
-              key={field.id}
-              className="p-6 relative group overflow-hidden border-primary-100 bg-white shadow-sm!"
+            <Button
+              key={opt.value}
+              type="button"
+              variant="primaryOutline"
+              size="sm"
+              onClick={() =>
+                handleAddTransport(opt.value as 'BUS' | 'TRAIN' | 'TAXI' | 'MPV' | 'OTHER')
+              }
+              className="rounded-full h-8 px-4 text-[10px]!"
             >
-              <div className="absolute top-0 left-0 w-1 h-full bg-primary-default" />
-
-              <div className="flex items-center justify-between mb-6 w-full">
-                <div className="flex items-center gap-2 w-full">
-                  <div className="p-2 rounded-lg bg-gray-50 border border-gray-100">
-                    {getTransportIcon(watch(`transportations.${index}.type`) as string)}
-                  </div>
-                  <span className="text-sm font-bold uppercase tracking-tight">
-                    {t(`form.transportTypeOptions.${watch(`transportations.${index}.type`)}`)}{' '}
-                    {t('form.entry')} #{index + 1}
-                  </span>
-                </div>
-                <div>
-                  <Button
-                    type="button"
-                    variant="dangerOutline"
-                    size="icon"
-                    onClick={() => remove(index)}
-                    className="rounded-xl h-9 w-9 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <Trash2 className="size-4" />
-                  </Button>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-1">
-                  <InputFile
-                    label={t('form.uploadTransportProof')}
-                    maxFiles={2}
-                    value={(watch(`transportations.${index}.imageUrls`) || []).map(
-                      (url: string, i: number) => ({
-                        name: `proof-${i + 1}.jpg`,
-                        base64: url,
-                      }),
-                    )}
-                    onChange={(files: { base64: string }[]) => {
-                      const base64s = files
-                        .map((f: { base64: string }) => f.base64)
-                        .filter(Boolean) as string[];
-                      setValue(`transportations.${index}.imageUrls`, base64s, {
-                        shouldValidate: true,
-                      });
-                    }}
-                    errorMessage={
-                      (errors.transportations?.[index] as Record<string, { message?: string }>)
-                        ?.imageUrls?.message
-                    }
-                  />
-                </div>
-                <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <InputSelect
-                    useLabelInside
-                    size="lg"
-                    label={t('form.transportType')}
-                    options={TRANSPORT_TYPE_OPTIONS.map((opt) => ({
-                      ...opt,
-                      label: t(`form.transportTypeOptions.${opt.value}`),
-                    }))}
-                    name={`transportations.${index}.type`}
-                    required
-                    errorMessage={
-                      (errors.transportations?.[index] as Record<string, { message?: string }>)
-                        ?.type?.message
-                    }
-                  />
-                  <InputText
-                    useLabelInside
-                    size="lg"
-                    label={t('form.companyCarrier')}
-                    type="text"
-                    register={register}
-                    name={`transportations.${index}.company`}
-                    required
-                    errorMessage={
-                      (errors.transportations?.[index] as Record<string, { message?: string }>)
-                        ?.company?.message
-                    }
-                  />
-                  <InputText
-                    useLabelInside
-                    size="lg"
-                    label={t('form.totalUnit')}
-                    type="number"
-                    register={register}
-                    name={`transportations.${index}.total`}
-                    required
-                    errorMessage={
-                      (errors.transportations?.[index] as Record<string, { message?: string }>)
-                        ?.total?.message
-                    }
-                  />
-
-                  <InputText
-                    useLabelInside
-                    size="lg"
-                    label={t('form.routeFrom')}
-                    type="text"
-                    register={register}
-                    name={`transportations.${index}.from`}
-                    required
-                    errorMessage={
-                      (errors.transportations?.[index] as Record<string, { message?: string }>)
-                        ?.from?.message
-                    }
-                  />
-                  <InputText
-                    useLabelInside
-                    size="lg"
-                    label={t('form.routeTo')}
-                    type="text"
-                    register={register}
-                    name={`transportations.${index}.to`}
-                    required
-                    errorMessage={
-                      (errors.transportations?.[index] as Record<string, { message?: string }>)?.to
-                        ?.message
-                    }
-                  />
-
-                  <Controller
-                    control={control}
-                    name={`transportations.${index}.date`}
-                    render={({ field }) => (
-                      <DatePicker
-                        {...field}
-                        useLabelInside
-                        size="lg"
-                        label={t('form.dateAndTime')}
-                        showTime={true}
-                        required
-                        value={field.value}
-                        onChange={(val) => {
-                          const isoString = val as string;
-                          field.onChange(isoString);
-                          setValue(`transportations.${index}.time`, isoString, {
-                            shouldValidate: true,
-                          });
-                          setShowTransportSyncWarning(false);
-                        }}
-                        minDate={departureFlightEta || getTodayRiyadh().toISOString()}
-                        maxDate={returnFlightEtd}
-                        disabled={!isFlightFilled}
-                        disabledTooltip="Isi data penerbangan terlebih dahulu"
-                        errorMessage={
-                          touchedFields.transportations?.[index]?.date || isSubmitted
-                            ? (errors.transportations?.[index] as Record<string, { message?: string }>)
-                                ?.date?.message ||
-                              (errors.transportations?.[index] as Record<string, { message?: string }>)
-                                ?.time?.message
-                            : undefined
-                        }
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-            </Card>
+              <Plus className="size-3 mr-1" /> {t(`form.transportTypeOptions.${opt.value}`)}
+            </Button>
           ))}
-
-          {fields.length === 0 && (
-            <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-gray-100 rounded-[32px] bg-gray-50/50">
-              <History className="size-10 text-gray-200 mb-2" />
-              <p className="text-sm font-medium text-gray-400">{t('form.noTransportAdded')}</p>
-              <p className="text-[10px] text-gray-300 uppercase tracking-widest mt-1">
-                {t('form.optionalSection')}
-              </p>
-            </div>
-          )}
         </div>
+      </div>
+
+      <div className="space-y-4">
+        {fields.map((field, index) => (
+          <Card
+            key={field.id}
+            className="p-6 relative group overflow-hidden border-primary-100 bg-white shadow-sm!"
+          >
+            <div className="absolute top-0 left-0 w-1 h-full bg-primary-default" />
+
+            <div className="flex items-center justify-between mb-6 w-full">
+              <div className="flex items-center gap-2 w-full">
+                <div className="p-2 rounded-lg bg-gray-50 border border-gray-100">
+                  {getTransportIcon(watch(`transportations.${index}.type`) as string)}
+                </div>
+                <span className="text-sm font-bold uppercase tracking-tight">
+                  {t(`form.transportTypeOptions.${watch(`transportations.${index}.type`)}`)}{' '}
+                  {t('form.entry')} #{index + 1}
+                </span>
+              </div>
+              <div>
+                <Button
+                  type="button"
+                  variant="dangerOutline"
+                  size="icon"
+                  onClick={() => remove(index)}
+                  className="rounded-xl h-9 w-9 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-1">
+                <InputFile
+                  label={t('form.uploadTransportProof')}
+                  maxFiles={2}
+                  value={(watch(`transportations.${index}.imageUrls`) || []).map(
+                    (url: string, i: number) => ({
+                      name: `proof-${i + 1}.jpg`,
+                      base64: url,
+                    }),
+                  )}
+                  onChange={(files: { base64: string }[]) => {
+                    const base64s = files
+                      .map((f: { base64: string }) => f.base64)
+                      .filter(Boolean) as string[];
+                    setValue(`transportations.${index}.imageUrls`, base64s, {
+                      shouldValidate: true,
+                    });
+                  }}
+                  errorMessage={
+                    (errors.transportations?.[index] as Record<string, { message?: string }>)
+                      ?.imageUrls?.message
+                  }
+                />
+              </div>
+              <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputSelect
+                  useLabelInside
+                  size="lg"
+                  label={t('form.transportType')}
+                  options={TRANSPORT_TYPE_OPTIONS.map((opt) => ({
+                    ...opt,
+                    label: t(`form.transportTypeOptions.${opt.value}`),
+                  }))}
+                  name={`transportations.${index}.type`}
+                  required
+                  errorMessage={
+                    (errors.transportations?.[index] as Record<string, { message?: string }>)?.type
+                      ?.message
+                  }
+                />
+                <InputText
+                  useLabelInside
+                  size="lg"
+                  label={t('form.companyCarrier')}
+                  type="text"
+                  register={register}
+                  name={`transportations.${index}.company`}
+                  required
+                  errorMessage={
+                    (errors.transportations?.[index] as Record<string, { message?: string }>)
+                      ?.company?.message
+                  }
+                />
+                <InputText
+                  useLabelInside
+                  size="lg"
+                  label={t('form.totalUnit')}
+                  type="number"
+                  register={register}
+                  name={`transportations.${index}.total`}
+                  required
+                  errorMessage={
+                    (errors.transportations?.[index] as Record<string, { message?: string }>)?.total
+                      ?.message
+                  }
+                />
+
+                <InputText
+                  useLabelInside
+                  size="lg"
+                  label={t('form.routeFrom')}
+                  type="text"
+                  register={register}
+                  name={`transportations.${index}.from`}
+                  required
+                  errorMessage={
+                    (errors.transportations?.[index] as Record<string, { message?: string }>)?.from
+                      ?.message
+                  }
+                />
+                <InputText
+                  useLabelInside
+                  size="lg"
+                  label={t('form.routeTo')}
+                  type="text"
+                  register={register}
+                  name={`transportations.${index}.to`}
+                  required
+                  errorMessage={
+                    (errors.transportations?.[index] as Record<string, { message?: string }>)?.to
+                      ?.message
+                  }
+                />
+
+                <Controller
+                  control={control}
+                  name={`transportations.${index}.date`}
+                  render={({ field }) => (
+                    <DatePicker
+                      {...field}
+                      useLabelInside
+                      size="lg"
+                      label={t('form.dateAndTime')}
+                      showTime={true}
+                      required
+                      value={field.value}
+                      onChange={(val) => {
+                        const isoString = val as string;
+                        field.onChange(isoString);
+                        setValue(`transportations.${index}.time`, isoString, {
+                          shouldValidate: true,
+                        });
+                        setShowTransportSyncWarning(false);
+                      }}
+                      minDate={departureFlightEta || getTodayRiyadh().toISOString()}
+                      maxDate={returnFlightEtd}
+                      disabled={!isFlightFilled}
+                      disabledTooltip="Isi data penerbangan terlebih dahulu"
+                      errorMessage={
+                        touchedFields.transportations?.[index]?.date || isSubmitted
+                          ? (
+                              errors.transportations?.[index] as Record<
+                                string,
+                                { message?: string }
+                              >
+                            )?.date?.message ||
+                            (
+                              errors.transportations?.[index] as Record<
+                                string,
+                                { message?: string }
+                              >
+                            )?.time?.message
+                          : undefined
+                      }
+                    />
+                  )}
+                />
+              </div>
+            </div>
+          </Card>
+        ))}
+
+        {fields.length === 0 && (
+          <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-gray-100 rounded-[32px] bg-gray-50/50">
+            <History className="size-10 text-gray-200 mb-2" />
+            <p className="text-sm font-medium text-gray-400">{t('form.noTransportAdded')}</p>
+            <p className="text-[10px] text-gray-300 uppercase tracking-widest mt-1">
+              {t('form.optionalSection')}
+            </p>
+          </div>
+        )}
+      </div>
 
       <div className="p-8 border border-gray-100 rounded-[32px] bg-gray-50/30 space-y-8">
         <div className="flex items-center gap-3">
@@ -365,7 +377,9 @@ export const TransportRawdahForm = () => {
                 disabled={!isFlightFilled}
                 disabledTooltip="Isi data penerbangan terlebih dahulu"
                 errorMessage={
-                  touchedFields.rawdahMenTime || isSubmitted ? errors.rawdahMenTime?.message : undefined
+                  touchedFields.rawdahMenTime || isSubmitted
+                    ? errors.rawdahMenTime?.message
+                    : undefined
                 }
               />
             )}

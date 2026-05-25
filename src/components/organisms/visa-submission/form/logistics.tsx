@@ -34,7 +34,7 @@ export const LogisticsForm = () => {
     formState: { errors, touchedFields, isSubmitted },
   } = useFormContext<TWizardForm>();
   const [isAutoDetected, setIsAutoDetected] = useState<Record<string, boolean>>({});
-  const [showHotelSyncWarning, setShowHotelSyncWarning] = useState(false);
+  const [showHotelSyncWarning, setShowHotelSyncWarning] = useState<boolean>(false);
   const { useProcessOcr } = useTransactionController();
   const handleOcrSuccess = (data: ILogisticsOcrResponse) => {
     const ocrData = data.ocr || data;

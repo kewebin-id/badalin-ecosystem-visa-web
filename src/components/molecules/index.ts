@@ -23,3 +23,4 @@ export * from './badge/provider-status';
 export * from './action-button';
 export * from './pagination';
 export * from './infinite-scroll';
+export * from './dropdown-drawer';

@@ -20,9 +20,9 @@ export const endpoints = {
     },
   },
   notifications: {
-    list: '/ws-api/notifications',
-    unreadCount: '/ws-api/notifications/unread-count',
-    markAsRead: (id: string) => `/ws-api/notifications/${id}/read`,
+    list: '/notifications',
+    unreadCount: '/notifications/unread-count',
+    markAsRead: (id: string) => `/notifications/${id}/read`,
   },
   visa: {
     dashboard: {

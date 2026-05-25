@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 export const NotificationOptIn = () => {
-  const [isRequesting, setIsRequesting] = useState(false);
+  const [isRequesting, setIsRequesting] = useState<boolean>(false);
 
   const handleRequestPermission = async () => {
     setIsRequesting(true);

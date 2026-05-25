@@ -77,8 +77,8 @@ export const SubmissionsMonitoring = () => {
   const { mutateAsync: exportSubmission, isPending: isExporting } = useExportSubmission();
 
   const [reviewData, setReviewData] = useState<ISubmissionListItem | null>(null);
-  const [isReviewOpen, setIsReviewOpen] = useState(false);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isReviewOpen, setIsReviewOpen] = useState<boolean>(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState<boolean>(false);
   const [previewImage, setPreviewImage] = useState<{ src: string; alt: string } | null>(null);
   const [isFetchingDetail, setIsFetchingDetail] = useState<string | null>(null);
 
