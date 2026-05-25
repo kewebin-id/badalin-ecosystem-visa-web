@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/atoms';
 import { InputText, LocaleSwitcher } from '@/components/molecules';
+import { PwaInstallPrompt } from '@/components/organisms/layout/pwa-install-prompt';
 import { getAuthFormSchema, TAuthFormSchema, TStep } from '@/packages/pilgrim/auth/dto/form.dto';
 import { useAuthController } from '@/packages/pilgrim/auth/presentation/controller';
 import { ROUTES } from '@/shared/constants/routes';
@@ -129,166 +130,169 @@ export const LoginContent: FC<{ providerSlug?: string }> = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex bg-white lg:p-4 relative overflow-hidden">
-      <div className="lg:hidden absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[url(/assets/images/kabah.webp)] bg-cover bg-center bg-no-repeat" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-transparent" />
-      </div>
-
-      <div className="hidden lg:flex relative w-1/2 h-full min-h-[calc(100vh-32px)] overflow-hidden rounded-3xl bg-dark-900">
-        <div className="absolute inset-0 bg-[url(/assets/images/kabah.webp)] bg-cover bg-center bg-no-repeat transition-transform duration-700 hover:scale-105" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10" />
-        <div className="absolute bottom-0 z-10 flex flex-col h-full items-center justify-end pb-10 px-12 text-center w-full">
-          <div className="w-54 h-24 bg-[url(/assets/images/logo-transparent.webp)] bg-contain bg-no-repeat bg-center" />
-          <h2 className="text-3xl font-bold text-white font-heading mb-2">{t('brandSlogan')}</h2>
-          <p className="text-gray-300 text-lg max-w-md">{t('brandDescription')}</p>
+    <>
+      <PwaInstallPrompt />
+      <div className="min-h-screen w-full flex bg-white lg:p-4 relative overflow-hidden">
+        <div className="lg:hidden absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-[url(/assets/images/kabah.webp)] bg-cover bg-center bg-no-repeat" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-transparent" />
         </div>
-      </div>
 
-      <div className="relative z-10 w-full lg:w-1/2 flex items-center justify-center p-0 md:p-6 lg:px-24">
-        <div className="absolute top-4 right-4">
-          <LocaleSwitcher />
+        <div className="hidden lg:flex relative w-1/2 h-full min-h-[calc(100vh-32px)] overflow-hidden rounded-3xl bg-dark-900">
+          <div className="absolute inset-0 bg-[url(/assets/images/kabah.webp)] bg-cover bg-center bg-no-repeat transition-transform duration-700 hover:scale-105" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10" />
+          <div className="absolute bottom-0 z-10 flex flex-col h-full items-center justify-end pb-10 px-12 text-center w-full">
+            <div className="w-54 h-24 bg-[url(/assets/images/logo-transparent.webp)] bg-contain bg-no-repeat bg-center" />
+            <h2 className="text-3xl font-bold text-white font-heading mb-2">{t('brandSlogan')}</h2>
+            <p className="text-gray-300 text-lg max-w-md">{t('brandDescription')}</p>
+          </div>
         </div>
-        <div className="w-full max-w-md bg-white lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none p-4 md:p-8 lg:p-0 rounded-xl md:rounded-3xl shadow-2xl lg:shadow-none border border-white/20 lg:border-none">
-          <div className="lg:hidden flex flex-col items-center mb-6">
-            <div className="w-32 h-16 bg-[url(/assets/images/logo-transparent.webp)] bg-contain bg-no-repeat bg-center" />
-            <span className="text-primary-500 font-bold text-xs tracking-[0.2em] uppercase mt-[-10px]">
-              {t('subtitle')}
-            </span>
+
+        <div className="relative z-10 w-full lg:w-1/2 flex items-center justify-center p-0 md:p-6 lg:px-24">
+          <div className="absolute top-4 right-4">
+            <LocaleSwitcher />
           </div>
+          <div className="w-full max-w-md bg-white lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none p-4 md:p-8 lg:p-0 rounded-xl md:rounded-3xl shadow-2xl lg:shadow-none border border-white/20 lg:border-none">
+            <div className="lg:hidden flex flex-col items-center mb-6">
+              <div className="w-32 h-16 bg-[url(/assets/images/logo-transparent.webp)] bg-contain bg-no-repeat bg-center" />
+              <span className="text-primary-500 font-bold text-xs tracking-[0.2em] uppercase mt-[-10px]">
+                {t('subtitle')}
+              </span>
+            </div>
 
-          {step !== 'input' && (
-            <button
-              onClick={() => {
-                setStep('input');
-                setValue('password', '');
-                setValue('name', '');
-                setValue('confirmPassword', '');
-              }}
-              className="flex items-center gap-2 text-sm text-gray-500 lg:text-gray-500 hover:text-primary-default transition-colors mb-6 font-medium"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              {t('back')}
-            </button>
-          )}
-
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold tracking-tight text-dark-900 font-heading">
-              {step === 'register' ? tr('title') : t('welcome')}
-            </h1>
-            <p className="text-gray-500 text-sm">{t('enterDetail')}</p>
-          </div>
-
-          <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
-            <InputText
-              useLabelInside
-              label={t('identifier')}
-              name="identifier"
-              type="text"
-              register={register}
-              placeholder={t('identifierPlaceholder')}
-              className="rounded-xl border-gray-200 focus:ring-primary-500 bg-white"
-              disabled={step !== 'input' || isLoading}
-              errorMessage={errors.identifier?.message}
-              helperText={t('identifierPlaceholder')}
-            />
-
-            {step === 'register' && (
-              <InputText
-                useLabelInside
-                label={t('name')}
-                name="name"
-                type="text"
-                register={register}
-                placeholder={t('namePlaceholder')}
-                className="rounded-xl border-gray-200 bg-white"
-                disabled={isLoading}
-                helperText={t('nameHelper')}
-                errorMessage={errors.name?.message}
-              />
+            {step !== 'input' && (
+              <button
+                onClick={() => {
+                  setStep('input');
+                  setValue('password', '');
+                  setValue('name', '');
+                  setValue('confirmPassword', '');
+                }}
+                className="flex items-center gap-2 text-sm text-gray-500 lg:text-gray-500 hover:text-primary-default transition-colors mb-6 font-medium"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                {t('back')}
+              </button>
             )}
 
-            {(step === 'login' || step === 'register') && (
-              <>
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold tracking-tight text-dark-900 font-heading">
+                {step === 'register' ? tr('title') : t('welcome')}
+              </h1>
+              <p className="text-gray-500 text-sm">{t('enterDetail')}</p>
+            </div>
+
+            <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
+              <InputText
+                useLabelInside
+                label={t('identifier')}
+                name="identifier"
+                type="text"
+                register={register}
+                placeholder={t('identifierPlaceholder')}
+                className="rounded-xl border-gray-200 focus:ring-primary-500 bg-white"
+                disabled={step !== 'input' || isLoading}
+                errorMessage={errors.identifier?.message}
+                helperText={t('identifierPlaceholder')}
+              />
+
+              {step === 'register' && (
                 <InputText
                   useLabelInside
-                  label={t('password')}
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
+                  label={t('name')}
+                  name="name"
+                  type="text"
                   register={register}
-                  placeholder={t('passwordPlaceholder')}
+                  placeholder={t('namePlaceholder')}
                   className="rounded-xl border-gray-200 bg-white"
                   disabled={isLoading}
-                  icon={
-                    showPassword ? (
-                      <EyeOff className="size-6 text-gray-400" />
-                    ) : (
-                      <Eye className="size-6 text-gray-400" />
-                    )
-                  }
-                  iconPosition="right"
-                  iconOnClick={() => setShowPassword(!showPassword)}
-                  errorMessage={errors.password?.message}
+                  helperText={t('nameHelper')}
+                  errorMessage={errors.name?.message}
                 />
+              )}
 
-                {step === 'login' && (
-                  <div className="flex justify-start">
-                    <Link
-                      href={ROUTES.AUTH.FORGOT_PASSWORD}
-                      className="text-xs font-medium text-primary-default hover:text-primary-600 transition-colors"
-                    >
-                      {t('forgotPassword') || 'Lupa Kata Sandi?'}
-                    </Link>
-                  </div>
-                )}
-
-                {step === 'register' && (
+              {(step === 'login' || step === 'register') && (
+                <>
                   <InputText
                     useLabelInside
-                    label={tr('confirmPassword') || 'Confirm Password'}
-                    name="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
+                    label={t('password')}
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
                     register={register}
-                    placeholder="••••••••"
+                    placeholder={t('passwordPlaceholder')}
                     className="rounded-xl border-gray-200 bg-white"
                     disabled={isLoading}
                     icon={
-                      showConfirmPassword ? (
+                      showPassword ? (
                         <EyeOff className="size-6 text-gray-400" />
                       ) : (
                         <Eye className="size-6 text-gray-400" />
                       )
                     }
                     iconPosition="right"
-                    iconOnClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    errorMessage={errors.confirmPassword?.message}
+                    iconOnClick={() => setShowPassword(!showPassword)}
+                    errorMessage={errors.password?.message}
                   />
-                )}
-              </>
-            )}
 
-            <Button
-              type="submit"
-              size="lg"
-              disabled={
-                isLoading ||
-                (step === 'input' && (!watch('identifier') || !!errors.identifier)) ||
-                (step !== 'input' && !isValid)
-              }
-              isSubmitting={isLoading || isSubmitting}
-            >
-              {step === 'input'
-                ? t('continue')
-                : step === 'login'
-                  ? t('loginNow')
-                  : t('registerAccount')}
-            </Button>
-          </form>
+                  {step === 'login' && (
+                    <div className="flex justify-start">
+                      <Link
+                        href={ROUTES.AUTH.FORGOT_PASSWORD}
+                        className="text-xs font-medium text-primary-default hover:text-primary-600 transition-colors"
+                      >
+                        {t('forgotPassword') || 'Lupa Kata Sandi?'}
+                      </Link>
+                    </div>
+                  )}
+
+                  {step === 'register' && (
+                    <InputText
+                      useLabelInside
+                      label={tr('confirmPassword') || 'Confirm Password'}
+                      name="confirmPassword"
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      register={register}
+                      placeholder="••••••••"
+                      className="rounded-xl border-gray-200 bg-white"
+                      disabled={isLoading}
+                      icon={
+                        showConfirmPassword ? (
+                          <EyeOff className="size-6 text-gray-400" />
+                        ) : (
+                          <Eye className="size-6 text-gray-400" />
+                        )
+                      }
+                      iconPosition="right"
+                      iconOnClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      errorMessage={errors.confirmPassword?.message}
+                    />
+                  )}
+                </>
+              )}
+
+              <Button
+                type="submit"
+                size="lg"
+                disabled={
+                  isLoading ||
+                  (step === 'input' && (!watch('identifier') || !!errors.identifier)) ||
+                  (step !== 'input' && !isValid)
+                }
+                isSubmitting={isLoading || isSubmitting}
+              >
+                {step === 'input'
+                  ? t('continue')
+                  : step === 'login'
+                    ? t('loginNow')
+                    : t('registerAccount')}
+              </Button>
+            </form>
+          </div>
         </div>
+        <p className="text-center text-xs text-white mt-8 lg:hidden absolute bottom-4 w-full">
+          {tc('copyright', { year: new Date().getFullYear() })}
+        </p>
       </div>
-      <p className="text-center text-xs text-white mt-8 lg:hidden absolute bottom-4 w-full">
-        {tc('copyright', { year: new Date().getFullYear() })}
-      </p>
-    </div>
+    </>
   );
 };
