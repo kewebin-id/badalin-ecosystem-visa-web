@@ -868,5 +868,17 @@
       "title": "Tidak Ada Refund",
       "description": "Semua refund telah diselesaikan atau tidak ada jemaah yang memerlukan refund."
     }
+  },
+  "PwaInstall": {
+    "title": "Tambahkan aplikasi ke Layar beranda Anda?",
+    "description": "Buka aplikasi dengan cepat dan mudah dengan cara menambahkannya ke Layar beranda Anda.",
+    "cancel": "Batal",
+    "install": "Install"
+  },
+  "SoundPermission": {
+    "title": "Aktifkan Suara Notifikasi?",
+    "description": "Izinkan sistem memutar suara agar Anda tidak ketinggalan info penting.",
+    "allow": "Izinkan",
+    "later": "Nanti"
   }
 }
