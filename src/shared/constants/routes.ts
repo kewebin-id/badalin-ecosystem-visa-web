@@ -15,6 +15,7 @@ export const ROUTES = {
       FORM: '/transactions/form',
       DETAIL: '/transactions',
     },
+    NOTIFICATIONS: '/notifications',
   },
   PROVIDER: {
     DASHBOARD: (slug: string = 'p') => `/${slug}/dashboard`,

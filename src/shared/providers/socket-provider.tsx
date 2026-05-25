@@ -28,6 +28,39 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const { addNotification, incrementUnreadCount } = useNotificationStore();
 
   useEffect(() => {
+    const granted = localStorage.getItem('sound_permission_granted');
+    const lastAsked = localStorage.getItem('sound_permission_asked');
+    const now = Date.now();
+    const oneWeek = 7 * 24 * 60 * 60 * 1000;
+
+    if (granted !== 'true' && (!lastAsked || now - parseInt(lastAsked) > oneWeek)) {
+      const timer = setTimeout(() => {
+        toast('Aktifkan Suara Notifikasi?', {
+          description: 'Izinkan sistem memutar suara agar Anda tidak ketinggalan info penting.',
+          action: {
+            label: 'Izinkan',
+            onClick: () => {
+              const audio = new Audio('/assets/sounds/notif.mp3');
+              audio.volume = 0;
+              audio.play().catch(() => {});
+              localStorage.setItem('sound_permission_granted', 'true');
+            },
+          },
+          cancel: {
+            label: 'Nanti',
+            onClick: () => {
+              localStorage.setItem('sound_permission_asked', now.toString());
+            },
+          },
+          duration: Number.POSITIVE_INFINITY,
+          position: typeof window !== 'undefined' && window.innerWidth < 768 ? 'bottom-center' : 'top-right',
+        });
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  useEffect(() => {
     if (!isLoggedIn || !token) {
       if (socket) {
         socket.disconnect();
@@ -80,8 +113,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
           </div>
         ),
         { 
-          duration: 5000,
-          position: typeof window !== 'undefined' && window.innerWidth < 768 ? 'bottom-center' : 'bottom-right',
+          duration: 10000,
+          position: typeof window !== 'undefined' && window.innerWidth < 768 ? 'bottom-center' : 'top-right',
         }
       );
 
