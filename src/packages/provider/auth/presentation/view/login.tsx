@@ -2,6 +2,7 @@
 
 import { Button, Card, Checkbox, Image } from '@/components/atoms';
 import { InputText } from '@/components/molecules';
+import { PwaInstallPrompt } from '@/components/organisms';
 import { useAgencySettingsController } from '@/packages/provider/agency-settings/presentation/controller';
 import { ROUTES } from '@/shared/constants/routes';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -52,8 +53,10 @@ export const ProviderLoginView: FC = () => {
   const loading = loginMutation.isPending;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50/50 px-4">
-      <div className="w-full max-w-md">
+    <>
+      <PwaInstallPrompt />
+      <div className="min-h-screen flex items-center justify-center bg-gray-50/50 px-4">
+        <div className="w-full max-w-md">
         <Card className="rounded-3xl shadow-xl border-none p-8! bg-white">
           <div className="flex flex-col items-center mb-8">
             <div className="relative w-32 h-16 mb-4">
@@ -175,7 +178,8 @@ export const ProviderLoginView: FC = () => {
             </div>
           </div>
         </Card>
+        </div>
       </div>
-    </div>
+    </>
   );
 };

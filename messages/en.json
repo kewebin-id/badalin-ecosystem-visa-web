@@ -868,5 +868,17 @@
       "title": "No Refunds",
       "description": "All refunds have been settled or there are no pilgrims requiring a refund."
     }
+  },
+  "PwaInstall": {
+    "title": "Add app to your Home screen?",
+    "description": "Open the app quickly and easily by adding it to your Home screen.",
+    "cancel": "Cancel",
+    "install": "Install"
+  },
+  "SoundPermission": {
+    "title": "Enable Notification Sounds?",
+    "description": "Allow the system to play sounds so you do not miss important info.",
+    "allow": "Allow",
+    "later": "Later"
   }
 }

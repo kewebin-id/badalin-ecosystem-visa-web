@@ -9,3 +9,4 @@ export * from './visa-submission/form/select-members';
 export * from './visa-submission/form/summary';
 export * from './visa-submission/form/transport-rawdah';
 export * from './providers';
+export * from './layout/pwa-install-prompt';

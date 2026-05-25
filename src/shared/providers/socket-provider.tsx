@@ -5,7 +5,8 @@ import { useNotificationStore } from '@/shared/hooks/use-notification-store';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { toast } from 'sonner';
-import { Bell, X } from 'lucide-react';
+import { Bell, Volume2, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface SocketContextType {
   socket: Socket | null;
@@ -26,6 +27,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const { addNotification, incrementUnreadCount } = useNotificationStore();
+  const t = useTranslations('SoundPermission');
 
   useEffect(() => {
     const granted = localStorage.getItem('sound_permission_granted');
@@ -35,26 +37,52 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (granted !== 'true' && (!lastAsked || now - parseInt(lastAsked) > oneWeek)) {
       const timer = setTimeout(() => {
-        toast('Aktifkan Suara Notifikasi?', {
-          description: 'Izinkan sistem memutar suara agar Anda tidak ketinggalan info penting.',
-          action: {
-            label: 'Izinkan',
-            onClick: () => {
-              const audio = new Audio('/assets/sounds/notif.mp3');
-              audio.volume = 0;
-              audio.play().catch(() => {});
-              localStorage.setItem('sound_permission_granted', 'true');
-            },
-          },
-          cancel: {
-            label: 'Nanti',
-            onClick: () => {
-              localStorage.setItem('sound_permission_asked', now.toString());
-            },
-          },
-          duration: Number.POSITIVE_INFINITY,
-          position: typeof window !== 'undefined' && window.innerWidth < 768 ? 'bottom-center' : 'top-right',
-        });
+        toast.custom(
+          (tToast) => (
+            <div className="relative flex w-full max-w-sm overflow-hidden bg-white rounded-xl shadow-xl dark:bg-neutral-800 ring-1 ring-black/5 dark:ring-white/10 pointer-events-auto p-4 flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-default/10 text-primary-default">
+                  <Volume2 className="w-5 h-5" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                    {t('title')}
+                  </h3>
+                  <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                    {t('description')}
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2 justify-end mt-2">
+                <button
+                  onClick={() => {
+                    localStorage.setItem('sound_permission_asked', now.toString());
+                    toast.dismiss(tToast);
+                  }}
+                  className="px-4 py-2 text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                >
+                  {t('later')}
+                </button>
+                <button
+                  onClick={() => {
+                    const audio = new Audio('/assets/sounds/notif.mp3');
+                    audio.volume = 0;
+                    audio.play().catch(() => {});
+                    localStorage.setItem('sound_permission_granted', 'true');
+                    toast.dismiss(tToast);
+                  }}
+                  className="px-4 py-2 text-xs font-medium text-white bg-primary-default hover:bg-primary-dark rounded-lg transition-colors shadow-sm"
+                >
+                  {t('allow')}
+                </button>
+              </div>
+            </div>
+          ),
+          {
+            duration: Number.POSITIVE_INFINITY,
+            position: typeof window !== 'undefined' && window.innerWidth < 768 ? 'bottom-center' : 'top-right',
+          }
+        );
       }, 3000);
       return () => clearTimeout(timer);
     }
