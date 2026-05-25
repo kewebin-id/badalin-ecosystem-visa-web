@@ -2,8 +2,9 @@
 
 import { useAuth } from '@/shared/hooks/use-auth';
 import { useNotificationStore } from '@/shared/hooks/use-notification-store';
-import { Bell, Volume2, X } from 'lucide-react';
+import { Bell, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { SoundPermissionPrompt, GlobalNotificationToast } from '@/components/organisms';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { toast } from 'sonner';
@@ -29,68 +30,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const { addNotification, incrementUnreadCount } = useNotificationStore();
   const t = useTranslations('SoundPermission');
 
-  useEffect(() => {
-    const granted = localStorage.getItem('sound_permission_granted');
-    const lastAsked = localStorage.getItem('sound_permission_asked');
-    const now = Date.now();
-    const oneWeek = 7 * 24 * 60 * 60 * 1000;
 
-    if (granted !== 'true' && (!lastAsked || now - parseInt(lastAsked) > oneWeek)) {
-      const timer = setTimeout(() => {
-        toast.custom(
-          (tToast) => (
-            <div className="relative flex w-full max-w-sm overflow-hidden bg-white rounded-xl shadow-xl dark:bg-neutral-800 ring-1 ring-black/5 dark:ring-white/10 pointer-events-auto p-4 flex-col gap-3">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-default/10 text-primary-default">
-                  <Volume2 className="w-5 h-5" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                    {t('title')}
-                  </h3>
-                  <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                    {t('description')}
-                  </p>
-                </div>
-              </div>
-              <div className="flex gap-2 justify-end mt-2">
-                <button
-                  onClick={() => {
-                    localStorage.setItem('sound_permission_asked', now.toString());
-                    toast.dismiss(tToast);
-                  }}
-                  className="px-4 py-2 text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                >
-                  {t('later')}
-                </button>
-                <button
-                  onClick={() => {
-                    const audio = new Audio('/assets/sounds/notif.mp3');
-                    audio.volume = 0;
-                    audio.play().catch(() => {});
-                    localStorage.setItem('sound_permission_granted', 'true');
-                    toast.dismiss(tToast);
-                  }}
-                  className="px-4 py-2 text-xs font-medium text-white bg-primary-default hover:bg-primary-dark rounded-lg transition-colors shadow-sm"
-                >
-                  {t('allow')}
-                </button>
-              </div>
-            </div>
-          ),
-          {
-            duration: Number.POSITIVE_INFINITY,
-            position:
-              typeof window !== 'undefined' && window.innerWidth < 768 ? 'top-center' : 'top-left',
-            unstyled: true,
-            className: '!bg-transparent !border-none !shadow-none !p-0 flex w-full',
-            style: { background: 'transparent', border: 'none', boxShadow: 'none', padding: 0 },
-          },
-        );
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, []);
 
   useEffect(() => {
     if (!isLoggedIn || !token) {
@@ -122,37 +62,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     socketInstance.on('new_notification', (payload) => {
       addNotification(payload);
       incrementUnreadCount();
-      toast.custom(
-        (t) => (
-          <div className="relative flex w-full max-w-sm overflow-hidden bg-white rounded-xl shadow-xl dark:bg-neutral-800 ring-1 ring-black/5 dark:ring-white/10 pointer-events-auto">
-            <div className="flex items-center justify-center w-12 bg-primary">
-              <Bell className="w-5 h-5 text-white animate-pulse" />
-            </div>
-            <div className="px-4 py-3 flex-1">
-              <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 pr-4">
-                {payload.title}
-              </h3>
-              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2">
-                {payload.message}
-              </p>
-            </div>
-            <button
-              onClick={() => toast.dismiss(t)}
-              className="absolute top-2 right-2 p-1 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors rounded-md"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        ),
-        {
-          duration: 10000,
-          position:
-            typeof window !== 'undefined' && window.innerWidth < 768 ? 'top-center' : 'top-right',
-          unstyled: true,
-          className: '!bg-transparent !border-none !shadow-none !p-0 flex w-full',
-          style: { background: 'transparent', border: 'none', boxShadow: 'none', padding: 0 },
-        },
-      );
+      window.dispatchEvent(new CustomEvent('show_custom_toast', { detail: payload }));
 
       // Play notification sound
       try {
@@ -177,6 +87,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   }, [token, isLoggedIn, addNotification, incrementUnreadCount]);
 
   return (
-    <SocketContext.Provider value={{ socket, isConnected }}>{children}</SocketContext.Provider>
+    <SocketContext.Provider value={{ socket, isConnected }}>
+      <SoundPermissionPrompt />
+      <GlobalNotificationToast />
+      {children}
+    </SocketContext.Provider>
   );
 };
