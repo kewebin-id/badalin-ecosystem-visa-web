@@ -2,7 +2,6 @@ import { ROUTES } from '@/shared/constants/routes';
 import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 
-// Daftarkan semua root path menu jamaah di sini
 const pilgrimBasePaths = ['transactions', 'family', 'pilgrim', 'profile', 'dashboard'];
 
 export default withAuth(
@@ -17,7 +16,6 @@ export default withAuth(
     const slug = segments[0];
     const isAuthPage = pathname.includes('/auth/');
 
-    // 1. Root Path Redirect (Authenticated)
     if (token && pathname === '/') {
       if (role === 'PROVIDER') {
         const userSlug =
@@ -29,7 +27,6 @@ export default withAuth(
       }
     }
 
-    // 2. Proteksi Provider (Unauthenticated)
     const isProviderProtectedArea =
       segments.length >= 2 &&
       !isAuthPage &&
@@ -41,7 +38,6 @@ export default withAuth(
       return NextResponse.redirect(loginUrl);
     }
 
-    // 3. Auth Page Redirect (Authenticated)
     if (token && isAuthPage) {
       let landing: string = ROUTES.PILGRIM.DASHBOARD;
       if (role === 'SUPERADMIN') landing = ROUTES.ADMIN.CONSOLE;
@@ -53,13 +49,11 @@ export default withAuth(
       return NextResponse.redirect(new URL(landing, req.url));
     }
 
-    // 4. Proteksi Route berdasarkan Role (Authenticated)
     if (token) {
       if (pathname.startsWith('/console') && role !== 'SUPERADMIN') {
         return NextResponse.redirect(new URL(ROUTES.PILGRIM.DASHBOARD, req.url));
       }
 
-      // FIX: Bypass pengecekan slug jika segment pertama adalah menu jamaah
       const isPotentialProviderPath =
         segments.length > 0 &&
         !['console', 'auth', 'public', 'api', ...pilgrimBasePaths].includes(segments[0]);
@@ -71,7 +65,6 @@ export default withAuth(
 
     const response = NextResponse.next();
 
-    // 5. Agency Context (Cookie Setting)
     const reservedPaths = ['console', 'auth', 'public', 'api', ...pilgrimBasePaths];
     const isPotentialAgencyPath = segments.length > 0 && !reservedPaths.includes(segments[0]);
 
@@ -96,10 +89,8 @@ export default withAuth(
         if (pathname.startsWith('/auth/') || pathname.startsWith('/public/')) return true;
         if (segments.length >= 2 && segments[1] === 'auth') return true;
 
-        // Allow public access to provider landing page to set cookie
         if (segments.length === 2 && segments[0] === 'p') return true;
 
-        // Biarkan request masuk ke middleware function untuk di-redirect ke login provider
         if (segments.length >= 2 && segments[1] === 'dashboard') return true;
         if (
           segments.length >= 2 &&
