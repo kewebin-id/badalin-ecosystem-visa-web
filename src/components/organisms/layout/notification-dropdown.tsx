@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Bell } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { ROUTES } from '@/shared/constants/routes';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -117,7 +118,7 @@ export const NotificationDropdown = () => {
             </div>
           ) : (
             <div className="flex flex-col">
-              {notifications.map((item) => (
+              {notifications.slice(0, 10).map((item) => (
                 <div
                   key={item.id}
                   onClick={() => handleNotificationClick(item)}
@@ -144,6 +145,17 @@ export const NotificationDropdown = () => {
                   </div>
                 </div>
               ))}
+              {notifications.length > 10 && (
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    router.push(ROUTES.PILGRIM.NOTIFICATIONS);
+                  }}
+                  className="mt-2 text-sm text-center text-primary-default font-medium hover:underline py-2"
+                >
+                  {t('viewAllNotifications')}
+                </button>
+              )}
             </div>
           )}
         </div>

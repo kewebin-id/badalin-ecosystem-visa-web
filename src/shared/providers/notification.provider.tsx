@@ -32,11 +32,12 @@ export const NotificationProvider: FC<{ children: ReactNode }> = ({ children }) 
 
   // Sync user when authenticated
   useEffect(() => {
-    if (!useCaseRef.current || !isLoggedIn || !user?.employeeId) return;
+    const userId = user?.employeeId || user?.id;
+    if (!useCaseRef.current || !isLoggedIn || !userId) return;
 
-    Logger.info(`Syncing user: ${user.employeeId}`, { location: 'NotificationProvider' });
-    useCaseRef.current.syncUser(user.employeeId);
-  }, [isLoggedIn, user?.employeeId]);
+    Logger.info(`Syncing user: ${userId}`, { location: 'NotificationProvider' });
+    useCaseRef.current.syncUser(userId);
+  }, [isLoggedIn, user?.employeeId, user?.id]);
 
   return <>{children}</>;
 };
