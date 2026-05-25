@@ -8,10 +8,11 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Bell } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { ROUTES } from '@/shared/constants/routes';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { ROUTES } from '@/shared/constants/routes';
 
 dayjs.extend(relativeTime);
 
@@ -85,7 +86,7 @@ export const NotificationDropdown = () => {
   };
 
   return (
-    <>
+    <div className="flex items-center gap-2">
       <DropdownDrawer
         open={open}
         setOpen={setOpen}
@@ -159,6 +160,6 @@ export const NotificationDropdown = () => {
           )}
         </div>
       </DropdownDrawer>
-    </>
+    </div>
   );
 };
