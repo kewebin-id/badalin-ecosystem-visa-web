@@ -468,7 +468,14 @@
       "IN_REVIEW": "Dalam Tinjauan",
       "VERIFIED": "Diproses",
       "REJECTED": "Ditolak"
-    }
+    },
+    "memberCount": "{count, plural, =1 {Hanya Anda} other {{count} Orang}}",
+    "departure": "Keberangkatan",
+    "flight": "Penerbangan",
+    "airlineTba": "Informasi Maskapai Menyusul",
+    "accommodation": "Akomodasi",
+    "days": "{count} Hari",
+    "viewEVisa": "Lihat E-Visa"
   },
   "VisaWizard": {
     "title": "Permohonan Visa Baru",

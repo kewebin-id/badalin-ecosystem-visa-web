@@ -18,7 +18,7 @@ export const ProviderLoginView: FC = () => {
   const slug = (params?.slug as string) || 'p';
   const isDefaultSlug = slug === 'p';
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const { loginMutation } = useProviderAuthController();
   const { useValidateSlug } = useAgencySettingsController();
 

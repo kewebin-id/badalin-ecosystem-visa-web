@@ -41,7 +41,7 @@ export const InteractiveMap: React.FC<IInteractiveMapProps> = ({
 
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<ILonLat[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const createMarkerStyle = useCallback(() => {
     return new Style({

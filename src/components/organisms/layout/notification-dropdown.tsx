@@ -1,22 +1,22 @@
 'use client';
 
-import { DialogDrawer } from '@/components/molecules';
+import { DropdownDrawer } from '@/components/molecules';
 import { useNotificationController } from '@/packages/notification/presentation/controller';
-import { useNotificationStore, INotification } from '@/shared/hooks/use-notification-store';
+import { INotification, useNotificationStore } from '@/shared/hooks/use-notification-store';
 import { cn } from '@/shared/utils';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Bell } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
 
 dayjs.extend(relativeTime);
 
 export const NotificationDropdown = () => {
   const router = useRouter();
   const t = useTranslations('Dashboard');
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
   const {
     notifications,
     unreadCount,
@@ -32,10 +32,12 @@ export const NotificationDropdown = () => {
   const { data: countRes } = useUnreadCount();
   const markAsReadMutation = useMarkAsRead();
 
+  const pages = historyRes?.pages;
+
   useEffect(() => {
-    if (historyRes?.pages) {
+    if (pages) {
       const allNotifs: INotification[] = [];
-      historyRes.pages.forEach((page: unknown) => {
+      pages.forEach((page: unknown) => {
         const listData = (page as { data?: unknown })?.data;
         const pageArray = Array.isArray(listData)
           ? listData
@@ -46,7 +48,7 @@ export const NotificationDropdown = () => {
       });
       setNotifications(allNotifs);
     }
-  }, [historyRes, setNotifications]);
+  }, [pages, setNotifications]);
 
   useEffect(() => {
     const countData = countRes?.data as unknown;
@@ -82,32 +84,31 @@ export const NotificationDropdown = () => {
 
   return (
     <>
-      <button 
-        onClick={() => setOpen(true)}
-        className="relative flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100 transition-colors focus:outline-none"
-      >
-        <Bell className="size-5 text-gray-600" />
-        {unreadCount > 0 && (
-          <span className="absolute top-2 right-2 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-white">
-            {unreadCount > 99 ? '99+' : unreadCount}
-          </span>
-        )}
-      </button>
-
-      <DialogDrawer
+      <DropdownDrawer
         open={open}
         setOpen={setOpen}
         title={t('notifications')}
-        showCloseButton
-      >
-        <div className="flex flex-col mb-4">
-          {unreadCount > 0 && (
-            <span className="self-start text-xs text-primary-default font-medium bg-primary-default/10 px-2 py-0.5 rounded-full mb-2">
+        trigger={
+          <button className="relative flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100 transition-colors focus:outline-none">
+            <Bell className="size-5 text-gray-600" />
+            {unreadCount > 0 && (
+              <span className="absolute top-1 right-1 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-white">
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
+          </button>
+        }
+        showCloseButton={false}
+        headerRight={
+          unreadCount > 0 && (
+            <span className="text-xs text-primary-default font-medium bg-primary-default/10 px-2 py-0.5 rounded-full">
               {t('newNotifications', { count: unreadCount })}
             </span>
-          )}
-        </div>
-
+          )
+        }
+        description="Notifications List"
+        descriptionClassName="sr-only"
+      >
         <div className="flex flex-col gap-2">
           {notifications.length === 0 ? (
             <div className="py-8 text-center text-gray-500 text-sm flex flex-col items-center gap-2">
@@ -146,7 +147,7 @@ export const NotificationDropdown = () => {
             </div>
           )}
         </div>
-      </DialogDrawer>
+      </DropdownDrawer>
     </>
   );
 };

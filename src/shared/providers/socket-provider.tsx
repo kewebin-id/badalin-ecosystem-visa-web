@@ -23,7 +23,7 @@ export const useSocket = () => {
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const { token, isLoggedIn } = useAuth();
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
   const { addNotification, incrementUnreadCount } = useNotificationStore();
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
-    const socketInstance = io(window.location.origin, {
+    const socketInstance = io(`${window.location.origin}/notifications`, {
       path: '/ws-api/notifications/socket.io',
       auth: { token },
       autoConnect: false,

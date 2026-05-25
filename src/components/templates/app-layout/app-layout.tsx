@@ -18,8 +18,8 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const { signOut, user } = useAuth();
   const params = useParams();
   const slug = (params?.slug as string) || user?.agencySlug || user?.agency?.slug;
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState<boolean>(false);
 
   // Initialize Onboarding Tour
   useOnboardingTour(user?.role, slug);

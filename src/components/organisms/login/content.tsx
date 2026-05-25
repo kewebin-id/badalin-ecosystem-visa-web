@@ -24,8 +24,8 @@ export const LoginContent: FC<{ providerSlug?: string }> = () => {
   const callbackUrl = searchParams?.get('callbackUrl');
 
   const [step, setStep] = useState<TStep>('input');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {

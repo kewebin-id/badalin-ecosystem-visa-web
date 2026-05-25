@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 
 export const AjukanVisaButton = () => {
   const t = useTranslations('VisaTransaction');
-  // const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState<boolean>(false);
 
   return (
     <>

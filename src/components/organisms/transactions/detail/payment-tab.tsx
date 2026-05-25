@@ -33,7 +33,7 @@ interface DetailPaymentTabProps {
 
 export const DetailPaymentTab = ({ transaction, onUpload, isUploading }: DetailPaymentTabProps) => {
   const t = useTranslations('VisaTransaction');
-  const [showPreview, setShowPreview] = useState(false);
+  const [showPreview, setShowPreview] = useState<boolean>(false);
   const proofUrl = transaction.proofOfPayment || transaction.paymentProofUrl;
 
   const handleCopy = () => {

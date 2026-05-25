@@ -53,7 +53,7 @@ export const InputFile = ({
 }: GlobalUploadProps) => {
   const isPdf = (src: string) => typeof src === 'string' && src.toLowerCase().includes('.pdf');
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
   const [previewImage, setPreviewImage] = useState<{
     src: string;
     name: string;
