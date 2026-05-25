@@ -36,8 +36,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
-    const socketInstance = io(`${window.location.origin}/notifications`, {
-      path: '/ws-api/notifications/socket.io',
+    const baseUrl = process.env.BASE_API_URL;
+    const socketInstance = io(`${baseUrl}/notifications`, {
       auth: { token },
       autoConnect: false,
       transports: ['websocket'],
