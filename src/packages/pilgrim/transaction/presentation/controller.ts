@@ -489,7 +489,7 @@ export const useTransactionController = () => {
     useTransactionDetail,
     useCreateTransaction: () => createTransactionMutation,
     useUpdateTransaction: () => updateTransactionMutation,
-    useProcessOcr: (onOcrSuccess: (data: ILogisticsOcrResponse) => void) =>
+    useProcessOcr: (onOcrSuccess: (data: ILogisticsOcrResponse) => void, onOcrError?: () => void) =>
       useMutation({
         mutationFn: ({ file, ocrType = 'LOGISTICS' }: { file: File; ocrType?: TOcrType }) =>
           useCase.processOcr(file, ocrType),
@@ -498,9 +498,13 @@ export const useTransactionController = () => {
             onOcrSuccess(res.data);
           } else {
             toast.error(res.message || 'Gagal memproses OCR dokumen logistik');
+            if (onOcrError) onOcrError();
           }
         },
-        onError: () => toast.error('Gagal memproses OCR dokumen logistik'),
+        onError: () => {
+          toast.error('Gagal memproses OCR dokumen logistik');
+          if (onOcrError) onOcrError();
+        },
       }),
     useUploadProof: () => uploadProofMutation,
     usePreviewSubmission: () => previewSubmissionMutation,

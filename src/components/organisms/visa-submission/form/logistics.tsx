@@ -96,61 +96,97 @@ export const LogisticsForm = () => {
     setIsAutoDetected(newAutoDetected);
   };
 
-  const departureTicketOcr = useProcessOcr((data: ILogisticsOcrResponse) => {
-    handleOcrSuccess(data);
-    const field = 'departureTicketUrls' as Path<TWizardForm>;
-    const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
-    setValue(
-      field,
-      [...prevValues, data?.publicUrl || ''] as import('react-hook-form').PathValue<
-        TWizardForm,
-        Path<TWizardForm>
-      >,
-      { shouldValidate: true },
-    );
-  });
+  const departureTicketOcr = useProcessOcr(
+    (data: ILogisticsOcrResponse) => {
+      handleOcrSuccess(data);
+      const field = 'departureTicketUrls' as Path<TWizardForm>;
+      const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
+      setValue(
+        field,
+        [...prevValues, data?.publicUrl || ''] as import('react-hook-form').PathValue<
+          TWizardForm,
+          Path<TWizardForm>
+        >,
+        { shouldValidate: true },
+      );
+    },
+    () => {
+      const field = 'departureTicketUrls' as Path<TWizardForm>;
+      const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
+      setValue(field, prevValues as import('react-hook-form').PathValue<TWizardForm, Path<TWizardForm>>, {
+        shouldValidate: true,
+      });
+    }
+  );
 
-  const returnTicketOcr = useProcessOcr((data: ILogisticsOcrResponse) => {
-    handleOcrSuccess(data);
-    const field = 'returnTicketUrls' as Path<TWizardForm>;
-    const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
-    setValue(
-      field,
-      [...prevValues, data?.publicUrl || ''] as import('react-hook-form').PathValue<
-        TWizardForm,
-        Path<TWizardForm>
-      >,
-      { shouldValidate: true },
-    );
-  });
+  const returnTicketOcr = useProcessOcr(
+    (data: ILogisticsOcrResponse) => {
+      handleOcrSuccess(data);
+      const field = 'returnTicketUrls' as Path<TWizardForm>;
+      const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
+      setValue(
+        field,
+        [...prevValues, data?.publicUrl || ''] as import('react-hook-form').PathValue<
+          TWizardForm,
+          Path<TWizardForm>
+        >,
+        { shouldValidate: true },
+      );
+    },
+    () => {
+      const field = 'returnTicketUrls' as Path<TWizardForm>;
+      const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
+      setValue(field, prevValues as import('react-hook-form').PathValue<TWizardForm, Path<TWizardForm>>, {
+        shouldValidate: true,
+      });
+    }
+  );
 
-  const makkahHotelOcr = useProcessOcr((data: ILogisticsOcrResponse) => {
-    handleOcrSuccess(data);
-    const field = 'hotelMakkahVoucherUrls' as Path<TWizardForm>;
-    const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
-    setValue(
-      field,
-      [...prevValues, data?.publicUrl || ''] as import('react-hook-form').PathValue<
-        TWizardForm,
-        Path<TWizardForm>
-      >,
-      { shouldValidate: true },
-    );
-  });
+  const makkahHotelOcr = useProcessOcr(
+    (data: ILogisticsOcrResponse) => {
+      handleOcrSuccess(data);
+      const field = 'hotelMakkahVoucherUrls' as Path<TWizardForm>;
+      const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
+      setValue(
+        field,
+        [...prevValues, data?.publicUrl || ''] as import('react-hook-form').PathValue<
+          TWizardForm,
+          Path<TWizardForm>
+        >,
+        { shouldValidate: true },
+      );
+    },
+    () => {
+      const field = 'hotelMakkahVoucherUrls' as Path<TWizardForm>;
+      const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
+      setValue(field, prevValues as import('react-hook-form').PathValue<TWizardForm, Path<TWizardForm>>, {
+        shouldValidate: true,
+      });
+    }
+  );
 
-  const madinahHotelOcr = useProcessOcr((data: ILogisticsOcrResponse) => {
-    handleOcrSuccess(data);
-    const field = 'hotelMadinahVoucherUrls' as Path<TWizardForm>;
-    const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
-    setValue(
-      field,
-      [...prevValues, data?.publicUrl || ''] as import('react-hook-form').PathValue<
-        TWizardForm,
-        Path<TWizardForm>
-      >,
-      { shouldValidate: true },
-    );
-  });
+  const madinahHotelOcr = useProcessOcr(
+    (data: ILogisticsOcrResponse) => {
+      handleOcrSuccess(data);
+      const field = 'hotelMadinahVoucherUrls' as Path<TWizardForm>;
+      const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
+      setValue(
+        field,
+        [...prevValues, data?.publicUrl || ''] as import('react-hook-form').PathValue<
+          TWizardForm,
+          Path<TWizardForm>
+        >,
+        { shouldValidate: true },
+      );
+    },
+    () => {
+      const field = 'hotelMadinahVoucherUrls' as Path<TWizardForm>;
+      const prevValues = (watch(field) as string[])?.filter((e) => !isBase64(e)) || [];
+      setValue(field, prevValues as import('react-hook-form').PathValue<TWizardForm, Path<TWizardForm>>, {
+        shouldValidate: true,
+      });
+    }
+  );
 
   useEffect(() => {
     const subscription = watch((_, { name, type }) => {
