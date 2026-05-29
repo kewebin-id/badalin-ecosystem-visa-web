@@ -23,4 +23,5 @@ export interface ITransactionRepository {
     data: ICreateTransactionRequest,
   ): Promise<ResponseREST<import('../domain/transaction').IPreviewResponse>>;
   upload(base64: string, ocrType?: string): Promise<ResponseREST<ILogisticsOcrResponse>>;
+  resubmit(id: string): Promise<ResponseREST<IApiTransaction>>;
 }

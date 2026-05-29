@@ -18,6 +18,8 @@ interface DetailReviewSidebarProps {
   isVisaPhase?: boolean;
   isIssued?: boolean;
   visaFiles?: Record<string, UploadFile[]>;
+  isPermanentRejection?: boolean;
+  setIsPermanentRejection?: (val: boolean) => void;
 }
 
 export const DetailReviewSidebar = ({
@@ -31,6 +33,8 @@ export const DetailReviewSidebar = ({
   isVisaPhase,
   isIssued,
   visaFiles = {},
+  isPermanentRejection = false,
+  setIsPermanentRejection,
 }: DetailReviewSidebarProps) => {
   const t = useTranslations('ProviderSubmissions.detail');
   const ta = useTranslations('ProviderSubmissions.detail.actions');
@@ -157,6 +161,25 @@ export const DetailReviewSidebar = ({
             <div className="pt-2 border-t border-red-100">
               <p className="text-[9px] text-red-400 font-medium italic">* {tr('penaltyWarning')}</p>
             </div>
+          </div>
+        )}
+
+        {!isVisaPhase && rejectedCount > 0 && !isIssued && setIsPermanentRejection && (
+          <div className="mb-6 p-4 bg-gray-50 rounded-2xl border border-gray-200">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                className="mt-1 h-4 w-4 rounded border-gray-300 text-primary-default focus:ring-primary-500"
+                checked={isPermanentRejection}
+                onChange={(e) => setIsPermanentRejection(e.target.checked)}
+              />
+              <div className="space-y-1">
+                <p className="text-sm font-bold text-gray-900">Tolak Permanen (Trigger Refund)</p>
+                <p className="text-[10px] text-gray-500 leading-relaxed">
+                  Pilih ini jika dokumen sama sekali tidak bisa diperbaiki dan Anda ingin memproses refund. Jika tidak, jamaah akan diminta melakukan revisi.
+                </p>
+              </div>
+            </label>
           </div>
         )}
 

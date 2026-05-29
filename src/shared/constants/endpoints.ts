@@ -37,6 +37,7 @@ export const endpoints = {
       detail: (id: string) => `${PrefixEndpoint.VISA}/submissions/${id}`,
       paymentProof: (id: string) => `${PrefixEndpoint.VISA}/transactions/${id}/upload-proof`,
       preview: `${PrefixEndpoint.VISA}/submissions/preview`,
+      resubmit: (id: string) => `${PrefixEndpoint.VISA}/submissions/${id}/resubmit`,
     },
     upload: `${PrefixEndpoint.V1}/upload`,
   },
@@ -132,6 +133,7 @@ export const endpoints = {
         detail: (id: string) => `/api/visa/submissions/${id}`,
         paymentProof: (id: string) => `/api/visa/submissions/${id}/payment-proof`,
         preview: '/api/visa/submissions/preview',
+        resubmit: (id: string) => `/api/visa/submissions/${id}/resubmit`,
       },
       upload: '/api/visa/upload',
       notifications: {

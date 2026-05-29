@@ -424,6 +424,7 @@
       "IN_REVIEW": "In Review",
       "VERIFIED": "Processing",
       "REJECTED": "Rejected",
+      "ON_FIXING": "Needs Revision",
       "AUTO_CANCELED": "Auto Canceled"
     },
     "payment": {
@@ -468,7 +469,8 @@
       "EXPIRED": "Expired",
       "IN_REVIEW": "In Review",
       "VERIFIED": "Processing",
-      "REJECTED": "Rejected"
+      "REJECTED": "Rejected",
+      "ON_FIXING": "Needs Revision"
     },
     "memberCount": "{count, plural, =1 {Just You} other {{count} People}}",
     "departure": "Departure",

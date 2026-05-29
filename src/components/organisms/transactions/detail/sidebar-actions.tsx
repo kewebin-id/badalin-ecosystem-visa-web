@@ -15,6 +15,8 @@ interface DetailSidebarActionsProps {
   onEdit: () => void;
   onDownload?: () => void;
   isDownloading?: boolean;
+  onResubmit?: () => void;
+  isResubmitting?: boolean;
 }
 
 export const DetailSidebarActions = ({
@@ -22,6 +24,8 @@ export const DetailSidebarActions = ({
   onEdit,
   onDownload,
   isDownloading,
+  onResubmit,
+  isResubmitting,
 }: DetailSidebarActionsProps) => {
   const t = useTranslations('VisaTransaction');
 
@@ -84,6 +88,25 @@ export const DetailSidebarActions = ({
               )}
             </>
           )}
+        </div>
+      )}
+
+      {transaction.status === 'ON_FIXING' && (
+        <div className="pt-6 border-t border-gray-50 flex flex-col gap-4">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-60">
+            Aksi Revisi
+          </p>
+          <Button
+            className="w-full rounded-2xl shadow-lg shadow-primary-500/20 py-6"
+            size="lg"
+            onClick={onResubmit}
+            disabled={isResubmitting}
+          >
+            {isResubmitting ? 'Mengirim Ulang...' : 'Submit Revision'}
+          </Button>
+          <p className="text-[10px] text-center text-muted-foreground italic leading-relaxed px-2">
+            Klik tombol ini jika Anda sudah menyelesaikan semua revisi data yang diminta.
+          </p>
         </div>
       )}
     </Card>

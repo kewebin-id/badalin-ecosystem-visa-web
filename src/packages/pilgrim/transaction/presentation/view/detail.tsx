@@ -25,7 +25,7 @@ export const TransactionDetailView = () => {
   const params = useParams();
   const id = params?.id as string;
 
-  const { useTransactionDetail, useUploadProof, handleDownloadAllVisas, isDownloading } =
+  const { useTransactionDetail, useUploadProof, useResubmitTransaction, handleDownloadAllVisas, isDownloading } =
     useTransactionController();
   const { data: detailRes, isLoading, refetch } = useTransactionDetail(id);
   const transaction = detailRes?.data || null;
@@ -33,7 +33,9 @@ export const TransactionDetailView = () => {
   const [showSuccessDialog, setShowSuccessDialog] = useState<boolean>(false);
   const [lastUploadedData, setLastUploadedData] = useState<ITransaction | null>(null);
 
+  const resubmitMutation = useResubmitTransaction();
   const uploadMutation = useUploadProof();
+
   const handleUpload = (_: UploadFile[], rawFiles?: File[]) => {
     const file = rawFiles?.[0];
     if (file && transaction) {
@@ -130,6 +132,8 @@ export const TransactionDetailView = () => {
             onEdit={() => router.push(`${ROUTES.PILGRIM.TRANSACTION.FORM}?id=${transaction.id}`)}
             onDownload={() => handleDownloadAllVisas(transaction)}
             isDownloading={isDownloading}
+            onResubmit={() => resubmitMutation.mutate(transaction.id)}
+            isResubmitting={resubmitMutation.isPending}
           />
         </div>
       </div>
