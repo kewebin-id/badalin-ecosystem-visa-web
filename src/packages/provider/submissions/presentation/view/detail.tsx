@@ -60,6 +60,7 @@ export const SubmissionDetailView = () => {
   const [logisticsReason, setLogisticsReason] = useState('');
   const [visaFiles, setVisaFiles] = useState<Record<string, UploadFile[]>>({});
   const [previewImage, setPreviewImage] = useState<{ src: string; alt: string } | null>(null);
+  const [isPermanentRejection, setIsPermanentRejection] = useState<boolean>(false);
 
   useEffect(() => {
     if (submission?.resultSnapshot?.memberStatuses) {
@@ -173,6 +174,7 @@ export const SubmissionDetailView = () => {
         payload: {
           status,
           rejectionReason: reason,
+          isPermanentRejection,
           resultSnapshot: { memberStatuses },
           members,
         },
@@ -307,6 +309,8 @@ export const SubmissionDetailView = () => {
               isVisaPhase={isVisaPhase}
               isIssued={isIssued}
               visaFiles={visaFiles}
+              isPermanentRejection={isPermanentRejection}
+              setIsPermanentRejection={setIsPermanentRejection}
             />
           </div>
         )}

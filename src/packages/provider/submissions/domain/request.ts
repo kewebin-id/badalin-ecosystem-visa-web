@@ -46,6 +46,7 @@ export interface IMemberReview {
 export interface IReviewSubmissionPayload {
   status: 'VERIFIED' | 'REJECTED';
   rejectionReason?: string;
+  isPermanentRejection?: boolean;
   resultSnapshot?: any;
   members?: IMemberReview[];
 }

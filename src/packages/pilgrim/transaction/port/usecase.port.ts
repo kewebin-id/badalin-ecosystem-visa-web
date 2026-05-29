@@ -28,4 +28,5 @@ export interface ITransactionUseCase {
     >
   >;
   upload(base64: string, ocrType?: string): Promise<IUsecaseResponse<ILogisticsOcrResponse>>;
+  resubmit(id: string): Promise<IUsecaseResponse<ITransaction>>;
 }

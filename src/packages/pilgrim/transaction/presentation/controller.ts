@@ -474,6 +474,20 @@ export const useTransactionController = () => {
     onError: (err: Error) => toast.error(err.message),
   });
 
+  const resubmitMutation = useMutation({
+    mutationFn: (id: string) => useCase.resubmit(id),
+    onSuccess: (res) => {
+      if (!res.error) {
+        queryClient.invalidateQueries({ queryKey: ['visa-transactions'] });
+        queryClient.invalidateQueries({ queryKey: ['visa-transaction', res.data?.id] });
+        toast.success('Pengajuan berhasil direvisi dan dikirim ulang!');
+      } else {
+        toast.error(res.message || res.error.message || 'Gagal mengirim ulang revisi');
+      }
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
   const previewSubmissionMutation = useMutation({
     mutationFn: async (form: TWizardForm) => {
       const uploadedForm = await handleUploadImages(form);
@@ -507,6 +521,7 @@ export const useTransactionController = () => {
         },
       }),
     useUploadProof: () => uploadProofMutation,
+    useResubmitTransaction: () => resubmitMutation,
     usePreviewSubmission: () => previewSubmissionMutation,
     wizardSchema,
   };

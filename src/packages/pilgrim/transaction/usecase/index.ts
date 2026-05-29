@@ -207,6 +207,26 @@ export class TransactionUseCase implements ITransactionUseCase {
     }
   }
 
+  async resubmit(id: string): Promise<IUsecaseResponse<ITransaction>> {
+    try {
+      const res = await this.repository.resubmit(id);
+      if (res.code !== 200) {
+        return {
+          message: res.message,
+          error: new Error(res.message || 'Gagal mengirim ulang pengajuan'),
+        };
+      }
+      if (!res.data) {
+        return {
+          error: new Error('Data tidak ditemukan'),
+        };
+      }
+      return { message: res.message, data: this.mapToDomain(res.data) };
+    } catch {
+      return { error: new Error('Terjadi kesalahan saat mengirim ulang pengajuan') };
+    }
+  }
+
   private mapToDomain(item: IApiTransaction): ITransaction {
     const hotels = item.hotels || [];
 

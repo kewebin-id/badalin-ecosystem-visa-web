@@ -424,6 +424,7 @@
       "IN_REVIEW": "Dalam Tinjauan",
       "VERIFIED": "Diproses",
       "REJECTED": "Ditolak",
+      "ON_FIXING": "Butuh Revisi",
       "AUTO_CANCELED": "Otomatis Dibatalkan"
     },
     "payment": {
@@ -468,7 +469,8 @@
       "EXPIRED": "Kadaluarsa",
       "IN_REVIEW": "Dalam Tinjauan",
       "VERIFIED": "Diproses",
-      "REJECTED": "Ditolak"
+      "REJECTED": "Ditolak",
+      "ON_FIXING": "Butuh Revisi"
     },
     "memberCount": "{count, plural, =1 {Hanya Anda} other {{count} Orang}}",
     "departure": "Keberangkatan",

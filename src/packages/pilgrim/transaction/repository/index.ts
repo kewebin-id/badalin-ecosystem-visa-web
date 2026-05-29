@@ -117,6 +117,13 @@ export class TransactionRepository implements ITransactionRepository {
     });
   }
 
+  async resubmit(id: string): Promise<ResponseREST<IApiTransaction>> {
+    return this.api.post<IApiTransaction>({
+      endpoint: endpoints.nextApi.visa.submissions.resubmit(id),
+      isNextApi: true,
+    });
+  }
+
   private fileToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();

@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 const BADALIN_CS_NUMBER = process.env.BADALIN_CS_NUMBER || '6281333737330';
@@ -31,6 +32,7 @@ interface DetailLogisticsTabProps {
 export const DetailLogisticsTab = ({ transaction }: DetailLogisticsTabProps) => {
   const t = useTranslations('VisaTransaction');
   const tPilgrim = useTranslations('PilgrimManagement');
+  const router = useRouter();
   const { handleDownloadAllVisas, isDownloading } = useTransactionController();
   const [selectedMember, setSelectedMember] = useState<(typeof transaction.members)[0] | null>(
     null,
@@ -172,20 +174,32 @@ export const DetailLogisticsTab = ({ transaction }: DetailLogisticsTabProps) => 
                         </div>
                       </div>
 
-                      <Button
-                        className="w-full bg-danger-600 hover:bg-danger-700 text-white rounded-2xl h-12 flex items-center gap-2"
-                        onClick={() => {
-                          const phone = transaction.agency?.phoneNumber || BADALIN_CS_NUMBER;
-                          const message = `Halo, saya ${selectedMember.fullName}. Saya mendapatkan informasi bahwa pengajuan visa saya ditolak dengan alasan: ${selectedMember.rejectionReason || '-'}. Mohon bantuannya untuk proses perbaikan dokumen. Terima kasih.`;
-                          window.open(
-                            `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
-                            '_blank',
-                          );
-                        }}
-                      >
-                        <MessageCircle className="size-4" />
-                        {t('detail.contactSupport')}
-                      </Button>
+                      {transaction.status === 'ON_FIXING' ? (
+                        <Button
+                          className="w-full bg-primary-default hover:bg-primary-600 text-white rounded-2xl h-12 flex items-center gap-2"
+                          onClick={() => {
+                            router.push(`/family/form?id=${selectedMember.id}`);
+                          }}
+                        >
+                          <FileText className="size-4" />
+                          Revisi Data Jamaah
+                        </Button>
+                      ) : (
+                        <Button
+                          className="w-full bg-danger-600 hover:bg-danger-700 text-white rounded-2xl h-12 flex items-center gap-2"
+                          onClick={() => {
+                            const phone = transaction.agency?.phoneNumber || BADALIN_CS_NUMBER;
+                            const message = `Halo, saya ${selectedMember.fullName}. Saya mendapatkan informasi bahwa pengajuan visa saya ditolak dengan alasan: ${selectedMember.rejectionReason || '-'}. Mohon bantuannya untuk proses perbaikan dokumen. Terima kasih.`;
+                            window.open(
+                              `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
+                              '_blank',
+                            );
+                          }}
+                        >
+                          <MessageCircle className="size-4" />
+                          {t('detail.contactSupport')}
+                        </Button>
+                      )}
                     </div>
                   )}
 
