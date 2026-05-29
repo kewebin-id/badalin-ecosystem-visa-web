@@ -145,7 +145,9 @@ export const SubmissionDetailView = () => {
 
     try {
       const status =
-        paymentAction === 'APPROVE' && logisticsValid === true ? 'VERIFIED' : 'REJECTED';
+        paymentAction === 'APPROVE' && logisticsValid === true && allMembersValid
+          ? 'VERIFIED'
+          : 'REJECTED';
 
       const reason =
         paymentAction === 'REJECT'

@@ -449,6 +449,7 @@
   "TransactionHistory": {
     "title": "Riwayat Transaksi",
     "total": "Total {count} Transaksi",
+    "viewAll": "Lihat Semua",
     "emptyTitle": "Belum ada pengajuan",
     "emptyDescription": "Mulai pengajuan visa pertama Anda sekarang.",
     "applyNow": "Ajukan Sekarang",

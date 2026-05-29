@@ -75,10 +75,20 @@ export const HistoryList = () => {
           </div>
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {history?.map((item: IVisaHistory) => (
-            <TransactionCard key={item.transactionId} transaction={item} />
-          ))}
+        <div className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {history?.slice(0, 3).map((item: IVisaHistory) => (
+              <TransactionCard key={item.transactionId} transaction={item} />
+            ))}
+          </div>
+
+          {history.length > 3 && (
+            <div className="flex justify-center pt-2">
+              <Button href={ROUTES.PILGRIM.TRANSACTION.INDEX} size="md">
+                {t('viewAll')}
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -449,6 +449,7 @@
   "TransactionHistory": {
     "title": "Transaction History",
     "total": "Total {count} Transactions",
+    "viewAll": "View All",
     "emptyTitle": "No submissions yet",
     "emptyDescription": "Start your first visa application now.",
     "applyNow": "Apply Now",
