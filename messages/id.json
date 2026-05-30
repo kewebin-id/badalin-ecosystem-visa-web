@@ -535,7 +535,9 @@
       "verified": "Sedang diajukan visanya",
       "rejected": "Ditolak",
       "issued": "Selesai",
-      "autoCanceled": "Batal Otomatis"
+      "autoCanceled": "Batal Otomatis",
+      "onFixing": "Butuh Revisi",
+      "ON_FIXING": "Butuh Revisi"
     },
     "manifest": {
       "title": "Logistik & Manifest",

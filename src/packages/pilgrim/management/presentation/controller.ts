@@ -95,7 +95,19 @@ export const useManagementController = () => {
     useMembers,
     useMemberDetail,
     useCreateMember: () => createMemberMutation,
-    useUpdateMember: () => updateMemberMutation,
+    useUpdateMember: (options?: { redirectUrl?: string }) => { return useMutation({
+    mutationFn: (data: IUpdateMemberRequest) => useCase.updateMember(data),
+    onSuccess: (res) => {
+      if (!res.error) {
+        queryClient.invalidateQueries({ queryKey: ['family-members'] });
+        toast.success(res.message || t('updateMemberSuccess'));
+        router.push(options?.redirectUrl || ROUTES.PILGRIM.FAMILY.INDEX);
+      } else {
+        toast.error(res.message || res.error.message || t('updateMemberError'));
+      }
+    },
+    onError: (err: Error) => toast.error(err.message || t('systemError')),
+  }); },
     useDeleteMember: () => deleteMemberMutation,
     useProcessOcr: (
       onOcrSuccess: (

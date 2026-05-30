@@ -178,7 +178,7 @@ export const DetailLogisticsTab = ({ transaction }: DetailLogisticsTabProps) => 
                         <Button
                           className="w-full bg-primary-default hover:bg-primary-600 text-white rounded-2xl h-12 flex items-center gap-2"
                           onClick={() => {
-                            router.push(`/family/form?id=${selectedMember.id}`);
+                            router.push(`/family/form?id=${selectedMember.id}&redirectUrl=${encodeURIComponent(`/transactions/${transaction.id}`)}`);
                           }}
                         >
                           <FileText className="size-4" />
