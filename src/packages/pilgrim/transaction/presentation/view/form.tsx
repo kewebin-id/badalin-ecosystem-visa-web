@@ -17,6 +17,8 @@ import { FormProvider } from 'react-hook-form';
 import { TWizardForm, useTransactionController, useTransactionForm } from '../controller';
 import { TransactionErrorDrawer } from './components/error-drawer';
 import { TransactionFormFooter } from './components/form-footer';
+import { ROUTES } from '@/shared/constants/routes';
+import { toast } from 'sonner';
 
 const FormSkeleton = () => (
   <div className="mx-auto space-y-8 pb-20 animate-in fade-in duration-500">
@@ -61,9 +63,18 @@ export const TransactionFormView = () => {
   const { useMembers } = useManagementController();
   const createMutation = useCreateTransaction();
   const updateMutation = useUpdateTransaction();
-  const { data: detailRes, isLoading: isLoadingDetail } = useTransactionDetail(id);
+  const { data: detailRes, isLoading: isLoadingDetail, isError, error } = useTransactionDetail(id);
   const { members } = useMembers({ page: 1, limit: 100 });
   const completeMembers = useMemo(() => members?.filter((m) => m.isComplete) || [], [members]);
+
+  useEffect(() => {
+    if (isError && error) {
+      if (error.message?.toLowerCase().includes('canceled') || error.message?.toLowerCase().includes('cancelled')) {
+        toast.error('Pengajuan ini telah dibatalkan secara otomatis.');
+        router.push(ROUTES.PILGRIM.TRANSACTION.INDEX);
+      }
+    }
+  }, [isError, error, router]);
 
   const form = useTransactionForm(detailRes?.data);
   const {

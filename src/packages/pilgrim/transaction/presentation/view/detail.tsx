@@ -16,7 +16,8 @@ import { ROUTES } from '@/shared/constants/routes';
 import { CheckCircle2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { useTransactionController } from '../controller';
 
 export const TransactionDetailView = () => {
@@ -27,8 +28,17 @@ export const TransactionDetailView = () => {
 
   const { useTransactionDetail, useUploadProof, useResubmitTransaction, handleDownloadAllVisas, isDownloading } =
     useTransactionController();
-  const { data: detailRes, isLoading, refetch } = useTransactionDetail(id);
+  const { data: detailRes, isLoading, refetch, isError, error } = useTransactionDetail(id);
   const transaction = detailRes?.data || null;
+
+  useEffect(() => {
+    if (isError && error) {
+      if (error.message?.toLowerCase().includes('canceled') || error.message?.toLowerCase().includes('cancelled')) {
+        toast.error('Pengajuan ini telah dibatalkan secara otomatis.');
+        router.push(ROUTES.PILGRIM.TRANSACTION.INDEX);
+      }
+    }
+  }, [isError, error, router]);
 
   const [showSuccessDialog, setShowSuccessDialog] = useState<boolean>(false);
   const [lastUploadedData, setLastUploadedData] = useState<ITransaction | null>(null);
