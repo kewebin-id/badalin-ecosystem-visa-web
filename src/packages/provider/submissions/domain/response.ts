@@ -22,6 +22,8 @@ export interface IMember {
   passportUrl?: string;
   visaUrl?: string;
   employmentCertificateUrl?: string;
+  isEligible?: boolean;
+  rejectionReason?: string;
 }
 
 export interface ISubmissionListItem {

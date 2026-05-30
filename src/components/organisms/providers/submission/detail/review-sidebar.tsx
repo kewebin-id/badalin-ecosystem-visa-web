@@ -165,7 +165,7 @@ export const DetailReviewSidebar = ({
           </div>
         )}
 
-        {!isVisaPhase && rejectedCount > 0 && !isIssued && setIsPermanentRejection && (
+        {!isVisaPhase && (rejectedCount > 0 || logisticsValid === false) && !isIssued && setIsPermanentRejection && (
           <div className="mb-6 p-4 bg-gray-50 rounded-2xl border border-gray-200">
             <label className="flex items-start gap-3 cursor-pointer">
               <Checkbox
