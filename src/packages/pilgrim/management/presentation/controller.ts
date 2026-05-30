@@ -94,12 +94,15 @@ export const useManagementController = () => {
     id,
     useMembers,
     useMemberDetail,
+    updateMemberMutation,
     useCreateMember: () => createMemberMutation,
     useUpdateMember: (options?: { redirectUrl?: string }) => { return useMutation({
     mutationFn: (data: IUpdateMemberRequest) => useCase.updateMember(data),
     onSuccess: (res) => {
       if (!res.error) {
         queryClient.invalidateQueries({ queryKey: ['family-members'] });
+        queryClient.invalidateQueries({ queryKey: ['visa-transaction'] });
+        queryClient.invalidateQueries({ queryKey: ['provider-submissions'] });
         toast.success(res.message || t('updateMemberSuccess'));
         router.push(options?.redirectUrl || ROUTES.PILGRIM.FAMILY.INDEX);
       } else {
