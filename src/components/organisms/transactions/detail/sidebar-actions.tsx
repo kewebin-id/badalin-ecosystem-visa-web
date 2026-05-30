@@ -82,9 +82,11 @@ export const DetailSidebarActions = ({
                   >
                     <Pencil className="size-4 mr-2" /> {t('detail.editSubmission')}
                   </Button>
-                  <p className="text-[10px] text-center text-muted-foreground italic leading-relaxed px-2">
-                    {t('detail.editHint')}
-                  </p>
+                  {transaction.status !== 'IN_REVIEW' && (
+                    <p className="text-[10px] text-center text-muted-foreground italic leading-relaxed px-2">
+                      {t('detail.editHint')}
+                    </p>
+                  )}
                 </>
               )}
             </>
