@@ -145,7 +145,11 @@ export const TransactionFormView = () => {
 
   const onSubmit = (form: TWizardForm) => {
     if (id) {
-      updateMutation.mutate({ id, form });
+      updateMutation.mutate({
+        id,
+        form,
+        autoResubmit: detailRes?.data?.status === 'ON_FIXING',
+      });
     } else {
       createMutation.mutate(form);
     }

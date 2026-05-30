@@ -433,16 +433,21 @@ export const useTransactionController = () => {
   });
 
   const updateTransactionMutation = useMutation({
-    mutationFn: async ({ id, form }: { id: string; form: TWizardForm }) => {
+    mutationFn: async ({ id, form, autoResubmit }: { id: string; form: TWizardForm; autoResubmit?: boolean }) => {
       const uploadedForm = await handleUploadImages(form);
-      return useCase.updateTransaction(id, transformToRequest(uploadedForm));
+      const updateRes = await useCase.updateTransaction(id, transformToRequest(uploadedForm));
+      if (updateRes.error) return updateRes;
+      if (autoResubmit) {
+        return await useCase.resubmit(id);
+      }
+      return updateRes;
     },
-    onSuccess: (res) => {
+    onSuccess: (res, variables) => {
       if (!res.error) {
         queryClient.invalidateQueries({ queryKey: ['visa-transactions'] });
-        queryClient.invalidateQueries({ queryKey: ['visa-transaction', res.data?.id] });
-        toast.success('Pengajuan visa berhasil diperbarui!');
-        router.push(ROUTES.PILGRIM.TRANSACTION.INDEX);
+        queryClient.invalidateQueries({ queryKey: ['visa-transaction', variables.id] });
+        toast.success(variables.autoResubmit ? 'Revisi pengajuan berhasil dikirim!' : 'Pengajuan visa berhasil diperbarui!');
+        router.push(`${ROUTES.PILGRIM.TRANSACTION.INDEX}/${variables.id}`);
       } else {
         const errorMsg = res.message || res.error.message || 'Gagal memperbarui pengajuan';
         toast.error(errorMsg);
