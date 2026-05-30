@@ -26,12 +26,8 @@ const useCase = new TransactionUseCase(repository);
 
 const toLocalYYYYMMDD = (val?: string | dayjs.Dayjs | Date | null) => {
   if (!val) return '';
-  if (typeof val === 'string') {
-    if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
-    if (val.includes('T')) {
-      const parts = val.split('T')[0];
-      if (/^\d{4}-\d{2}-\d{2}$/.test(parts)) return parts;
-    }
+  if (typeof val === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(val)) {
+    return val;
   }
   const d = dateUtil(val);
   return `${d.year()}-${String(d.month() + 1).padStart(2, '0')}-${String(d.date()).padStart(2, '0')}`;
