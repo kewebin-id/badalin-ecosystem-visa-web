@@ -1,5 +1,5 @@
 import { ROUTES } from '@/shared/constants';
-import { dateRiyadh as dateUtil, dayjs, isBase64 } from '@/shared/utils';
+import { dateUtil, dayjs, isBase64 } from '@/shared/utils';
 import { RestAPI } from '@/shared/utils/rest-api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
