@@ -535,7 +535,9 @@
       "verified": "Visa is being applied for",
       "rejected": "Rejected",
       "issued": "Issued",
-      "autoCanceled": "Auto Canceled"
+      "autoCanceled": "Auto Canceled",
+      "onFixing": "Needs Revision",
+      "ON_FIXING": "Needs Revision"
     },
     "manifest": {
       "title": "Logistics & Manifest",

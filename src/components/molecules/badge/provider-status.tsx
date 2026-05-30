@@ -83,6 +83,11 @@ export const ReviewStatusBadge = ({ status }: { status: ProviderSubmission['revi
       className: 'bg-emerald-50 text-emerald-600 border-emerald-100',
       dotClassName: 'bg-emerald-400',
     },
+    ON_FIXING: {
+      label: t('onFixing'),
+      className: 'bg-amber-50 text-amber-600 border-amber-100',
+      dotClassName: 'bg-amber-400',
+    },
   };
 
   const current = config[status as string] || {

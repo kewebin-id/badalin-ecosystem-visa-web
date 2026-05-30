@@ -8,7 +8,7 @@ import { InputFile, UploadFile } from '@/components/molecules/input/file';
 import { InputSelect } from '@/components/molecules/input/select';
 import { InputText } from '@/components/molecules/input/text';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 import { INusukCompatibility, RELATIONS, TRelation, MARITAL_STATUS_MAP, IFamilyMember } from '../../domain/member';
@@ -26,9 +26,11 @@ export const PilgrimUpdateForm = ({ id, initialData }: PilgrimUpdateFormProps) =
   const t = useTranslations('PilgrimManagement');
   const tCommon = useTranslations('Common');
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get('redirectUrl');
 
   const { useUpdateMember, useProcessOcr } = useManagementController();
-  const updateMutation = useUpdateMember();
+  const updateMutation = useUpdateMember({ redirectUrl: redirectUrl || undefined });
 
   const [passportPreview, setPassportPreview] = useState<string>();
   const [ktpPreview, setKtpPreview] = useState<string>();

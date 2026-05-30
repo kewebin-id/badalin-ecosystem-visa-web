@@ -1,4 +1,5 @@
 import { Badge, Button, Card } from '@/components/atoms';
+import { Checkbox } from '@/components/atoms/checkbox';
 import { UploadFile } from '@/components/molecules/input/file';
 import { ISubmissionListItem } from '@/packages/provider/submissions/domain/response';
 import { cn, formatRupiah } from '@/shared/utils';
@@ -167,11 +168,10 @@ export const DetailReviewSidebar = ({
         {!isVisaPhase && rejectedCount > 0 && !isIssued && setIsPermanentRejection && (
           <div className="mb-6 p-4 bg-gray-50 rounded-2xl border border-gray-200">
             <label className="flex items-start gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                className="mt-1 h-4 w-4 rounded border-gray-300 text-primary-default focus:ring-primary-500"
+              <Checkbox
                 checked={isPermanentRejection}
-                onChange={(e) => setIsPermanentRejection(e.target.checked)}
+                onCheckedChange={(checked) => setIsPermanentRejection(checked as boolean)}
+                className="mt-1"
               />
               <div className="space-y-1">
                 <p className="text-sm font-bold text-gray-900">Tolak Permanen (Trigger Refund)</p>
