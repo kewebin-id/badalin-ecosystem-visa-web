@@ -228,24 +228,19 @@ const getWizardSchema = (
 
 const saudiTimezone = 'Asia/Riyadh';
 
-const parseToSaudi = (val?: string | null, includeTime: boolean = false) => {
+const parseToSaudi = (val?: string | dayjs.Dayjs | Date | null, includeTime: boolean = false) => {
   if (!val) return '';
-  let localStr = '';
-  if (typeof val === 'string') {
-    if (val.includes('T')) {
-      localStr = val.substring(0, includeTime ? 19 : 10);
-    } else {
-      localStr = dayjs(val).format(includeTime ? 'YYYY-MM-DDTHH:mm:ss' : 'YYYY-MM-DD');
-    }
-  } else {
-    localStr = dayjs(val).format(includeTime ? 'YYYY-MM-DDTHH:mm:ss' : 'YYYY-MM-DD');
+
+  if (!includeTime) {
+    const dateStr = toLocalYYYYMMDD(val);
+    return dayjs.tz(`${dateStr}T00:00:00`, saudiTimezone).toISOString();
   }
 
-  if (!includeTime && !localStr.includes('T')) {
-    localStr += 'T00:00:00';
+  if (typeof val === 'string' && !val.includes('Z') && !val.includes('+')) {
+    return dayjs.tz(val, saudiTimezone).toISOString();
   }
 
-  return dayjs.tz(localStr, saudiTimezone).toISOString();
+  return dateUtil(val).toISOString();
 };
 
 export type TWizardForm = z.infer<ReturnType<typeof getWizardSchema>>;
