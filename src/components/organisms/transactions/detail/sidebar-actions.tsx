@@ -51,6 +51,20 @@ export const DetailSidebarActions = ({
         </div>
       </div>
 
+      {(transaction.status === 'ON_FIXING' || transaction.status === 'REJECTED') &&
+        transaction.rejectionReason && (
+          <div className="space-y-4">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500 opacity-80">
+              Alasan Penolakan
+            </p>
+            <div className="bg-red-50 rounded-2xl p-4 border border-red-100 shadow-sm">
+              <p className="text-xs text-red-700 leading-relaxed font-bold">
+                {transaction.rejectionReason}
+              </p>
+            </div>
+          </div>
+        )}
+
       {(transaction.paymentStatus === 'PENDING' ||
         transaction.status === 'ON_FIXING' ||
         (transaction.paymentStatus === 'COMPLETED' && transaction.status === 'ISSUED')) && (
@@ -82,7 +96,7 @@ export const DetailSidebarActions = ({
                   >
                     <Pencil className="size-4 mr-2" /> {t('detail.editSubmission')}
                   </Button>
-                  {transaction.status !== 'IN_REVIEW' && (
+                  {transaction.paymentStatus === 'PENDING' && (
                     <p className="text-[10px] text-center text-muted-foreground italic leading-relaxed px-2">
                       {t('detail.editHint')}
                     </p>

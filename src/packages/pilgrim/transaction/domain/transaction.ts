@@ -81,6 +81,7 @@ export interface ITransaction {
   paymentDeadline?: string;
   paymentProofUrl?: string;
   proofOfPayment?: string;
+  rejectionReason?: string;
   members: {
     id: string;
     fullName: string;

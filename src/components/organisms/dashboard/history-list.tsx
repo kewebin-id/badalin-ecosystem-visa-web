@@ -84,7 +84,7 @@ export const HistoryList = () => {
 
           {history.length > 3 && (
             <div className="flex justify-center pt-2">
-              <Button href={ROUTES.PILGRIM.TRANSACTION.INDEX} size="md">
+              <Button variant="transparent" href={ROUTES.PILGRIM.TRANSACTION.INDEX} size="md">
                 {t('viewAll')}
               </Button>
             </div>

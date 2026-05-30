@@ -55,7 +55,7 @@ export const SubmissionDetailView = () => {
   const [paymentReason, setPaymentReason] = useState('');
   const [memberStatuses, setMemberStatuses] = useState<
     Record<string, { valid: boolean; reason?: string }>
-  >(submission?.resultSnapshot?.memberStatuses || {});
+  >({});
   const [logisticsValid, setLogisticsValid] = useState<boolean | null>(null);
   const [logisticsReason, setLogisticsReason] = useState('');
   const [visaFiles, setVisaFiles] = useState<Record<string, UploadFile[]>>({});
@@ -63,9 +63,26 @@ export const SubmissionDetailView = () => {
   const [isPermanentRejection, setIsPermanentRejection] = useState<boolean>(false);
 
   useEffect(() => {
-    if (submission?.resultSnapshot?.memberStatuses) {
-      setMemberStatuses(submission.resultSnapshot.memberStatuses);
+    if (submission) {
+      if (submission.paymentStatus === 'COMPLETED') {
+        setPaymentAction('APPROVE');
+      }
+
+      const initialStatuses: Record<string, { valid: boolean; reason?: string }> = {};
+      submission.members.forEach((m) => {
+        if (m.isEligible) {
+          initialStatuses[m.id] = { valid: true };
+        } else {
+          const snapshotStatus = submission.resultSnapshot?.memberStatuses?.[m.id];
+          initialStatuses[m.id] = snapshotStatus || {
+            valid: m.isEligible ?? true,
+            reason: m.rejectionReason || undefined,
+          };
+        }
+      });
+      setMemberStatuses(initialStatuses);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submission]);
 
   useEffect(() => {
