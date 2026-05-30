@@ -67,3 +67,6 @@ scratch
 # others
 update-metadata.js
 *patch*
+
+# test
+*test*

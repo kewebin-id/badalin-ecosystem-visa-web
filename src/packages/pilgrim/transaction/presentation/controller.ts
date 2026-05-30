@@ -157,26 +157,24 @@ const getWizardSchema = (
         : null;
       const takeoff = data.returnFlightEtd ? dateUtil(data.returnFlightEtd).startOf('day') : null;
 
-      const landingStr = toLocalYYYYMMDD(data.departureFlightEta);
-      const takeoffStr = toLocalYYYYMMDD(data.returnFlightEtd);
 
       const validateBoundary = (fieldDate: string | undefined, path: (string | number)[]) => {
         if (!fieldDate) return;
-        const dateStr = toLocalYYYYMMDD(fieldDate);
-        if (landingStr && dateStr < landingStr) {
+        const dateObj = dateUtil(fieldDate).startOf('day');
+        if (landing && dateObj.isBefore(landing, 'day')) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: t('form.hotelCheckinBeforeLanding', {
-              date: landing ? landing.format('DD MMM YYYY') : '',
+              date: landing.format('DD MMM YYYY'),
             }),
             path,
           });
         }
-        if (takeoffStr && dateStr > takeoffStr) {
+        if (takeoff && dateObj.isAfter(takeoff, 'day')) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: t('form.hotelCheckoutAfterTakeoff', {
-              date: takeoff ? takeoff.format('DD MMM YYYY') : '',
+              date: takeoff.format('DD MMM YYYY'),
             }),
             path,
           });
@@ -189,13 +187,13 @@ const getWizardSchema = (
       validateBoundary(data.hotelMadinahCheckOut, ['hotelMadinahCheckOut']);
 
       if (data.hotelMakkahCheckIn && data.hotelMadinahCheckIn) {
-        const makkahInStr = toLocalYYYYMMDD(data.hotelMakkahCheckIn);
-        const madinahInStr = toLocalYYYYMMDD(data.hotelMadinahCheckIn);
+        const makkahIn = dateUtil(data.hotelMakkahCheckIn).startOf('day');
+        const madinahIn = dateUtil(data.hotelMadinahCheckIn).startOf('day');
 
-        if (makkahInStr < madinahInStr) {
+        if (makkahIn.isBefore(madinahIn, 'day')) {
           if (
             data.hotelMakkahCheckOut &&
-            madinahInStr < toLocalYYYYMMDD(data.hotelMakkahCheckOut)
+            madinahIn.isBefore(dateUtil(data.hotelMakkahCheckOut).startOf('day'), 'day')
           ) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
@@ -204,10 +202,10 @@ const getWizardSchema = (
               path: ['hotelMadinahCheckIn'],
             });
           }
-        } else if (madinahInStr < makkahInStr) {
+        } else if (madinahIn.isBefore(makkahIn, 'day')) {
           if (
             data.hotelMadinahCheckOut &&
-            makkahInStr < toLocalYYYYMMDD(data.hotelMadinahCheckOut)
+            makkahIn.isBefore(dateUtil(data.hotelMadinahCheckOut).startOf('day'), 'day')
           ) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
