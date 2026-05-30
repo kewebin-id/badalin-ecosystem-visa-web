@@ -27,8 +27,8 @@ export const ROUTES = {
     SETTINGS: (slug: string = 'p') => `/${slug}/settings`,
     AUTH: {
       LOGIN: (slug: string = 'p') => `/${slug}/auth/login`,
-      FORGOT_PASSWORD: (slug: string = 'p') => `/${slug}/auth/forgot_password`,
-      RESET_PASSWORD: (slug: string = 'p') => `/${slug}/auth/reset_password`,
+      FORGOT_PASSWORD: (slug: string = 'p') => `/${slug}/auth/forgot-password`,
+      RESET_PASSWORD: (slug: string = 'p') => `/${slug}/auth/reset-password`,
       SETUP: (slug: string = 'p') => `/${slug}/auth/setup`,
     },
   },
