@@ -31,9 +31,16 @@ export const PATCH = async (req: NextRequest, { params }: { params: Promise<{ id
       },
     });
 
-    Logger.info(JSON.stringify(res), {
-      location: `api/provider/submissions/${id}/review/route.ts - PATCH`,
-    });
+    Logger.info(
+      `PATCH ${endpoints.provider.submissions.review(agencySlug || 'p', id)} - Response: ${JSON.stringify(res)}`,
+      {
+        location: `api/provider/submissions/${id}/review/route.ts - PATCH`,
+      },
+    );
+
+    if (res?.code !== 200) {
+      return response[400](res);
+    }
 
     return response.handler(res);
   } catch (error: unknown) {
