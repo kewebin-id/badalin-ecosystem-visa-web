@@ -234,11 +234,9 @@ const parseToSaudi = (val?: string | dayjs.Dayjs | Date | null, includeTime: boo
     return dayjs.tz(`${dateStr}T00:00:00`, saudiTimezone).toISOString();
   }
 
-  if (typeof val === 'string' && !val.includes('Z') && !val.includes('+')) {
-    return dayjs.tz(val, saudiTimezone).toISOString();
-  }
-
-  return dateUtil(val).toISOString();
+  const d = dateUtil(val);
+  const faceValue = `${d.format('YYYY-MM-DD')}T${d.format('HH:mm:ss')}`;
+  return dayjs.tz(faceValue, saudiTimezone).toISOString();
 };
 
 export type TWizardForm = z.infer<ReturnType<typeof getWizardSchema>>;
@@ -258,7 +256,7 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
         flightDate: data.departureFlightEta
           ? dayjs(parseToSaudi(data.departureFlightEta)).format('YYYY-MM-DD')
           : '',
-        eta: data.departureFlightEta ? dayjs(data.departureFlightEta).toISOString() : '',
+        eta: data.departureFlightEta ? parseToSaudi(data.departureFlightEta, true) : '',
         etd: data.departureFlightEtd ? dayjs(data.departureFlightEtd).toISOString() : '',
         imageUrls: data.departureTicketUrls,
       },
@@ -272,7 +270,7 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
           ? dayjs(parseToSaudi(data.returnFlightEtd)).format('YYYY-MM-DD')
           : '',
         eta: data.returnFlightEta ? dayjs(data.returnFlightEta).toISOString() : '',
-        etd: data.returnFlightEtd ? dayjs(data.returnFlightEtd).toISOString() : '',
+        etd: data.returnFlightEtd ? parseToSaudi(data.returnFlightEtd, true) : '',
         imageUrls: data.returnTicketUrls,
       },
     ],
