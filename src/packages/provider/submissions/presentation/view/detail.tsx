@@ -82,7 +82,7 @@ export const SubmissionDetailView = () => {
       });
       setMemberStatuses(initialStatuses);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submission]);
 
   useEffect(() => {
@@ -186,7 +186,7 @@ export const SubmissionDetailView = () => {
         await verifyPaymentMutation.mutateAsync(submission!.id);
       }
 
-      await reviewSubmissionMutation.mutateAsync({
+      const res = await reviewSubmissionMutation.mutateAsync({
         id: submission!.id,
         payload: {
           status,
@@ -197,8 +197,10 @@ export const SubmissionDetailView = () => {
         },
       });
 
-      toast.success(t('toasts.saveSuccess'));
-      router.push(ROUTES.PROVIDER.SUBMISSIONS(slug as string));
+      if (res) {
+        toast.success(t('toasts.saveSuccess'));
+        router.push(ROUTES.PROVIDER.SUBMISSIONS(slug as string));
+      }
     } catch (error) {
       toast.error(t('toasts.saveError'));
     }

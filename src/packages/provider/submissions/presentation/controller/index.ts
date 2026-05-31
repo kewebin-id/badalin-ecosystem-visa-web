@@ -1,6 +1,7 @@
 import { exportSubmissionToZip } from '@/shared/utils/manifest-export';
 import { RestAPI } from '@/shared/utils/rest-api';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import {
   IFlightManifestPayload,
   IGetSubmissionsQuery,
@@ -75,8 +76,11 @@ export const useProviderSubmissionsController = () => {
 
   const useReviewSubmission = () =>
     useMutation({
-      mutationFn: ({ id, payload }: { id: string; payload: IReviewSubmissionPayload }) =>
-        usecase.reviewSubmission(id, payload),
+      mutationFn: async ({ id, payload }: { id: string; payload: IReviewSubmissionPayload }) => {
+        const res = await usecase.reviewSubmission(id, payload);
+        if (res?.data) return res;
+        else toast.error(res?.message);
+      },
       onSuccess: (_, { id }) => {
         queryClient.invalidateQueries({ queryKey: ['provider', 'submissions'] });
         queryClient.invalidateQueries({ queryKey: ['provider', 'submissions', id] });
