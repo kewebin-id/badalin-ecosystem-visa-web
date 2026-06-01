@@ -7,18 +7,18 @@ import {
   LogisticsForm,
   SelectMembersForm,
   SummaryForm,
+  TransactionErrorDrawer,
+  TransactionFormFooter,
   TransportRawdahForm,
 } from '@/components/organisms';
 import { useManagementController } from '@/packages/pilgrim/management/presentation/controller';
+import { ROUTES } from '@/shared/constants/routes';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormProvider } from 'react-hook-form';
-import { TWizardForm, useTransactionController, useTransactionForm } from '../controller';
-import { TransactionErrorDrawer } from './components/error-drawer';
-import { TransactionFormFooter } from './components/form-footer';
-import { ROUTES } from '@/shared/constants/routes';
 import { toast } from 'sonner';
+import { TWizardForm, useTransactionController, useTransactionForm } from '../controller';
 
 const FormSkeleton = () => (
   <div className="mx-auto space-y-8 pb-20 animate-in fade-in duration-500">
@@ -69,7 +69,10 @@ export const TransactionFormView = () => {
 
   useEffect(() => {
     if (isError && error) {
-      if (error.message?.toLowerCase().includes('canceled') || error.message?.toLowerCase().includes('cancelled')) {
+      if (
+        error.message?.toLowerCase().includes('canceled') ||
+        error.message?.toLowerCase().includes('cancelled')
+      ) {
         toast.error('Pengajuan ini telah dibatalkan secara otomatis.');
         router.push(ROUTES.PILGRIM.TRANSACTION.INDEX);
       }

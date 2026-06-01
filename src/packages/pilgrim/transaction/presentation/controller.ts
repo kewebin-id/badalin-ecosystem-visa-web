@@ -157,7 +157,6 @@ const getWizardSchema = (
         : null;
       const takeoff = data.returnFlightEtd ? dateUtil(data.returnFlightEtd).startOf('day') : null;
 
-
       const validateBoundary = (fieldDate: string | undefined, path: (string | number)[]) => {
         if (!fieldDate) return;
         const dateObj = dateUtil(fieldDate).startOf('day');
@@ -226,12 +225,16 @@ const getWizardSchema = (
 
 const saudiTimezone = 'Asia/Riyadh';
 
-const parseToSaudi = (val?: string | dayjs.Dayjs | Date | null, includeTime: boolean = false) => {
+const parseToSaudi = (
+  val?: string | dayjs.Dayjs | Date | null,
+  includeTime: boolean = false,
+  defaultTime: string = '00:00:00',
+) => {
   if (!val) return '';
 
   if (!includeTime) {
     const dateStr = toLocalYYYYMMDD(val);
-    return dayjs.tz(`${dateStr}T00:00:00`, saudiTimezone).toISOString();
+    return dayjs.tz(`${dateStr}T${defaultTime}`, saudiTimezone).toISOString();
   }
 
   const d = dateUtil(val);
@@ -278,8 +281,12 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
       {
         name: data.hotelMakkahName,
         resvNo: data.hotelMakkahResvNo,
-        checkIn: data.hotelMakkahCheckIn ? parseToSaudi(data.hotelMakkahCheckIn) : '',
-        checkOut: data.hotelMakkahCheckOut ? parseToSaudi(data.hotelMakkahCheckOut) : '',
+        checkIn: data.hotelMakkahCheckIn
+          ? parseToSaudi(data.hotelMakkahCheckIn, false, '16:00:00')
+          : '',
+        checkOut: data.hotelMakkahCheckOut
+          ? parseToSaudi(data.hotelMakkahCheckOut, false, '12:00:00')
+          : '',
         city: 'MAKKAH',
         roomType: data.hotelMakkahRoomType,
         imageUrls: data.hotelMakkahVoucherUrls,
@@ -287,8 +294,12 @@ export const transformToRequest = (data: TWizardForm): ICreateTransactionRequest
       {
         name: data.hotelMadinahName,
         resvNo: data.hotelMadinahResvNo,
-        checkIn: data.hotelMadinahCheckIn ? parseToSaudi(data.hotelMadinahCheckIn) : '',
-        checkOut: data.hotelMadinahCheckOut ? parseToSaudi(data.hotelMadinahCheckOut) : '',
+        checkIn: data.hotelMadinahCheckIn
+          ? parseToSaudi(data.hotelMadinahCheckIn, false, '16:00:00')
+          : '',
+        checkOut: data.hotelMadinahCheckOut
+          ? parseToSaudi(data.hotelMadinahCheckOut, false, '12:00:00')
+          : '',
         city: 'MADINAH',
         roomType: data.hotelMadinahRoomType,
         imageUrls: data.hotelMadinahVoucherUrls,
@@ -429,7 +440,15 @@ export const useTransactionController = () => {
   });
 
   const updateTransactionMutation = useMutation({
-    mutationFn: async ({ id, form, autoResubmit }: { id: string; form: TWizardForm; autoResubmit?: boolean }) => {
+    mutationFn: async ({
+      id,
+      form,
+      autoResubmit,
+    }: {
+      id: string;
+      form: TWizardForm;
+      autoResubmit?: boolean;
+    }) => {
       const uploadedForm = await handleUploadImages(form);
       const updateRes = await useCase.updateTransaction(id, transformToRequest(uploadedForm));
       if (updateRes.error) return updateRes;
@@ -442,7 +461,11 @@ export const useTransactionController = () => {
       if (!res.error) {
         queryClient.invalidateQueries({ queryKey: ['visa-transactions'] });
         queryClient.invalidateQueries({ queryKey: ['visa-transaction', variables.id] });
-        toast.success(variables.autoResubmit ? 'Revisi pengajuan berhasil dikirim!' : 'Pengajuan visa berhasil diperbarui!');
+        toast.success(
+          variables.autoResubmit
+            ? 'Revisi pengajuan berhasil dikirim!'
+            : 'Pengajuan visa berhasil diperbarui!',
+        );
         router.push(`${ROUTES.PILGRIM.TRANSACTION.INDEX}/${variables.id}`);
       } else {
         const errorMsg = res.message || res.error.message || 'Gagal memperbarui pengajuan';
