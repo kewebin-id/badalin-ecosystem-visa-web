@@ -8,6 +8,7 @@ export interface IUpdateAgencyRequest {
   bankName?: string;
   bankAccountName?: string;
   bankAccountNumber?: string;
+  phoneNumber?: string;
 }
 
 export const getAgencySchema = (t: (key: string) => string) =>
@@ -23,6 +24,7 @@ export const getAgencySchema = (t: (key: string) => string) =>
     bankName: z.string().min(1, { message: t('validation.required') }),
     bankAccountName: z.string().min(1, { message: t('validation.required') }),
     bankAccountNumber: z.string().min(1, { message: t('validation.required') }),
+    phoneNumber: z.string().min(1, { message: t('validation.required') }),
   });
 
 export type AgencyFormValues = z.infer<ReturnType<typeof getAgencySchema>>;

@@ -24,7 +24,7 @@ const sanitizeFileName = (name: string): string => {
 
 export const generateManifestExcelBuffer = (submission: ISubmissionListItem): ArrayBuffer => {
   const workbook = XLSX.utils.book_new();
-  const aoa: any[][] = [];
+  const aoa: XLSX.CellObject[][] = [];
   const merges: XLSX.Range[] = [];
 
   const styleHeaderBlack = {
@@ -46,9 +46,9 @@ export const generateManifestExcelBuffer = (submission: ISubmissionListItem): Ar
     border: { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } }
   };
 
-  const cBlack = (v: any) => ({ v: v || '', t: 's', s: styleHeaderBlack });
-  const cYellow = (v: any) => ({ v: v || '', t: 's', s: styleHeaderYellow });
-  const cNorm = (v: any) => ({ v: v || '', t: typeof v === 'number' ? 'n' : 's', s: styleNormal });
+  const cBlack = (v: string | number | null | undefined): XLSX.CellObject => ({ v: v || '', t: 's', s: styleHeaderBlack });
+  const cYellow = (v: string | number | null | undefined): XLSX.CellObject => ({ v: v || '', t: 's', s: styleHeaderYellow });
+  const cNorm = (v: string | number | null | undefined): XLSX.CellObject => ({ v: v || '', t: typeof v === 'number' ? 'n' : 's', s: styleNormal });
 
   // 1. DATE SECTION
   aoa.push([cBlack('DATE:'), cNorm(moment(submission.createdAt).format('DD/MMM/YYYY')), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm('')]);
@@ -71,14 +71,14 @@ export const generateManifestExcelBuffer = (submission: ISubmissionListItem): Ar
   const adultCount = submission.members?.length || 0;
   aoa.push([
     cNorm(submission.id?.split('-')[0].toUpperCase() || 'N/A'),
-    cNorm(submission.leader?.fullName || '-'),
+    cNorm(submission.agency?.name || '-'),
     cNorm(''),
     cNorm(adultCount),
     cNorm(''),
     cNorm(submission.leader?.fullName || '-'),
     cNorm(''),
     cNorm(''),
-    cNorm(submission.leader?.phoneNumber || '-'),
+    cNorm(submission.agency?.phoneNumber || '-'),
   ]);
   merges.push({ s: { r: aoa.length - 1, c: 1 }, e: { r: aoa.length - 1, c: 2 } });
   merges.push({ s: { r: aoa.length - 1, c: 5 }, e: { r: aoa.length - 1, c: 7 } });

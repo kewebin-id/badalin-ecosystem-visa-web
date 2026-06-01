@@ -13,4 +13,5 @@ export interface IAgency {
   isSlugSetup: boolean;
   lastSlugUpdate: string;
   newToken?: string;
+  phoneNumber?: string | null;
 }

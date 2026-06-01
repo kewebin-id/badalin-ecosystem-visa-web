@@ -4,8 +4,8 @@ import { Button } from '@/components/atoms/button';
 import { Card } from '@/components/atoms/card';
 import { Skeleton } from '@/components/atoms/skeleton';
 import { HeaderPageContent, LoadingOverlay } from '@/components/molecules';
-import { InputText } from '@/components/molecules/input/text';
 import { InputSelect } from '@/components/molecules/input/select';
+import { InputText } from '@/components/molecules/input/text';
 import { unformatRupiah } from '@/shared/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Building2, Clock, CreditCard, DollarSign, Globe, Info, Save } from 'lucide-react';
@@ -17,7 +17,6 @@ import { useAgencySettingsController } from '../controller/index';
 
 export const AgencySettingsView = () => {
   const t = useTranslations('AgencySettings');
-  const tCommon = useTranslations('Common');
 
   const { useAgencyData, useUpdateAgency } = useAgencySettingsController();
   const { data: res, isPending: isLoadingData } = useAgencyData();
@@ -50,6 +49,7 @@ export const AgencySettingsView = () => {
       bankName: '',
       bankAccountName: '',
       bankAccountNumber: '',
+      phoneNumber: '',
     },
   });
 
@@ -73,6 +73,7 @@ export const AgencySettingsView = () => {
         bankName: agency.bankName || '',
         bankAccountName: agency.bankAccountName || '',
         bankAccountNumber: agency.bankAccountNumber || '',
+        phoneNumber: agency.phoneNumber || '',
       });
     }
   }, [agency, reset]);
@@ -137,6 +138,16 @@ export const AgencySettingsView = () => {
                   register={register}
                   name="name"
                   errorMessage={errors.name?.message}
+                />
+                <InputText
+                  useLabelInside
+                  type="only-number"
+                  size="lg"
+                  label={t('fields.phoneNumber')}
+                  placeholder={t('placeholders.phoneNumber')}
+                  register={register}
+                  name="phoneNumber"
+                  errorMessage={errors.phoneNumber?.message}
                 />
                 <div id="tour-agency-slug">
                   <InputText

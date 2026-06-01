@@ -810,7 +810,8 @@
       "visaCurrency": "Currency",
       "bankName": "Bank Name",
       "bankAccountName": "Account Holder Name",
-      "bankAccountNumber": "Account Number"
+      "bankAccountNumber": "Account Number",
+      "phoneNumber": "Phone Number"
     },
     "placeholders": {
       "name": "Enter agency name",
@@ -818,7 +819,8 @@
       "visaPrice": "Example: 1500000",
       "bankName": "Example: BCA",
       "bankAccountName": "Enter account holder name",
-      "bankAccountNumber": "Enter account number"
+      "bankAccountNumber": "Enter account number",
+      "phoneNumber": "e.g. +628123456789"
     },
     "sections": {
       "identity": "Agency Identity",

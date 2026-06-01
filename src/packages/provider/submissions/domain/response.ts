@@ -41,6 +41,8 @@ export interface ISubmissionListItem {
   refundStatus?: string;
   refundDeadline?: string;
   agency?: {
+    name?: string;
+    phoneNumber?: string;
     status: 'ACTIVE' | 'RESTRICTED' | 'INACTIVE';
   };
   flights?: IFlight[];

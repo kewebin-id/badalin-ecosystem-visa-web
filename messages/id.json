@@ -810,7 +810,8 @@
       "visaCurrency": "Mata Uang",
       "bankName": "Nama Bank",
       "bankAccountName": "Nama Pemilik Rekening",
-      "bankAccountNumber": "Nomor Rekening"
+      "bankAccountNumber": "Nomor Rekening",
+      "phoneNumber": "Nomor Telepon"
     },
     "placeholders": {
       "name": "Masukkan nama agensi",
@@ -818,7 +819,8 @@
       "visaPrice": "Contoh: 1500000",
       "bankName": "Contoh: BCA",
       "bankAccountName": "Masukkan nama pemilik rekening",
-      "bankAccountNumber": "Masukkan nomor rekening"
+      "bankAccountNumber": "Masukkan nomor rekening",
+      "phoneNumber": "Misal: +628123456789"
     },
     "sections": {
       "identity": "Identitas Agensi",
