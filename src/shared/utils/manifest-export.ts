@@ -216,9 +216,9 @@ export const exportSubmissionToZip = async (submission: ISubmissionListItem): Pr
   zip.file(`Manifest_${submissionIdShort}.xlsx`, excelBuffer);
 
   // 2. Add Member Documents
-  if (submission.members && submission.members.length > 0) {
-    const docsFolder = zip.folder('Documents');
+  const docsFolder = zip.folder('Documents');
 
+  if (submission.members && submission.members.length > 0) {
     for (const member of submission.members) {
       const safeName = sanitizeFileName(member.fullName);
 
@@ -241,7 +241,44 @@ export const exportSubmissionToZip = async (submission: ISubmissionListItem): Pr
     }
   }
 
-  // 3. Generate and Save ZIP
+  // 3. Add Flights and Hotel Documents
+  if (submission.flights && submission.flights.length > 0) {
+    const flightsFolder = docsFolder?.folder('Flights');
+    for (const flight of submission.flights) {
+      if (flight.imageUrls && flight.imageUrls.length > 0) {
+        for (let i = 0; i < flight.imageUrls.length; i++) {
+          const url = flight.imageUrls[i];
+          const blob = await fetchImageAsBlob(url);
+          if (blob) {
+            const extension = url.split('.').pop()?.split('?')[0] || 'jpg';
+            const safeFlightNo = sanitizeFileName(flight.flightNo || 'Flight');
+            const fileName = `${flight.type}_${safeFlightNo}_${i + 1}_${submissionIdShort}.${extension}`;
+            flightsFolder?.file(fileName, blob);
+          }
+        }
+      }
+    }
+  }
+
+  if (submission.hotels && submission.hotels.length > 0) {
+    const hotelFolder = docsFolder?.folder('Hotel');
+    for (const hotel of submission.hotels) {
+      if (hotel.imageUrls && hotel.imageUrls.length > 0) {
+        for (let i = 0; i < hotel.imageUrls.length; i++) {
+          const url = hotel.imageUrls[i];
+          const blob = await fetchImageAsBlob(url);
+          if (blob) {
+            const extension = url.split('.').pop()?.split('?')[0] || 'jpg';
+            const safeHotelName = sanitizeFileName(hotel.name || 'Hotel');
+            const fileName = `${hotel.city}_${safeHotelName}_${i + 1}_${submissionIdShort}.${extension}`;
+            hotelFolder?.file(fileName, blob);
+          }
+        }
+      }
+    }
+  }
+
+  // 4. Generate and Save ZIP
   const zipBlob = await zip.generateAsync({ type: 'blob' });
   saveAs(zipBlob, `Submission_${submissionIdShort}.zip`);
 };
