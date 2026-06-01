@@ -1,8 +1,8 @@
-import * as XLSX from 'xlsx-js-style';
-import moment from 'moment';
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
 import { ISubmissionListItem } from '@/packages/provider/submissions/domain/response';
+import { saveAs } from 'file-saver';
+import JSZip from 'jszip';
+import moment from 'moment';
+import * as XLSX from 'xlsx-js-style';
 
 const fetchImageAsBlob = async (url: string): Promise<Blob | null> => {
   try {
@@ -28,36 +28,103 @@ export const generateManifestExcelBuffer = (submission: ISubmissionListItem): Ar
   const merges: XLSX.Range[] = [];
 
   const styleHeaderBlack = {
-    fill: { fgColor: { rgb: "FF333333" } },
-    font: { color: { rgb: "FFFFFFFF" }, bold: true },
-    alignment: { horizontal: "center", vertical: "center", wrapText: true },
-    border: { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } }
+    fill: { fgColor: { rgb: 'FF333333' } },
+    font: { color: { rgb: 'FFFFFFFF' }, bold: true },
+    alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
+    border: {
+      top: { style: 'thin' },
+      bottom: { style: 'thin' },
+      left: { style: 'thin' },
+      right: { style: 'thin' },
+    },
   };
 
   const styleHeaderYellow = {
-    fill: { fgColor: { rgb: "FFFFC000" } }, // #FFC000 for standard Excel yellow/gold
-    font: { color: { rgb: "FF000000" }, bold: true },
-    alignment: { horizontal: "center", vertical: "center", wrapText: true },
-    border: { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } }
+    fill: { fgColor: { rgb: 'FFFFC000' } }, // #FFC000 for standard Excel yellow/gold
+    font: { color: { rgb: 'FF000000' }, bold: true },
+    alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
+    border: {
+      top: { style: 'thin' },
+      bottom: { style: 'thin' },
+      left: { style: 'thin' },
+      right: { style: 'thin' },
+    },
   };
 
   const styleNormal = {
-    alignment: { horizontal: "center", vertical: "center", wrapText: true },
-    border: { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } }
+    alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
+    border: {
+      top: { style: 'thin' },
+      bottom: { style: 'thin' },
+      left: { style: 'thin' },
+      right: { style: 'thin' },
+    },
   };
 
-  const cBlack = (v: string | number | null | undefined): XLSX.CellObject => ({ v: v || '', t: 's', s: styleHeaderBlack });
-  const cYellow = (v: string | number | null | undefined): XLSX.CellObject => ({ v: v || '', t: 's', s: styleHeaderYellow });
-  const cNorm = (v: string | number | null | undefined): XLSX.CellObject => ({ v: v || '', t: typeof v === 'number' ? 'n' : 's', s: styleNormal });
+  const cBlack = (v: string | number | null | undefined): XLSX.CellObject => ({
+    v: v || '',
+    t: 's',
+    s: styleHeaderBlack,
+  });
+  const cYellow = (v: string | number | null | undefined): XLSX.CellObject => ({
+    v: v || '',
+    t: 's',
+    s: styleHeaderYellow,
+  });
+  const cNorm = (v: string | number | null | undefined): XLSX.CellObject => ({
+    v: v || '',
+    t: typeof v === 'number' ? 'n' : 's',
+    s: styleNormal,
+  });
 
   // 1. DATE SECTION
-  aoa.push([cBlack('DATE:'), cNorm(moment(submission.createdAt).format('DD/MMM/YYYY')), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm('')]);
-  aoa.push([cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm('')]); // Empty row
+  aoa.push([
+    cBlack('DATE:'),
+    cNorm(moment(submission.createdAt).format('DD/MMM/YYYY')),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+  ]);
+  aoa.push([
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+  ]); // Empty row
 
   // 2. HEADER INFO SECTION
   const headerRowIdx = aoa.length;
-  aoa.push([cYellow('GROUP NO'), cYellow('SUB AGENT NAME'), cYellow(''), cYellow('NO. OF FAX'), cYellow(''), cYellow('TOUR LEADER'), cYellow(''), cYellow(''), cYellow('PHONE NO')]);
-  aoa.push([cYellow(''), cYellow(''), cYellow(''), cYellow('ADULT'), cYellow('CHILD'), cYellow(''), cYellow(''), cYellow(''), cYellow('')]);
+  aoa.push([
+    cYellow('GROUP NO'),
+    cYellow('SUB AGENT NAME'),
+    cYellow(''),
+    cYellow('NO. OF FAX'),
+    cYellow(''),
+    cYellow('TOUR LEADER'),
+    cYellow(''),
+    cYellow(''),
+    cYellow('PHONE NO'),
+  ]);
+  aoa.push([
+    cYellow(''),
+    cYellow(''),
+    cYellow(''),
+    cYellow('ADULT'),
+    cYellow('CHILD'),
+    cYellow(''),
+    cYellow(''),
+    cYellow(''),
+    cYellow(''),
+  ]);
 
   merges.push({ s: { r: headerRowIdx, c: 1 }, e: { r: headerRowIdx, c: 2 } });
   merges.push({ s: { r: headerRowIdx, c: 3 }, e: { r: headerRowIdx, c: 4 } });
@@ -78,18 +145,48 @@ export const generateManifestExcelBuffer = (submission: ISubmissionListItem): Ar
     cNorm(submission.leader?.fullName || '-'),
     cNorm(''),
     cNorm(''),
-    cNorm(submission.agency?.phoneNumber || '-'),
+    cNorm(submission.agency?.phoneNumber || process.env.BADALIN_CS_NUMBER || '-'),
   ]);
   merges.push({ s: { r: aoa.length - 1, c: 1 }, e: { r: aoa.length - 1, c: 2 } });
   merges.push({ s: { r: aoa.length - 1, c: 5 }, e: { r: aoa.length - 1, c: 7 } });
 
-  aoa.push([cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm('')]);
+  aoa.push([
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+  ]);
 
   // 3. FLIGHT INFORMATION SECTION
-  aoa.push([cBlack('FLIGHT INFORMATION'), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack('')]);
+  aoa.push([
+    cBlack('FLIGHT INFORMATION'),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+  ]);
   merges.push({ s: { r: aoa.length - 1, c: 0 }, e: { r: aoa.length - 1, c: 8 } });
 
-  aoa.push([cYellow('FROM'), cYellow('TO'), cYellow('DATE'), cYellow('ETD'), cYellow('ETA'), cYellow('CARRIER'), cYellow(''), cYellow('FLIGHT NO'), cYellow('REMARKS')]);
+  aoa.push([
+    cYellow('FROM'),
+    cYellow('TO'),
+    cYellow('DATE'),
+    cYellow('ETD'),
+    cYellow('ETA'),
+    cYellow('CARRIER'),
+    cYellow(''),
+    cYellow('FLIGHT NO'),
+    cYellow('REMARKS'),
+  ]);
   merges.push({ s: { r: aoa.length - 1, c: 5 }, e: { r: aoa.length - 1, c: 6 } });
 
   if (submission.flights && submission.flights.length > 0) {
@@ -111,15 +208,58 @@ export const generateManifestExcelBuffer = (submission: ISubmissionListItem): Ar
     for (let i = 0; i < 2; i++) aoa.push(new Array(9).fill(cNorm('')));
   }
 
-  aoa.push([cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm('')]);
+  aoa.push([
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+  ]);
 
   // 4. HOTEL ACCOMODATION SECTION
-  aoa.push([cBlack('HOTEL ACCOMODATION'), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack('')]);
+  aoa.push([
+    cBlack('HOTEL ACCOMODATION'),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+  ]);
   merges.push({ s: { r: aoa.length - 1, c: 0 }, e: { r: aoa.length - 1, c: 9 } });
 
   const hotelHeaderIdx = aoa.length;
-  aoa.push([cYellow('CITY'), cYellow('HOTEL'), cYellow(''), cYellow('DATE'), cYellow(''), cYellow('TYPE ROOM'), cYellow(''), cYellow(''), cYellow(''), cYellow('RESV NO')]);
-  aoa.push([cYellow(''), cYellow(''), cYellow(''), cYellow('IN'), cYellow('OUT'), cYellow('DBL'), cYellow('TRPL'), cYellow('QUAD'), cYellow('QUINT'), cYellow('')]);
+  aoa.push([
+    cYellow('CITY'),
+    cYellow('HOTEL'),
+    cYellow(''),
+    cYellow('DATE'),
+    cYellow(''),
+    cYellow('TYPE ROOM'),
+    cYellow(''),
+    cYellow(''),
+    cYellow(''),
+    cYellow('RESV NO'),
+  ]);
+  aoa.push([
+    cYellow(''),
+    cYellow(''),
+    cYellow(''),
+    cYellow('IN'),
+    cYellow('OUT'),
+    cYellow('DBL'),
+    cYellow('TRPL'),
+    cYellow('QUAD'),
+    cYellow('QUINT'),
+    cYellow(''),
+  ]);
 
   merges.push({ s: { r: hotelHeaderIdx, c: 1 }, e: { r: hotelHeaderIdx, c: 2 } });
   merges.push({ s: { r: hotelHeaderIdx, c: 3 }, e: { r: hotelHeaderIdx, c: 4 } });
@@ -150,12 +290,45 @@ export const generateManifestExcelBuffer = (submission: ISubmissionListItem): Ar
     for (let i = 0; i < 2; i++) aoa.push(new Array(10).fill(cNorm('')));
   }
 
-  aoa.push([cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm('')]);
+  aoa.push([
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+  ]);
 
   // 5. TRANSPORT SECTION
-  aoa.push([cBlack('TRANSPORT'), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack('')]);
+  aoa.push([
+    cBlack('TRANSPORT'),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+  ]);
   merges.push({ s: { r: aoa.length - 1, c: 0 }, e: { r: aoa.length - 1, c: 5 } });
-  aoa.push([cYellow('DATE'), cYellow('FROM'), cYellow('TO'), cYellow('TIME'), cYellow('TOTAL BUS'), cYellow('BUS COMPANY'), cYellow(''), cYellow(''), cYellow(''), cYellow('')]);
+  aoa.push([
+    cYellow('DATE'),
+    cYellow('FROM'),
+    cYellow('TO'),
+    cYellow('TIME'),
+    cYellow('TOTAL BUS'),
+    cYellow('BUS COMPANY'),
+    cYellow(''),
+    cYellow(''),
+    cYellow(''),
+    cYellow(''),
+  ]);
 
   if (submission.transportations && submission.transportations.length > 0) {
     submission.transportations
@@ -171,19 +344,52 @@ export const generateManifestExcelBuffer = (submission: ISubmissionListItem): Ar
           cNorm(''),
           cNorm(''),
           cNorm(''),
-          cNorm('')
+          cNorm(''),
         ]);
       });
   } else {
     for (let i = 0; i < 2; i++) aoa.push(new Array(10).fill(cNorm('')));
   }
 
-  aoa.push([cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm('')]);
+  aoa.push([
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+  ]);
 
   // 6. TRAIN SECTION
-  aoa.push([cBlack('Train reservation'), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack('')]);
+  aoa.push([
+    cBlack('Train reservation'),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+  ]);
   merges.push({ s: { r: aoa.length - 1, c: 0 }, e: { r: aoa.length - 1, c: 6 } });
-  aoa.push([cYellow('DATE'), cYellow('from'), cYellow('to'), cYellow('TIME'), cYellow('Total H'), cYellow('ajj'), cYellow('REMARKS'), cYellow(''), cYellow(''), cYellow('')]);
+  aoa.push([
+    cYellow('DATE'),
+    cYellow('from'),
+    cYellow('to'),
+    cYellow('TIME'),
+    cYellow('Total H'),
+    cYellow('ajj'),
+    cYellow('REMARKS'),
+    cYellow(''),
+    cYellow(''),
+    cYellow(''),
+  ]);
 
   if (submission.transportations && submission.transportations.length > 0) {
     submission.transportations
@@ -199,19 +405,52 @@ export const generateManifestExcelBuffer = (submission: ISubmissionListItem): Ar
           cNorm(''),
           cNorm(''),
           cNorm(''),
-          cNorm('')
+          cNorm(''),
         ]);
       });
   } else {
     for (let i = 0; i < 2; i++) aoa.push(new Array(10).fill(cNorm('')));
   }
 
-  aoa.push([cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm('')]);
+  aoa.push([
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+  ]);
 
   // 7. RAWDAH SECTION
-  aoa.push([cBlack('FOR RAWDAH PERMITS'), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack(''), cBlack('')]);
+  aoa.push([
+    cBlack('FOR RAWDAH PERMITS'),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+    cBlack(''),
+  ]);
   merges.push({ s: { r: aoa.length - 1, c: 0 }, e: { r: aoa.length - 1, c: 2 } });
-  aoa.push([cYellow(''), cYellow('DATE'), cYellow('TIME'), cYellow(''), cYellow(''), cYellow(''), cYellow(''), cYellow(''), cYellow(''), cYellow('')]);
+  aoa.push([
+    cYellow(''),
+    cYellow('DATE'),
+    cYellow('TIME'),
+    cYellow(''),
+    cYellow(''),
+    cYellow(''),
+    cYellow(''),
+    cYellow(''),
+    cYellow(''),
+    cYellow(''),
+  ]);
 
   // @ts-ignore
   const menRawdah = submission.rawdahMenTime ? moment(submission.rawdahMenTime) : null;
@@ -222,18 +461,30 @@ export const generateManifestExcelBuffer = (submission: ISubmissionListItem): Ar
     cNorm('MEN'),
     cNorm(menRawdah ? menRawdah.format('DD/MMM/YYYY') : ''),
     cNorm(menRawdah ? menRawdah.format('HH:mm') : ''),
-    cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm('')
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
   ]);
   aoa.push([
     cNorm('WOMEN'),
     cNorm(womenRawdah ? womenRawdah.format('DD/MMM/YYYY') : ''),
     cNorm(womenRawdah ? womenRawdah.format('HH:mm') : ''),
-    cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm(''), cNorm('')
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
+    cNorm(''),
   ]);
 
   const sheet = XLSX.utils.aoa_to_sheet(aoa);
   sheet['!merges'] = merges;
-  
+
   // Set column widths for better view
   sheet['!cols'] = [
     { wch: 15 }, // A
