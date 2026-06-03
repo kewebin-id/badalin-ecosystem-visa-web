@@ -397,7 +397,7 @@ export const PilgrimCreateForm = () => {
                 placeholder={t('nikPlaceholder')}
                 register={register}
                 name="nik"
-                required
+                required={!form.watch('dob') || dayjs().diff(dayjs(form.watch('dob')), 'year') >= 17}
                 errorMessage={errors.nik?.message}
                 isAutoDetected={isAutoDetected['nik']}
                 confidence={isAutoDetected['nik'] ? form.watch('ocrConfidence') : undefined}
